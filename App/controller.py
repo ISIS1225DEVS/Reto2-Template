@@ -35,10 +35,10 @@ def initCatalogArray():
     catalog = model.newCatalog_Array()
     return catalog
     #Inicia el catálogod de videos en Linked list
-def initCatalogLinked():
-    catalog = model.newCatalog_Linked()
-    return catalog
-# Funciones para la carga de datos
+# def initCatalogLinked():
+#     catalog = model.newCatalog_Linked()
+#     return catalog
+# # Funciones para la carga de datos
 def Load_Data(catalog):
     """
     Carga los datos de los archivos y cargar los datos en la
@@ -71,5 +71,5 @@ def sortVideos(catalog, size, sortType):
     return model.sortVideos(catalog, size, sortType)
     
 # Funciones de consulta sobre el catálogo
-def getGreatestTendency(catalog, n_category):
-    return model.greatestTendency(catalog, n_category)
+# def getGreatestTendency(catalog, n_category):
+#     return model.greatestTendency(catalog, n_category)

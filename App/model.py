@@ -33,6 +33,8 @@ from DISClib.Algorithms.Sorting import selectionsort as ss
 from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import mergesort as mg
 from DISClib.Algorithms.Sorting import quicksort as qs
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 
 assert cf
 
@@ -47,36 +49,39 @@ def newCatalog_Array():
                'country': None,
                'tagvideos': None,
                'categories': None}
-    catalog['videos'] = lt.newList()
-    catalog['country'] = lt.newList("ARRAY_LIST",
-                                    cmpfunction=cmpcountry)
-    catalog['tagvideos'] = lt.newList('ARRAY_LIST',
-                                    cmpfunction=cmptags)
-    catalog['categories'] = lt.newList('ARRAY_LIST',
-                                    cmpfunction=cmpcategories)
+    catalog['videos'] = lt.newList('SINGLE_LINKED')
+    catalog['country'] = mp.newMap(150,
+                                    maptype='CHAINING',
+                                    loadfactor=4.0)
+    catalog['tagvideos'] = mp.newMap(50000,
+                                     maptype='CHAINING',
+                                    loadfactor=4.0)
+    catalog['categories'] = mp.newMap(50000,
+                                     maptype='CHAINING',
+                                    loadfactor=4.0)
 
     return catalog
 #Construcción modelo linked
-def newCatalog_Linked():
-    """
-    Inicializa el catálogo de videos. Crea una lista vacia para guardar
-    todos los videos, adicionalmente, crea una lista vacia para los canales,
-    una lista vacia para la fecha de tendencia, el país, las visitas, los likes, 
-    los dislikes y adicionalmente el id de la categoría.
-    . Retorna el catalogo inicializado.
-    """
-    catalog = {'videos': None,
-               'country': None,
-               'tagvideos': None,
-               'categories': None}
-    catalog['videos'] = lt.newList()
-    catalog['country'] = lt.newList("SINGLE_LINKED",
-                                    cmpfunction=cmpcountry)
-    catalog['tagvideos'] = lt.newList("SINGLE_LINKED",
-                                    cmpfunction=cmptags)
-    catalog['categories'] = lt.newList("SINGLE_LINKED",
-                                    cmpfunction=cmpcategories)
-    return catalog
+# def newCatalog_Linked():
+#     """
+#     Inicializa el catálogo de videos. Crea una lista vacia para guardar
+#     todos los videos, adicionalmente, crea una lista vacia para los canales,
+#     una lista vacia para la fecha de tendencia, el país, las visitas, los likes, 
+#     los dislikes y adicionalmente el id de la categoría.
+#     . Retorna el catalogo inicializado.
+#     """
+#     catalog = {'videos': None,
+#                'country': None,
+#                'tagvideos': None,
+#                'categories': None}
+#     catalog['videos'] = lt.newList()
+#     catalog['country'] = lt.newList("SINGLE_LINKED",
+#                                     cmpfunction=cmpcountry)
+#     catalog['tagvideos'] = lt.newList("SINGLE_LINKED",
+#                                     cmpfunction=cmptags)
+#     catalog['categories'] = lt.newList("SINGLE_LINKED",
+#                                     cmpfunction=cmpcategories)
+#     return catalog
 
 
 # Funciones para agregar informacion al catalogo
@@ -84,52 +89,69 @@ def addVideo(catalog, video):
     # Se adiciona el video a la lista de videos
     lt.addLast(catalog['videos'], video)
     #Se adicionan los tags en la lista de tagvideos
+    mp.put(catalog['tagvideos'], video['tags'], video)
     tagvideo_info = video['tags'].split("|")
-    for tag_info in tagvideo_info:
-        addTagsVideo(catalog, tag_info, video)
+    # for tag_info in tagvideo_info:
+    #     addTagsVideo(catalog, tag_info.strip(), video)
     #Adiciona los países en su respectiva llave
-    country = video['country']
-    addCountry(catalog, country, video)
+    addCountry(catalog, video)
     
 
-def addCountry(catalog, n_country, video):
+def addCountry(catalog, video):
     countries = catalog['country']
-    print(countries)
-    pos_country = lt.isPresent(countries, n_country)
-    if pos_country > 0:
-        lt.addLast(countries['videos'], video)
+    act_country = video['country']
+    #print(countries)
+    # pos_country = lt.isPresent(countries, n_country)
+    # if pos_country > 0:
+    #     lt.addLast(countries['videos'], video)
+    # else: 
+    #     country = newCountry(n_country)
+    #     lt.addLast(countries, video['country'])
+    # lt.addLast(country['videos'], video)
+    existconutry  = mp.contains(countries, act_country)
+    if existconutry:
+        entry = mp.get(countries, act_country)
+        country = me.getValue(entry)
     else: 
-        country = newCountry(n_country)
-        lt.addLast(countries, video['country'])
-    lt.addLast(country['videos'], video)
-
+        country = newCountry(act_country)
+        mp.put(countries, act_country, country)
+        lt.addLast(country['videos'], video)
 
 def addTagsVideo(catalog, n_tag, video):
     tagvideos = catalog['tagvideos']
-    pos_tag = lt.isPresent(tagvideos, n_tag)
-    if pos_tag > 0:
-        videotag = lt.getElement(tagvideos, pos_tag)
+    existeTag = mp.contains(tagvideos, n_tag)
+    if existeTag: 
+        entry = mp.get(tagvideos, n_tag)
+        tag = me.getValue(entry)
     else:
-        videotag = newVideoTag(n_tag)
-        lt.addLast(tagvideos, videotag)
-    lt.addLast(videotag['videos'], video)
+        tagvideo = newVideoTag(n_tag)
+        mp.put(tagvideos,n_tag,tagvideo)
+    lt.addLast(tagvideos['videos'],video)
+     # pos_tag = lt.isPresent(tagvideos, n_tag)
+     # if pos_tag > 0:
+     #     videotag = lt.getElement(tagvideos, pos_tag)
+     # else:
+     #     videotag = newVideoTag(n_tag)
+     #     lt.addLast(tagvideos, videotag)
+     # lt.addLast(videotag['videos'], video)
 
 
 def addCategories(catalog, categories_videos):
-    category = NewCategories(categories_videos['name'], categories_videos['id'])
-    lt.addLast(catalog['categories'], category)
-
-
-# Funciones para creacion de datos
-# Estas funciones son precisamente para hacer la creación 
-# De las llaves y sus respectivos valores (llaves vacías, la idea es crear la llave y en las funciones
-# de agregar información al catálogo se completan)
-
-
+    #     category = NewCategories(categories_videos['name'], categories_videos['id'])
+    #     lt.addLast(catalog['categories'], category)
+    lista = categories_videos["id\tname"].split("\t ")
+    categories_videos["id"] = lista[0]
+    categories_videos["name"] = lista[1].strip()
+    t = NewCategories(categories_videos["id"], categories_videos['name'])
+    lt.addLast(catalog['categories'], t)
+    # Funciones para creacion de datos
+    # Estas funciones son precisamente para hacer la creación 
+    # De las llaves y sus respectivos valores (llaves vacías, la idea es crear la llave y en las funciones
+    # de agregar información al catálogo se completan)
 def newCountry(n_country):
     country = {'name': "", 'videos': None}
     country['name'] = n_country
-    country['videos'] = lt.newList('ARRAY_LIST')
+    country['videos'] = lt.newList('SINGLE_LINKED', cmpcountry)
     return country
 
 def newVideoTag(tag_name):
@@ -147,10 +169,12 @@ def NewCategories(name, id):
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 def cmpcountry(country1, country2):
-    if (country1.lower() in country2.lower()):
+    if (country1 == country2):
         return 0
-    return -1
-
+    elif country1 > country2:
+        return 1
+    else:
+        return -1
 def cmptags(tag1,tag2):
     if (tag1.lower() in tag2['name'].lower()):
         return 0
@@ -184,30 +208,30 @@ def sortVideos(catalog, size, sortType):
     return elapsed_time_mseg, sorted_list
 
 
-def greatestTendency(catalog, n_category):
-    temp_list = []
-    video_template = {'title': "", 
-                      'channel_title': "", 
-                      'category_id': "", 
-                      'days_trending': []
-                      'ammount_of_days': 0}
-    for video in catalog['categories']:
-        for video_temp in temp_list:
-            if video['title'] == video_temp['title']:
-                trending_date = video['publish_time'][0:9]
-                if trending_date not in video_temp['days_trending']:
-                    video_temp['days_trending'].append(trending_date)
-                    video_temp['ammount_of_days'] += 1
-            else:
-                video_template['title'] = video['title']
-                video_template['channel_title'] = video['channel_title']
-                video_template['category_id'] = video['category_id']
-                video_template['days_trending'].append(video['publish_time'][0:9])
-                video_template['ammount_of_days'] = 1
-    best = None
-    days = 0
-    for video in temp_list:
-        if video['ammount_of_days'] > days:
-            days = video['ammount_of_days']
-            best = video
-    return best
+# def greatestTendency(catalog, n_category):
+#     temp_list = []
+#     video_template = {'title': "", 
+#                       'channel_title': "", 
+#                       'category_id': "", 
+#                       'days_trending': []
+#                       'ammount_of_days': 0}
+#     for video in catalog['categories']:
+#         for video_temp in temp_list:
+#             if video['title'] == video_temp['title']:
+#                 trending_date = video['publish_time'][0:9]
+#                 if trending_date not in video_temp['days_trending']:
+#                     video_temp['days_trending'].append(trending_date)
+#                     video_temp['ammount_of_days'] += 1
+#             else:
+#                 video_template['title'] = video['title']
+#                 video_template['channel_title'] = video['channel_title']
+#                 video_template['category_id'] = video['category_id']
+#                 video_template['days_trending'].append(video['publish_time'][0:9])
+#                 video_template['ammount_of_days'] = 1
+#     best = None
+#     days = 0
+#     for video in temp_list:
+#         if video['ammount_of_days'] > days:
+#             days = video['ammount_of_days']
+#             best = video
+#     return best

@@ -38,7 +38,7 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo en una lista encadenada o un arreglo")
+    print("1- Cargar información en el catálogo en una lista arreglo")
     print("4- Cargar el video con mayor cantidad de días en tendencia, según categoría")
     print("6- Crear lista de los vídeos más vistos en un país y con categoría específica")
 
@@ -72,15 +72,6 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        selection = int(input("1 para SINGLE_LINKED o 2 para ARRAY_LIST:\n"))
-        if selection == 1:
-            catalog = initCatalog_Linked()
-            Load_Data(catalog)
-            print("Cargando información de los archivos ...")
-            print('Videos cargados: ' + str(lt.size(catalog['videos'])))
-            print('Etiquetas cargadas: ' + str(lt.size(catalog['tagvideos'])))
-            print('Categorías cargadas: ' + str(lt.size(catalog['categories'])))
-        if selection == 2:
             catalog = initCatalog_Array()
             Load_Data(catalog)
             print("Cargando información de los archivos ....")
