@@ -56,7 +56,7 @@ def newCatalog_Array():
     catalog['tagvideos'] = mp.newMap(50000,
                                      maptype='CHAINING',
                                     loadfactor=4.0)
-    catalog['categories'] = mp.newMap(50000,
+    catalog['categories'] = mp.newMap(32,
                                      maptype='CHAINING',
                                     loadfactor=4.0)
 
@@ -207,6 +207,18 @@ def sortVideos(catalog, size, sortType):
     elapsed_time_mseg = (stop_time - start_time)*1000
     return elapsed_time_mseg, sorted_list
 
+#Funciones de consulta
+
+def LikesbyCategory(catalog, number, category):
+    #los n videos con más LIKES para el nombre de una categoría específica
+    FilterCategory = lt.newList('ARRAY_LIST')
+    
+    i = 0
+    while i < lt.size(catalog['videos']):
+        a = lt.getElement(catalog['videos'], i)
+        i += 1
+        print(i, "video: ")
+        print(a['views'])
 
 # def greatestTendency(catalog, n_category):
 #     temp_list = []

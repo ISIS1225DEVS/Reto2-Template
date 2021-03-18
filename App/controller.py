@@ -69,7 +69,8 @@ def sortVideos(catalog, size, sortType):
     Ordena los videos por views
     """
     return model.sortVideos(catalog, size, sortType)
-    
+def LikesbyCategory (catalog, number, category):
+    model.LikesbyCategory(catalog, number, category)
 # Funciones de consulta sobre el catálogo
 # def getGreatestTendency(catalog, n_category):
 #     return model.greatestTendency(catalog, n_category)
