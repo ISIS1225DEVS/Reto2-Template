@@ -44,45 +44,24 @@ los mismos.
 """
 
 # Construccion de modelos Array
-def newCatalog_Array():
+def newCatalog(typemap, chargeFactor):
     catalog = {'videos': None,
                'country': None,
                'tagvideos': None,
                'categories': None}
     catalog['videos'] = lt.newList('SINGLE_LINKED')
     catalog['country'] = mp.newMap(150,
-                                    maptype='CHAINING',
-                                    loadfactor=4.0)
+                                    maptype=typemap,
+                                    loadfactor=chargeFactor)
     catalog['tagvideos'] = mp.newMap(50000,
-                                     maptype='CHAINING',
-                                    loadfactor=4.0)
+                                     maptype=typemap,
+                                    loadfactor=chargeFactor)
     catalog['categories'] = mp.newMap(32,
-                                     maptype='CHAINING',
-                                    loadfactor=4.0)
-
+                                     maptype=typemap,
+                                    loadfactor=chargeFactor)
+    print(typemap, "En el model")
+    print(chargeFactor, "En el model")
     return catalog
-#Construcción modelo linked
-# def newCatalog_Linked():
-#     """
-#     Inicializa el catálogo de videos. Crea una lista vacia para guardar
-#     todos los videos, adicionalmente, crea una lista vacia para los canales,
-#     una lista vacia para la fecha de tendencia, el país, las visitas, los likes, 
-#     los dislikes y adicionalmente el id de la categoría.
-#     . Retorna el catalogo inicializado.
-#     """
-#     catalog = {'videos': None,
-#                'country': None,
-#                'tagvideos': None,
-#                'categories': None}
-#     catalog['videos'] = lt.newList()
-#     catalog['country'] = lt.newList("SINGLE_LINKED",
-#                                     cmpfunction=cmpcountry)
-#     catalog['tagvideos'] = lt.newList("SINGLE_LINKED",
-#                                     cmpfunction=cmptags)
-#     catalog['categories'] = lt.newList("SINGLE_LINKED",
-#                                     cmpfunction=cmpcategories)
-#     return catalog
-
 
 # Funciones para agregar informacion al catalogo
 def addVideo(catalog, video):
@@ -206,6 +185,20 @@ def sortVideos(catalog, size, sortType):
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     return elapsed_time_mseg, sorted_list
+
+#Funciones para contar la información en el cátalogo
+def VideoSize(catalog):
+    return lt.size(catalog['videos'])
+
+def CountrySize(catalog):
+    return mp.size(catalog['country'])
+
+def TagSize(catalog):
+    return mp.size(catalog['tagvideos'])
+
+def CategoriesSize(catalog):
+    return mp.size(catalog['categories'])
+
 
 #Funciones de consulta
 

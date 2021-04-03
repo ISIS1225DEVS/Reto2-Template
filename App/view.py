@@ -38,22 +38,17 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo en una lista arreglo")
-    print('2- Cuántos likes según n videos y x categoría')
+    print("1- Inicializar cátalogo")
+    print('2- Cargar cátalogo')
     # print("4- Cargar el video con mayor cantidad de días en tendencia, según categoría")
     # print("6- Crear lista de los vídeos más vistos en un país y con categoría específica")
 
-def initCatalog_Linked():
+
+def initCatalog(typemap, chargeFactor):
     """
     Inicializa el catalogo de libros
     """
-    return controller.initCatalogLinked()
-    
-def initCatalog_Array():
-    """
-    Inicializa el catalogo de libros
-    """
-    return controller.initCatalogArray()
+    return controller.initCatalog(typemap, chargeFactor)
 
 def printResults(videos, sample=3):
     size = lt.size(videos)
@@ -65,6 +60,7 @@ def Load_Data(catalog):
     controller.Load_Data(catalog)
 
 catalog = None
+cont = None
 
 """
 Menu principal
@@ -72,17 +68,31 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
+
     if int(inputs[0]) == 1:
-        catalog = initCatalog_Array()
-        Load_Data(catalog)
+        print("Iniciando cátalogo...")
+        Prob_or_Chain = int(input("Introduzca 1 para Probing o 2 para Chaining:\n"))
+        if Prob_or_Chain == 1:
+            Prob_or_Chain = "PROBING"
+        else:
+            Prob_or_Chain = "CHAINING"
+        chargeFactor = float(input("Introduzca el factor de carga deseado:\n"))
+        cont = initCatalog(Prob_or_Chain, chargeFactor)
+    elif int(inputs[0]) == 2:
+        print("Cargando información...")
+        answer = controller.Load_Data(cont)
         print("Cargando información de los archivos ....")
-        print('Videos cargados: ' + str(lt.size(catalog['videos'])))
-        print('Etiquetas cargadas: ' + str(lt.size(catalog['tagvideos'])))
-        print('Categorías cargadas: ' + str(lt.size(catalog['categories'])))
-        print(catalog['categories'])
+        print('Videos cargados: ' + str(controller.VideoSize(cont)))
+        print('Países cargados: ' + str(controller.CountrySize(cont)))
+        print('Etiquetas cargadas: ' + str(controller.TagSize(cont)))
+        print('Categorías cargadas: ' + str(controller.CategoriesSize(cont)))
+        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+              "Memoria [kB]: ", f"{answer[1]:.3f}")
+
+        
 
     elif int(inputs[0]) == 2:
-        catalog = initCatalog_Array()
+        catalog = initCatalog()
         Load_Data(catalog)
         howMuch = int(input('Ingrese la cantidad de videos que desea archivar: '))
         whatCategory = str(input('Ingrese el nombre de la categoría que desea buscar: '))
