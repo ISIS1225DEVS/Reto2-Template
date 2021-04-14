@@ -24,6 +24,7 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
 assert cf
 
 
@@ -39,7 +40,11 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- ")
 
-catalog = None
+def initCatalog():
+    return controller.initCatalog()
+
+def loadData(catalog):
+    controller.loadData(catalog)
 
 """
 Menu principal
@@ -49,7 +54,10 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
-
+        catalog=initCatalog()
+        loadData(catalog)
+        print("Videos cargados: " + str(lt.size(catalog["videos"])))
+        print("Categorias cargadas: " + str(mp.size(catalog["categorias"])))
     elif int(inputs[0]) == 2:
         pass
 
