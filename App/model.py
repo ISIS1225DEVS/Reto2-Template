@@ -122,7 +122,8 @@ def sameCountryCategory(catalogo_pais,catalogo_categoria,country,category):
     sorted_vids=sortVideosViews(final_vids)
     return sorted_vids
 
-    def mostTrending(sorted_list):
+def mostTrending(sorted_list):
+    pass
 
 
 
@@ -145,5 +146,4 @@ def sortVideosViews(lista):
 def sortVideosName(lista):
     sorted_list=qcks.sort(lista,cmpVideosbyName)
     return sorted_list
-
 
