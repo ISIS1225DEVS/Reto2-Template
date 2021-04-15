@@ -76,6 +76,13 @@ while True:
             printReq1(controller.sameCountryCategory(catalog["country"],catalog["category-id"],country,category),sample)
         except IndexError:
             print("No hay tantos videos de este pais y categoria, estos son todos los que hay")
+    
+    elif int(inputs[0] == 3):
+        country = input("Digite el país en el cual está interesado:" )
+        rta1 = controller.sortVideoId(catalog,country)
+        rta2 = controller.encontrar_ganador(rta1)
+
+        print("El video más trending en: ", country, " es: ", rta2[0], " con: ", rta2[1]," días en trending.")
 
     else:
         sys.exit(0)

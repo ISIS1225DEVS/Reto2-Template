@@ -43,7 +43,7 @@ def loadData(catalog):
 
 
 def loadVideos(catalog):
-    videosfile = cf.data_dir + "videos-50pct.csv"
+    videosfile = cf.data_dir + "videos-small.csv"
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for video in input_file:
         model.addVideo(catalog, video)
@@ -63,4 +63,12 @@ def loadCategoria(catalog):
 def sameCountryCategory(catalogo_pais,catalogo_categoria,country,category):
     return model.sameCountryCategory(catalogo_pais,catalogo_categoria,country,category)
 
+def obtener_listapais(catalog, country):
+    return model.obtener_listapais(catalog, country)
+
+def sortVideoId(catalog, country):
+    return model.sortVideoId(catalog, country)
+
+def encontrar_ganador(lista_ids):
+    return model.encontrar_ganador(lista_ids)
 # Funciones de consulta sobre el catálogo
