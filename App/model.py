@@ -31,7 +31,7 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
-
+from DISClib.Algorithms.Sorting import quicksort as qcks
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
@@ -46,10 +46,10 @@ def newCatalog():
              "category-id": None,
              "country": None}
     catalog["videos"]=lt.newList(datastructure="ARRAY_LIST")
-    catalog["videos-id"]=mp.newMap(10000,
+    catalog["videos-id"]=mp.newMap(10,
                                     maptype="CHAINING",
                                     loadfactor=4.0)
-    catalog["categorias"]=mp.newMap(34500,
+    catalog["categorias"]=mp.newMap(10,
                                     maptype="PROBING",
                                     loadfactor=0.5)
     catalog["category-id"]=mp.newMap(37,
@@ -69,6 +69,7 @@ def addVideo(catalog,video):
         lt.addLast(catalog["videos"],video)
         mp.put(catalog["videos-id"],video["video_id"],video)
 
+
 def addCategoria(catalog,categoria):
     tag=newCategoria(categoria["name"],categoria["id"])
     mp.put(catalog["categorias"],categoria["name"],tag)
@@ -76,10 +77,14 @@ def addCategoria(catalog,categoria):
 
 def addCountry(catalog,video):
     country=video["country"]
-    if not mp.contains(catalog["videos"],country):
+    if not mp.contains(catalog["country"],country):
         videos=lt.newList(datastructure="ARRAY_LIST")
-    lt.addLast(videos,video)
-    mp.put(catalog["country"],country,videos)
+        lt.addLast(videos,video)
+        mp.put(catalog["country"],country,videos)
+    else:
+        videos=mp.get(catalog["country"],country)
+        lt.addLast(videos["value"],video)
+        mp.put(catalog["country"],country,videos["value"])
 
         
 
@@ -88,12 +93,9 @@ def addCountry(catalog,video):
 
 def newCategoria(name,id):
     categoria={"name":"",
-                "id":"",
-                "total_videos":0,
-                "videos":None}
+                "id":""}
     categoria["name"]=name
     categoria["id"]=id
-    categoria["videos"]=lt.newList()
     return categoria
 
 
@@ -101,6 +103,47 @@ def newCategoria(name,id):
 
 # Funciones de consulta
 
+def sameCountryCategory(catalogo_pais,catalogo_categoria,country,category):
+    country_cringe=mp.get(catalogo_pais,country)
+    country_vids=country_cringe["value"]
+    lista_categoria=mp.valueSet(catalogo_categoria)
+    final_vids=lt.newList(datastructure="ARRAY_LIST")
+    Id=None
+    for i in range(1,lt.size(lista_categoria)+1):
+        categoria=lt.getElement(lista_categoria,i)
+        name=categoria["name"]
+        if category==name:
+            Id=categoria["id"]
+            break
+    for i in range(1,lt.size(country_vids)+1):
+        video=lt.getElement(country_vids,i)
+        if video["category_id"]==Id:
+            lt.addLast(final_vids,video)
+    sorted_vids=sortVideosViews(final_vids)
+    return sorted_vids
+
+    def mostTrending(sorted_list):
+
+
+
+
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 
+def cmpVideosbyViews(video1,video2):
+    return (int(video1["views"])>int(video2["views"]))
+
+def cmpVideosbyName(video1,video2):
+    return (str(video1["title"]).lower()>str(video2["title"]).lower()) 
+
 # Funciones de ordenamiento
+
+def sortVideosViews(lista):
+    sorted_list=qcks.sort(lista,cmpVideosbyViews)
+    return sorted_list
+
+def sortVideosName(lista):
+    sorted_list=qcks.sort(lista,cmpVideosbyName)
+    return sorted_list
+
+

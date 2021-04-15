@@ -41,11 +41,14 @@ def loadData(catalog):
     loadVideos(catalog)
     loadCategoria(catalog)
 
+
 def loadVideos(catalog):
     videosfile = cf.data_dir + "videos-large.csv"
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for video in input_file:
         model.addVideo(catalog, video)
+        model.addCountry(catalog,video)
+
 
 def loadCategoria(catalog):
     categoriafile = cf.data_dir + "category-id.csv"
@@ -53,6 +56,11 @@ def loadCategoria(catalog):
     for categoria in input_file:
         model.addCategoria(catalog,categoria)
 
+
+
 # Funciones de ordenamiento
+
+def sameCountryCategory(catalogo_pais,catalogo_categoria,country,category):
+    return model.sameCountryCategory(catalogo_pais,catalogo_categoria,country,category)
 
 # Funciones de consulta sobre el catálogo
