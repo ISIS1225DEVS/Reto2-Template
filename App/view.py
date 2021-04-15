@@ -40,6 +40,7 @@ def printMenu():
     print("Bienvenido")
     print("1- Inicializar cátalogo")
     print('2- Cargar cátalogo')
+    print("3- Requerimiento 1")
     # print("4- Cargar el video con mayor cantidad de días en tendencia, según categoría")
     # print("6- Crear lista de los vídeos más vistos en un país y con categoría específica")
 
@@ -71,12 +72,8 @@ while True:
 
     if int(inputs[0]) == 1:
         print("Iniciando cátalogo...")
-        Prob_or_Chain = int(input("Introduzca 1 para Probing o 2 para Chaining:\n"))
-        if Prob_or_Chain == 1:
-            Prob_or_Chain = "PROBING"
-        else:
-            Prob_or_Chain = "CHAINING"
-        chargeFactor = float(input("Introduzca el factor de carga deseado:\n"))
+        Prob_or_Chain = "CHAINING"
+        chargeFactor = 2.0
         cont = initCatalog(Prob_or_Chain, chargeFactor)
     elif int(inputs[0]) == 2:
         print("Cargando información...")
@@ -86,36 +83,15 @@ while True:
         print('Países cargados: ' + str(controller.CountrySize(cont)))
         print('Etiquetas cargadas: ' + str(controller.TagSize(cont)))
         print('Categorías cargadas: ' + str(controller.CategoriesSize(cont)))
-        print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
-              "Memoria [kB]: ", f"{answer[1]:.3f}")
+        # print("Tiempo [ms]: ", f"{answer[0]:.3f}", "  ||  ",
+        #       "Memoria [kB]: ", f"{answer[1]:.3f}")
 
-        
-
-    elif int(inputs[0]) == 2:
-        catalog = initCatalog()
-        Load_Data(catalog)
-        howMuch = int(input('Ingrese la cantidad de videos que desea archivar: '))
-        whatCategory = str(input('Ingrese el nombre de la categoría que desea buscar: '))
-        result = controller.LikesbyCategory(catalog, howMuch, whatCategory)
-        print(result)
-    # elif int(inputs[0]) == 4:
-    #     n_category = input("¿A cuál categoría (según ID) desea consultar?")
-    #     result = controller.getGreatestTendency(catalog, n_category)
-    #     print("El video con mayor tendencia en la categoría ", n_category, "es ", result['title'], ", del canal ", result['channel_title'], " teniendo ", result['ammount_of_days'], " días en tendencia.")
-
-    # elif int(inputs[0]) == 6:
-    #     size = int(input("¿Cuántos vídeos desea enlistar?\n"))
-    #     # country = str(input("Digite el nombre del país: \n"))
-    #     # category_videos = str(input("Digite la categoría: \n"))
-    #     if size > lt.size(catalog['videos']):
-    #         print('La cantidad de videos a enlistar es mayor a la cantidad de videos disponibles.')
-    #     else:
-    #         print("1 - Selection Sort \n2 - Insertion Sort \n3 - Shell Sort \n4 - Merge Sort \n5 - Quick Sort \n")
-    #         sortType = input("Seleccione el tipo de algoritmo de ordenamiento que desea usar: ")
-    #         result = controller.sortVideos(catalog, int(size), sortType)
-    #         # print("Usando una muestra de ", size, " elementos, el tiempo que tomó ordenar el catálogo (en milisegundos) es ", str(result[0]))
-    #         print(result)
-
+    elif int(inputs[0]) == 3:
+        category_name = input("Introduzca el nombre de la categoría deseada:\n")
+        country = input("Introduzca el nombre del país deseado:\n")
+        n_videos = int(input("Introduzca el número de videos en lista que desea ver:\n"))
+        imprime = controller.n_videostrending(cont, category_name, country, n_videos)
+        print(imprime)
 
     else:
         sys.exit(0)

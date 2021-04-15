@@ -34,8 +34,8 @@ El controlador se encarga de mediar entre la vista y el modelo.
     #Inicia el catálogo de videos en Array
 def initCatalog(typemap, chargeFactor):
     catalog = model.newCatalog(typemap, chargeFactor)
-    print(typemap, "En el controller")
-    print(chargeFactor, "En el controller")
+    # print(typemap, "En el controller")
+    # print(chargeFactor, "En el controller")
     return catalog
     #Inicia el catálogod de videos en Linked list
 # def initCatalogLinked():
@@ -47,31 +47,30 @@ def Load_Data(catalog):
     Carga los datos de los archivos y cargar los datos en la
     estructura de datos
     """
-    delta_time = -1.0
-    delta_memory = -1.0
+    # delta_time = -1.0
+    # delta_memory = -1.0
 
-    tracemalloc.start()
-    start_time = getTime()
-    start_memory = getMemory()
+    # tracemalloc.start()
+    # start_time = getTime()
+    # start_memory = getMemory()
 
     LoadVideos(catalog)
     LoadCategory(catalog)
 
-    stop_memory = getMemory()
-    stop_time = getTime()
-    tracemalloc.stop()
+    # stop_memory = getMemory()
+    # stop_time = getTime()
+    # tracemalloc.stop()
 
-    delta_time = stop_time - start_time
-    delta_memory = deltaMemory(start_memory, stop_memory)
-
-    return delta_time, delta_memory
+    # delta_time = stop_time - start_time
+    # delta_memory = deltaMemory(start_memory, stop_memory)
+    # return delta_time, delta_memory
 def LoadVideos(catalog):
     """
     Carga los libros del archivo.  Por cada libro se toman sus autores y por
     cada uno de ellos, se crea en la lista de autores, a dicho autor y una
     referencia al libro que se esta procesando.
     """
-    videosfile = cf.data_dir + 'videos-small.csv'
+    videosfile = cf.data_dir + 'videos-supersmall.csv'
     input_file = csv.DictReader(open(videosfile, encoding='utf-8'))
     for videos in input_file:
         model.addVideo(catalog,videos)
@@ -107,7 +106,10 @@ def TagSize(catalog):
 def CategoriesSize(catalog):
     return model.CategoriesSize(catalog)
 
+#Funciones del reto 2
 
+def n_videostrending(catalog, category_name, country, n_videos):
+    return model.n_videostrending(catalog, category_name, country, n_videos)
 
 #Funciones para tiempo y memoria
 
