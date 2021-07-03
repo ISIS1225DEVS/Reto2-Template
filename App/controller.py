@@ -20,8 +20,9 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+from os import sep
 import config as cf
-import model
+import model 
 import csv
 
 
@@ -30,9 +31,42 @@ El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 # Inicialización del Catálogo de libros
+def initialize():
+    Datos=model.initialize()
+    return Datos 
 
 # Funciones para la carga de datos
+def Load_Data(storage:dict):
+    Load_videos(storage)
+    Load_cetegories(storage)
+
+def Load_videos(storage:dict):
+    videos_File = cf.data_dir + 'videos-small.csv'
+    input_file = csv.DictReader(open(videos_File, encoding='utf-8'))
+    for video in input_file:
+        model.add_video(storage, video)
+
+def Load_cetegories(storage:dict):
+    cat_File = cf.data_dir + 'category-id.csv'
+    input_file = csv.DictReader(open(cat_File, encoding='utf-8'), delimiter='\t')
+    for cat in input_file:
+        model.add_categoria(storage, cat)
 
 # Funciones de ordenamiento
 
+
 # Funciones de consulta sobre el catálogo
+def filtrar_count_cat(videos:list, categories:list, categoria:str, pais:str)->list:
+    return model.filtrar_count_cat(videos, categories, categoria, pais)
+
+def filtrar_cat_n(videos:list, categories:list, categoria:str)->list:
+    return model.filtrar_cat_n(videos, categories, categoria)
+
+def filtrar_count_tag(videos, pais, tag)->list:
+    return model.filtrar_count_tag(videos, pais, tag)
+
+def max_vids_count(vids:list,pais:str):
+    return model.max_vids_count(vids,pais)
+
+def max_vids_cat(videos:list, categories:list, categoria:str):
+    return model.max_vids_cat(videos, categories, categoria)
