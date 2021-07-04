@@ -78,13 +78,13 @@ while True:
             "Dislikes: "+str(first["dislikes"])
         )
         print("Categorias: \n"+"id "+" nombre")
-        cat_keys=mp.keySet(Datos["categorias"])
+        cat_keys=mp.keySet(Datos["categorias_id"])
         for i in lt.iterator(cat_keys):
             id=i
-            name=mp.get(Datos["categorias"],id)
+            name=mp.get(Datos["categorias_id"],id)
             name=me.getValue(name)
             print(id+" "+name)
-        
+
     elif int(inputs[0]) == 2:
         pais=input("Pais: ")
         categoria=input("Categoria: ")
@@ -137,11 +137,11 @@ while True:
         while int(n)>lt.size(Datos["videos"]):
             print("El número de videos a listar excede la cantidad de videos cargados en la memoria")
             n = input("Número de videos a listar: ")
-        tiempo,lista=ctrl.filtrar_cat_n(Datos["videos"], Datos["categorias"], " "+categoria) #El " " es porque cuando se leen las categorias, vienen con un espacio al inicio.
+        lista=ctrl.filtrar_cat_n(Datos["categorias"]," "+categoria,int(n)) #El " " es porque cuando se leen las categorias, vienen con un espacio al inicio.
         i=1
         if lt.size(lista)==0:
             print("No hay videos que hayan sido tendencia en {} de la categoria {}".format(categoria))
-        while i<=lt.size(lista) and i<=int(n):
+        while i<=lt.size(lista):
             vid=lt.getElement(lista,i)
             print("Titulo: "+vid["title"],"trending date: "+vid["trending_date"],"Canal: "+vid["channel_title"],"Fecha de publicacion: "+vid["publish_time"],"Vistas: "+vid["views"],"Likes: "+vid["likes"],"Dislikes: "+vid["dislikes"])
             i+=1

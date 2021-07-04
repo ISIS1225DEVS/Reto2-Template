@@ -43,43 +43,42 @@ los mismos.
 def initialize():
     Data={
         "videos":None,
+        "categorias_id":None,
         "categorias":None
     }
-    Data["videos"]=lt.newList("ARRAY_LIST")
-    Data["categorias"]=mp.newMap(44,47,'CHAINING',4,None)
-
+    Data["videos"]=lt.newList("ARRAY_LIST")#Todos los videos
+    Data["categorias_id"]=mp.newMap(44,47,'CHAINING',4,None)#Parejas id_categoria-Nombre categoria
+    Data["categorias"]=mp.newMap(44,47,'CHAINING',4,None)#Videos ordenados por categoria
+    
     return Data
 # Funciones para agregar informacion al catalogo
 def add_video(Data, video):
     lt.addLast(Data["videos"],video)
+    add_categoria_vid(video,Data)
 
-def add_categoria(Data, categoria):
-    mp.put(Data["categorias"],categoria["id"],categoria["name"])
+def add_categoria_id(Data, categoria):
+    mp.put(Data["categorias_id"],categoria["id"],categoria["name"])
+    cat=new_categoria(categoria["name"],categoria["id"])
+    mp.put(Data["categorias"],categoria["name"],cat)
 
+def new_categoria(name,id):
+    cat={"name":name,"id":id,'videos':lt.newList()}
+    return cat
+
+def add_categoria_vid(video,Data):
+    nombre_cat=me.getValue(mp.get(Data["categorias_id"],video["category_id"]))
+    categoria=me.getValue(mp.get(Data["categorias"],nombre_cat))
+    lt.addLast(categoria["videos"],video)
 
 # Funciones para creacion de datos
 
 # Funciones de consulta
 
-def filtrar_cat_n(videos:list, categories, categoria:str)->tuple:
-    """ Retorna una lista ordenada de los videos con más likes de una categoría y 
-    un país en específico """
-    vids_cat=lt.newList()
-    cat_id=None
-    j=1
-    search=True
-    while j<=lt.size(mp.keySet(categories)) and search:
-        nombre_cat=me.getValue(mp.get(categories,lt.getElement(mp.keySet(categories),j)))
-        print(nombre_cat,categoria,nombre_cat==categoria)
-        if nombre_cat==categoria:
-            search=False
-            cat_id=me.getKey(mp.get(categories,lt.getElement(mp.keySet(categories),j)))
-        j+=1
-    for i in range(lt.size(videos)):
-        video_i=lt.getElement(videos,i)
-        if video_i["category_id"]==cat_id:
-            lt.addLast(vids_cat,video_i)
-    return sort_vids_by_views(vids_cat)
+def filtrar_cat_n(categories, categoria_name,n)->list:
+    """ Retorna una lista ordenada de los videos con más views de una categoría """
+    videos=me.getValue(mp.get(categories,categoria_name))["videos"]
+    sort_vids_by_views(videos)
+    return lt.subList(videos,1,n)
 
 def filtrar_count_cat(videos:list, categories, categoria:str, pais:str)->tuple:
     """ Retorna una lista ordenada de los videos con más likes de una categoría y 
@@ -276,5 +275,3 @@ def sort_vids_by_views(Data:list):
     stop_time = time.process_time()
     elapsed_time_mseg = (stop_time - start_time)*1000
     return elapsed_time_mseg, sorted_list
-
-
