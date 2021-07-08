@@ -20,7 +20,6 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
-from typing import cast
 import config as cf
 import sys
 import controller as ctrl
@@ -48,12 +47,16 @@ def printMenu():
     print("4- Video que ha sido trending por más días de categoria especifica con una percepción sumamente positiva.")
     print("5- Mostrar n videos con más comentarios, en un pais y con tag especifico.")
     print("6- n videos con más likes para una categoria especifica.")
+
+def printType():
+    print("1- Linear Probing")
+    print("2- Separate Chaining")
 Data = None
 
-def initialize()->dict:
-    return ctrl.initialize()
+def initialize(type, fc)->dict:
+    return ctrl.initialize(type, fc)
 
-def Load_Data(storage:dict)->None:
+def Load_Data(storage:dict):
     ctrl.Load_Data(storage)
 
 """
@@ -63,12 +66,18 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        Datos=initialize()      
+        fc=input("Factor de carga: ")
+        printType()
+        Inputs = input('Seleccione un tipo de manejo de colisión\n')
+        if int(Inputs[0]) == 1:
+            Datos=initialize("PROBING", float(fc))
+        if int(Inputs[0]) == 2:
+            Datos=initialize("CHAINING", float(fc))   
         print("Cargando información de los archivos ....")
         Load_Data(Datos)
         print("Numero de videos cargados: "+str(lt.size(Datos["videos"])))
         first=lt.firstElement(Datos["videos"])
-        print("Datos del primer video cargado:\n"+
+        """print("Datos del primer video cargado:\n"+
             "Titulo: "+str(first["title"])+"\n"+
             "Canal: "+str(first["channel_title"])+"\n"+
             "Fecha de trending: "+str(first["trending_date"])+"\n"+
@@ -83,7 +92,8 @@ while True:
             id=i
             name=mp.get(Datos["categorias_id"],id)
             name=me.getValue(name)
-            print(id+" "+name)
+            print(id+" "+name)"""
+        
 
     elif int(inputs[0]) == 2:
         pais=input("Pais: ")
