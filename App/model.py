@@ -62,7 +62,7 @@ def add_categoria_id(Data, categoria):
     mp.put(Data["categorias"],categoria["name"],cat)
 
 def new_categoria(name,id):
-    cat={"name":name,"id":id,'videos':lt.newList()}
+    cat={"name":name,"id":id,'videos':lt.newList(datastructure='ARRAY_LIST')}
     return cat
 
 def add_categoria_vid(video,Data):

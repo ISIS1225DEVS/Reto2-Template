@@ -92,7 +92,8 @@ while True:
         while int(n)>lt.size(Datos["videos"]):
             print("El número de videos a listar excede la cantidad de videos cargados en la memoria")
             n = input("Número de videos a listar: ")
-        tiempo,lista=ctrl.filtrar_count_cat(Datos["videos"], Datos["categorias"], " "+categoria, pais) #El " " es porque cuando se leen las categorias, vienen con un espacio al inicio.
+        print("holaaaaaaa")
+        tiempo,lista=ctrl.filtrar_cat_n(Datos["categorias"], " "+categoria, int(n)) #El " " es porque cuando se leen las categorias, vienen con un espacio al inicio.
         i=1
         if lt.size(lista)==0:
             print("No hay videos que hayan sido tendencia en {} de la categoria {}".format(pais, categoria))
