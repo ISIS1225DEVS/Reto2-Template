@@ -148,10 +148,10 @@ while True:
         while int(n)>lt.size(Datos["videos"]):
             print("El número de videos a listar excede la cantidad de videos cargados en la memoria")
             n = input("Número de videos a listar: ")
-        tiempo,lista=ctrl.filtrar_cat_n(Datos["categorias"]," "+categoria,int(n)) #El " " es porque cuando se leen las categorias, vienen con un espacio al inicio.
+        tiempo,lista=ctrl.filtrar_cat_n(Datos["categorias"]," "+categoria, int(n)) #El " " es porque cuando se leen las categorias, vienen con un espacio al inicio.
         i=1
         if lt.size(lista)==0:
-            print("No hay videos que hayan sido tendencia en {} de la categoria {}".format(categoria))
+            print("No hay videos que hayan sido tendencia de la categoria {}".format(categoria))
         while i<=lt.size(lista):
             vid=lt.getElement(lista,i)
             print("Titulo: "+vid["title"],"trending date: "+vid["trending_date"],"Canal: "+vid["channel_title"],"Fecha de publicacion: "+vid["publish_time"],"Vistas: "+vid["views"],"Likes: "+vid["likes"],"Dislikes: "+vid["dislikes"])

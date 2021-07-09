@@ -52,6 +52,7 @@ def initialize(type, lf):
     
     return Data
 # Funciones para agregar informacion al catalogo
+
 def add_video(Data, video):
     lt.addLast(Data["videos"],video)
     add_categoria_vid(video,Data)
@@ -74,10 +75,10 @@ def add_categoria_vid(video,Data):
 
 # Funciones de consulta
 
-def filtrar_cat_n(categories, categoria_name,n)->list:
+def filtrar_cat_n(categories, categoria,n)->list:
     """ Retorna una lista ordenada de los videos con más views de una categoría """
-    videos=me.getValue(mp.get(categories,categoria_name))["videos"]
-    tiempo,vids_sorted=sort_vids_by_views(videos)
+    videos=me.getValue(mp.get(categories, categoria))["videos"]
+    vids_sorted=sort_vids_by_views(videos)
     list_new=lt.newList()
     titulos=lt.newList()
     i=1
@@ -89,27 +90,25 @@ def filtrar_cat_n(categories, categoria_name,n)->list:
             lt.addLast(titulos,tit)
             lt.addLast(list_new,lt.getElement(vids_sorted,i))
         i+=1
-    return tiempo,list_new 
+    return list_new 
 
-def filtrar_count_cat(videos:list, categories, categoria:str, pais:str)->tuple:
+def filtrar_count_cat(videos, categories, categoria, pais, n)->list:
     """ Retorna una lista ordenada de los videos con más likes de una categoría y 
     un país en específico """
-    vids_cat=lt.newList()
-    cat_id=None
-    j=1
-    search=True
-    while j<=lt.size(mp.keySet(categories)) and search:
-        nombre_cat=me.getValue(mp.get(categories,lt.getElement(mp.keySet(categories),j)))
-        print(nombre_cat,categoria,nombre_cat==categoria)
-        if nombre_cat==categoria:
-            search=False
-            cat_id=me.getKey(mp.get(categories,lt.getElement(mp.keySet(categories),j)))
-        j+=1
-    for i in range(lt.size(videos)):
-        video_i=lt.getElement(videos,i)
-        if video_i["category_id"]==cat_id and video_i["country"]==pais:
-            lt.addLast(vids_cat,video_i)
-    return sort_vids_by_likes(vids_cat)
+    videos=me.getValue(mp.get(categories,categoria))["videos"] and mp.get(videos['country'], pais)
+    vids_sorted=sort_vids_by_views(videos)
+    new_list=lt.newList()
+    titulos=lt.newList()
+    i=1
+    while lt.size(new_list)<=n and i<=lt.size(vids_sorted):
+        tit=lt.getElement(vids_sorted,i)["title"]
+        if lt.isPresent(titulos,tit):
+            pass
+        else:
+            lt.addLast(titulos,tit)
+            lt.addLast(new_list,lt.getElement(vids_sorted,i))
+        i+=1
+    return new_list
 
 def filtrar_count_tag(videos, pais, tag)->list:
     """ Retorna una lista ordenada de los videos con más comentarios de un país 
@@ -258,31 +257,22 @@ def cmpVideosByViews(video1, video2):
 # Funciones de ordenamiento
 
 def sort_vids_by_likes(Data:list):
-    """ Retorna la lista ordenada por medio de merge sort y el tiempo que 
-    tardó en realizar esta operación. Utiliza la función cmpVideosByLikes 
+    """ Retorna la lista ordenada por medio de merge sort. 
+    Utiliza la función cmpVideosByLikes 
     como función de comparación"""
-    start_time = time.process_time()
     sorted_list = merge.sort(Data, cmpVideosByLikes)
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
-    return elapsed_time_mseg, sorted_list
+    return sorted_list
 
 def sort_vids_by_comments(Data:list):
-    """ Retorna la lista ordenada por medio de merge sort y el tiempo que 
-    tardó en realizar esta operación. Utiliza la función cmpVideosByCommesnts 
+    """ Retorna la lista ordenada por medio de merge sort. 
+    Utiliza la función cmpVideosByCommesnts 
     como función de comparación"""
-    start_time = time.process_time()
     sorted_list = merge.sort(Data, cmpVideosByComments)
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
-    return elapsed_time_mseg, sorted_list
+    return sorted_list
 
 def sort_vids_by_views(Data:list):
-    """ Retorna la lista ordenada por medio de merge sort y el tiempo que 
-    tardó en realizar esta operación. Utiliza la función cmpVideosByCommesnts 
+    """ Retorna la lista ordenada por medio de merge sort.
+    Utiliza la función cmpVideosByViews
     como función de comparación"""
-    start_time = time.process_time()
     sorted_list = merge.sort(Data, cmpVideosByViews)
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
-    return elapsed_time_mseg, sorted_list
+    return sorted_list

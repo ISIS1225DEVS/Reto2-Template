@@ -104,10 +104,10 @@ def deltaMemory(start_memory, stop_memory):
 
 
 # Funciones de consulta sobre el catálogo
-def filtrar_count_cat(videos:list, categories:list, categoria:str, pais:str)->list:
+def filtrar_count_cat(videos, categories, categoria, pais, n)->list:
     return model.filtrar_count_cat(videos, categories, categoria, pais)
 
-def filtrar_cat_n(categories, categoria:str,n:int)->list:
+def filtrar_cat_n(categories, categoria ,n)->list:
     return model.filtrar_cat_n(categories, categoria,n)
 
 def filtrar_count_tag(videos, pais, tag)->list:
