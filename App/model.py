@@ -78,11 +78,11 @@ def add_categoria_vid(video,Data):
 def filtrar_cat_n(categories, categoria,n)->list:
     """ Retorna una lista ordenada de los videos con más views de una categoría """
     videos=me.getValue(mp.get(categories, categoria))["videos"]
-    vids_sorted=sort_vids_by_views(videos)
-    list_new=lt.newList()
-    titulos=lt.newList()
+    vids_sorted=sort_vids_by_likes(videos)
+    list_new=lt.newList('ARRAY_LIST')
+    titulos=lt.newList('ARRAY_LIST')
     i=1
-    while lt.size(list_new)<=n and i<=lt.size(vids_sorted):
+    while lt.size(list_new)<n and i<lt.size(vids_sorted):
         tit=lt.getElement(vids_sorted,i)["title"]
         if lt.isPresent(titulos,tit):
             pass
@@ -90,36 +90,48 @@ def filtrar_cat_n(categories, categoria,n)->list:
             lt.addLast(titulos,tit)
             lt.addLast(list_new,lt.getElement(vids_sorted,i))
         i+=1
-    return list_new 
+    return list_new
 
-def filtrar_count_cat(videos, categories, categoria, pais, n)->list:
+def filtrar_count_cat(categories, categoria, pais, n)->list:
     """ Retorna una lista ordenada de los videos con más likes de una categoría y 
     un país en específico """
-    videos=me.getValue(mp.get(categories,categoria))["videos"] and mp.get(videos['country'], pais)
-    vids_sorted=sort_vids_by_views(videos)
-    new_list=lt.newList()
-    titulos=lt.newList()
+    videos_count_cat=me.getValue(mp.get(categories,categoria))["videos"]
+    videos=lt.newList('ARRAY_LIST')
+    titulos=lt.newList('ARRAY_LIST')
     i=1
-    while lt.size(new_list)<=n and i<=lt.size(vids_sorted):
-        tit=lt.getElement(vids_sorted,i)["title"]
-        if lt.isPresent(titulos,tit):
-            pass
-        else:
+    while i<=lt.size(videos_count_cat):
+        tit=lt.getElement(videos_count_cat,i)["title"]
+        country=lt.getElement(videos_count_cat, i)["country"]
+        if lt.isPresent(titulos,tit)==0 and country==pais:
             lt.addLast(titulos,tit)
-            lt.addLast(new_list,lt.getElement(vids_sorted,i))
+            lt.addLast(videos,lt.getElement(videos_count_cat,i))
         i+=1
-    return new_list
+    vids_sorted=sort_vids_by_likes(videos)
+    if lt.size(vids_sorted)>=n:
+        return lt.subList(vids_sorted, 1, n)
+    else:
+        return vids_sorted
 
-def filtrar_count_tag(videos, pais, tag)->list:
+def filtrar_count_tag(videos, pais, tag, n)->list:
     """ Retorna una lista ordenada de los videos con más comentarios de un país 
     y con un tag en específico. En este caso se incluyen todos aquellos tags que 
     incluyan la palabra ingresada por el usuario como subcadena """
-    vid_filtrados=lt.newList()#Lista en la que poner los videos filtrados
-    for i in range(lt.size(videos)):#Proceso de filtrado
-        video=lt.getElement(videos, i)
-        if video["country"]==pais and (tag in video["tags"]):
-            lt.addLast(vid_filtrados, video)
-    return sort_vids_by_comments(vid_filtrados)
+    videos_count_tag=lt.newList('ARRAY_LIST')
+    titulos=lt.newList('ARRAY_LIST')
+    i=1
+    while i<=lt.size(videos):
+        tit=lt.getElement(videos,i)["title"]
+        country=lt.getElement(videos,i)["country"]
+        tags=lt.getElement(videos,i)["tags"]
+        if lt.isPresent(titulos,tit)==0 and (country==pais) and (tag in tags):
+            lt.addLast(titulos,tit)
+            lt.addLast(videos_count_tag,lt.getElement(videos,i))
+        i+=1
+    vids_sorted=sort_vids_by_comments(videos_count_tag)
+    if lt.size(vids_sorted)>=n:
+        return lt.subList(vids_sorted, 1, n)
+    else:
+        return vids_sorted
 
 def max_vids_count(videos:list,pais:str)->dict:
     """ Retorna una tupla que contiene 
