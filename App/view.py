@@ -46,7 +46,7 @@ def printMenu():
     print("3- Video que ha sido trending por más días en un pais especifico con una percepción altamente positiva.")
     print("4- Video que ha sido trending por más días de categoria especifica con una percepción sumamente positiva.")
     print("5- Mostrar n videos con más comentarios, en un pais y con tag especifico.")
-    print("6- n videos con más likes para una categoria especifica.")
+    print("6- Mostrar n videos con más likes para una categoria especifica.")
 
 def printType():
     print("1- Linear Probing")

@@ -95,16 +95,16 @@ def filtrar_cat_n(categories, categoria,n)->list:
 def filtrar_count_cat(categories, categoria, pais, n)->list:
     """ Retorna una lista ordenada de los videos con más likes de una categoría y 
     un país en específico """
-    videos_count_cat=me.getValue(mp.get(categories,categoria))["videos"]
+    videos_cat=me.getValue(mp.get(categories,categoria))["videos"]
     videos=lt.newList('ARRAY_LIST')
     titulos=lt.newList('ARRAY_LIST')
     i=1
-    while i<=lt.size(videos_count_cat):
-        tit=lt.getElement(videos_count_cat,i)["title"]
-        country=lt.getElement(videos_count_cat, i)["country"]
+    while i<=lt.size(videos_cat):
+        tit=lt.getElement(videos_cat,i)["title"]
+        country=lt.getElement(videos_cat, i)["country"]
         if lt.isPresent(titulos,tit)==0 and country==pais:
             lt.addLast(titulos,tit)
-            lt.addLast(videos,lt.getElement(videos_count_cat,i))
+            lt.addLast(videos,lt.getElement(videos_cat,i))
         i+=1
     vids_sorted=sort_vids_by_likes(videos)
     if lt.size(vids_sorted)>=n:
@@ -118,20 +118,18 @@ def filtrar_count_tag(videos, pais, tag, n)->list:
     incluyan la palabra ingresada por el usuario como subcadena """
     videos_count_tag=lt.newList('ARRAY_LIST')
     titulos=lt.newList('ARRAY_LIST')
+    videos_sorted=sort_vids_by_comments(videos)
     i=1
-    while i<=lt.size(videos):
-        tit=lt.getElement(videos,i)["title"]
-        country=lt.getElement(videos,i)["country"]
-        tags=lt.getElement(videos,i)["tags"]
+    while i<=lt.size(videos_sorted) and lt.size(videos_count_tag)<n:
+        tit=lt.getElement(videos_sorted,i)["title"]
+        country=lt.getElement(videos_sorted,i)["country"]
+        tags=lt.getElement(videos_sorted,i)["tags"]
         if lt.isPresent(titulos,tit)==0 and (country==pais) and (tag in tags):
             lt.addLast(titulos,tit)
-            lt.addLast(videos_count_tag,lt.getElement(videos,i))
+            lt.addLast(videos_count_tag,lt.getElement(videos_sorted,i))
         i+=1
-    vids_sorted=sort_vids_by_comments(videos_count_tag)
-    if lt.size(vids_sorted)>=n:
-        return lt.subList(vids_sorted, 1, n)
-    else:
-        return vids_sorted
+    return videos_count_tag
+
 
 def max_vids_count(videos:list,pais:str)->dict:
     """ Retorna una tupla que contiene 
@@ -191,36 +189,29 @@ def max_vids_cat(videos:list, categories:list, categoria:str)->dict:
             El canal del video que fue tendencia por más días de una categoría específica
             El numero de días que el video fue tendencia
             La categoría del video fue tendencia por más días"""
-    registro={} #Diccionario de listas vacio, tendra como llave los titulos de los videos; en las listas se anotaran los valores solicitados por el usuario.
-    cat_id=None
-    j=1
-    encontro=False
-    while j<lt.size(categories) and encontro == False: #Busca el id de la categoria que se desea consultar
-        categ=lt.getElement(categories, j)
-        if categ["name"]==categoria:
-            search = True
-            cat_id = categ["id"]
-        j+=1
 
-    for i in lt.iterator(videos):#Recorrer cada video de la lista principal.
-        titulo=i["title"]
-        if titulo in registro.keys() and i["category_id"]==cat_id: #Si el video ya ha aparecido para la categoria requerida, entonces se suma uno al contador y se comparan los likes.
-            lista=registro[titulo]#[numero de apariciones, likes maximos, dislikes maximos,titulo del canal]
-            record=lt.getElement(lista,1)
-            lt.changeInfo(lista,1,record+1)#Suma 1 a la cantidad de días en tendencia
-            likes_i=int(i["likes"])
-            dislikes_i=int(i["dislikes"])
-            if likes_i>lt.getElement(lista,2):#Asumimos que la relacion likes/dislikes es la de la ultima fecha, y que en esta ultima fecha hay más likes que en las otras posibles.
-                lt.changeInfo(lista,2,likes_i)
-                lt.changeInfo(lista,3,dislikes_i)
-        elif titulo not in registro.keys() and i["category_id"]==cat_id:#Si el video no esta registrado ya, entonces se añade su entrada y se inicializa con sus valores.
+    registro={} #Diccionario de listas vacio, tendra como llave los titulos de los videos; en las listas se anotaran los valores solicitados por el usuario.
+    videos_cat=me.getValue(mp.get(categories,categoria))["videos"]
+    i=1
+    while i<=lt.size(videos_cat):
+        titulo=lt.getElement(videos_cat,i)["title"]
+        if titulo not in registro.keys():#Si el video no esta registrado ya, entonces se añade su entrada y se inicializa con sus valores.
             registro[titulo]=lt.newList()
             lt.addLast(registro[titulo],1)
             lt.addLast(registro[titulo],int(i["likes"]))
             lt.addLast(registro[titulo],int(i["dislikes"]))
             lt.addLast(registro[titulo],i["channel_title"])
-        else:
-            pass #Caso en el que el video no corresponde al pais
+
+        elif titulo in registro.keys():  #Si el video ya ha aparecido para la categoria requerida, entonces se suma uno al contador y se comparan los likes.
+            lista=registro[titulo]#[numero de apariciones, likes maximos, dislikes maximos,titulo del canal]
+            apariciones=lt.getElement(lista,1)
+            lt.changeInfo(lista,1,apariciones+1)#Suma 1 a la cantidad de días en tendencia
+            likes_i=int(i["likes"])
+            dislikes_i=int(i["dislikes"])
+            if likes_i>lt.getElement(lista,2):#Asumimos que la relacion likes/dislikes es la de la ultima fecha, y que en esta ultima fecha hay más likes que en las otras posibles.
+                lt.changeInfo(lista,2,likes_i)
+                lt.changeInfo(lista,3,dislikes_i)
+        i
     #Para este punto nuestro diccionario tiene que tener todos los videos unicos de la lista para la categoria seleccionada, y con los likes/dislikes más actuales.         
     respuesta=None
     ratio=None
@@ -242,7 +233,7 @@ def max_vids_cat(videos:list, categories:list, categoria:str)->dict:
                 ratio=likes/dislikes
             else:
                 ratio=likes
-    return respuesta, ratio, lt.getElement(registro[respuesta], 4), lt.getElement(registro[respuesta],1), categoria, cat_id
+    return respuesta, ratio, lt.getElement(registro[respuesta], 4), lt.getElement(registro[respuesta],1), categoria
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
