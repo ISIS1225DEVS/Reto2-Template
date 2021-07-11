@@ -211,7 +211,7 @@ def max_vids_cat(videos:list, categories:list, categoria:str)->dict:
             if likes_i>lt.getElement(lista,2):#Asumimos que la relacion likes/dislikes es la de la ultima fecha, y que en esta ultima fecha hay más likes que en las otras posibles.
                 lt.changeInfo(lista,2,likes_i)
                 lt.changeInfo(lista,3,dislikes_i)
-        i
+        
     #Para este punto nuestro diccionario tiene que tener todos los videos unicos de la lista para la categoria seleccionada, y con los likes/dislikes más actuales.         
     respuesta=None
     ratio=None

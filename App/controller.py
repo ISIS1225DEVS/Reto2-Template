@@ -102,7 +102,6 @@ def deltaMemory(start_memory, stop_memory):
     delta_memory = delta_memory/1024.0
     return delta_memory
 
-
 # Funciones de consulta sobre el catálogo
 def filtrar_count_cat(categories, categoria, pais, n)->list:
     return model.filtrar_count_cat(categories, categoria, pais, n)
