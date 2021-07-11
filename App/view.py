@@ -154,7 +154,7 @@ while True:
             print("No hay videos que hayan sido tendencia de la categoria {}".format(categoria))
         while i<=lt.size(lista):
             vid=lt.getElement(lista,i)
-            print("Titulo: "+vid["title"],"trending date: "+vid["trending_date"],"Canal: "+vid["channel_title"],"Fecha de publicacion: "+vid["publish_time"],"Vistas: "+vid["views"],"Likes: "+vid["likes"],"Dislikes: "+vid["dislikes"])
+            print("\nTitulo: "+vid["title"],"trending date: "+vid["trending_date"],"Canal: "+vid["channel_title"],"Fecha de publicacion: "+vid["publish_time"],"Vistas: "+vid["views"],"Likes: "+vid["likes"],"Dislikes: "+vid["dislikes"])
             i+=1
     else:
         sys.exit(0)
