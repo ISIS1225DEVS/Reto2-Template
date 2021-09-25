@@ -44,10 +44,10 @@ import operator
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
 """
-
+#VERSION RETO 2 (lo dejo comentado para comprobar que carga con la versión del reto1 luego de copiar y pegar todo)
 # Construccion de modelos
-def newCatalog():
-    """ Inicializa el catálogo de libros
+#def newCatalog():
+    """Inicializa el catálogo de libros
 
     Crea una lista vacia para guardar todos los libros
 
@@ -58,7 +58,6 @@ def newCatalog():
     Año de publicacion
 
     Retorna el catalogo inicializado.
-    """
     estructura= "SINGLE_LINKED"
     catalog = {'obras': None,
                'artistas': None,
@@ -69,73 +68,22 @@ def newCatalog():
     catalog['medio'] = mp.newMap(2000,
                                    maptype='CHAINING',
                                    loadfactor=4.0,
-                                   comparefunction=compareMediumName)
-# Funciones para agregar informacion al catalogo
-def addArtist(catalog, artista):
-    """
-    Adiciona un artista a lista de artistas, se hace un diccionario vacio y luego 
-    se llena con los atributos que necesitamos en el reto, tambien se asigna un espacio
-    para las obras con una lista vacia.
-    """
-    artist= {}
-    artist["ConstituentID"]= artista["ConstituentID"]
-    artist["DisplayName"]= artista["DisplayName"]
-    artist["BeginDate"]= artista["BeginDate"]
-    artist["EndDate"]= artista["EndDate"]
-    artist["Nationality"]= artista["Nationality"]
-    artist["Gender"]= artista["Gender"]
-    artist["Artworks"]= lt.newList("ARRAY_LIST",cmpfunction= compareObraId)
-    lt.addLast(catalog['artistas'], artist)
+                                   comparefunction=compareMediumName) """
 
-def addObra(catalog, obra):
-    """
-    Adiciona una obra a lista de obras, se hace un diccionario vacio y luego 
-    se llena con los atributos que necesitamos en el reto, tambien se asigna un espacio
-    para las obras con una lista vacia.
-    """
-    artwork={}
-    artwork["ObjectID"]= obra["ObjectID"]
-    artwork["Title"]= obra["Title"]
-    artwork["Medium"]= obra["Medium"]
-    artwork["Date"]= obra["Date"]
-    artwork["DateAcquired"]= obra["DateAcquired"]
-    artwork["Department"]= obra["Department"]
-    artwork["CreditLine"]= obra["CreditLine"]
-    artwork["Dimensions"]= obra["Dimensions"]
-    artwork["Depth (cm)"]= obra["Depth (cm)"]
-    artwork["Diameter (cm)"]= obra["Diameter (cm)"]
-    artwork["Height (cm)"]= obra["Height (cm)"]
-    artwork["Length (cm)"]= obra["Length (cm)"]
-    artwork["Weight (kg)"]= obra["Weight (kg)"]
-    artwork["Width (cm)"]= obra["Width (cm)"]
-    artwork["Classification"]= obra["Classification"]
-    artwork["Seat Height (cm)"]= obra["Seat Height (cm)"]
-    artwork["Artists"]= lt.newList("ARRAY_LIST",cmpfunction=compareArtistId)
-    """en obras los artistas estan como constituente id, en un formato [,] separado por comas, 
-    vamos a obtener de este formato el int del ID para cada artista y lo almacenaremos en una lista
-    primero quitamos los corchetes del string y luego haremos la lista usando , como separador
-    """
-    codigosArtistas= obra['ConstituentID']
-    codigosArtistas= codigosArtistas.replace("[","")
-    codigosArtistas= codigosArtistas.replace("]","")
-    codigosArtistas= codigosArtistas.replace(" ","")
-    codigosArtistas= codigosArtistas.split(",")
-    artwork["ConstituentID"]= codigosArtistas
-    """
-    vamos a hacer la conexión de referencias entre obras y artistas
-    al artista se le adiciona la info de la obra a la lista artworks
-     y viceversa con los artistas a la obra
-    """
-    for ID in codigosArtistas:
-        ID= int(ID)
-        for artista in lt.iterator(catalog["artistas"]):
-            IDArtista=(artista["ConstituentID"]).replace(" ","")
-            IDArtista= int(IDArtista)
-            if ID == IDArtista:
-                lt.addLast(artista["Artworks"],artwork)
-                lt.addLast(artwork["Artists"],artista)
-                
-    lt.addLast(catalog['obras'], artwork)
+
+
+#VERSION RETO1
+# Construccion de modelos
+def newCatalog():
+    estructura= "ARRAY_LIST"
+    catalog = {'obras': None,
+               'artistas': None,
+               }
+
+    catalog['artistas'] = lt.newList(estructura, cmpfunction=compareArtistId)
+    catalog['obras'] = lt.newList(estructura, cmpfunction=compareObraId)
+
+    return catalog
 
 # Funciones para creacion de datos
 
@@ -190,17 +138,18 @@ def compareObraId(obra1, obra2):
         return 1
 
 def cmpArtistByDate(artist1, artist2):
-    #req 1, re utilizò la librerìa datetime
-    ##tomaremos vacios como automaticamente menor
     fecha1= (artist1['BeginDate'])
     fecha2=(artist2['BeginDate'])
-    temp=False
     if fecha1=="":
         fecha1=0 
     if fecha2=="":
         fecha2=0
-    temp= int(fecha1)<int(fecha2)
-    return temp
+    if  int(fecha1)<int(fecha2):
+        return -1 
+    elif int(fecha1)==int(fecha2):
+        return 0
+    else: 
+        return 1
 
 def cmpArtworkByDateAcquired(artwork1, artwork2):
     #req 2, re utilizò la librerìa datetime#
@@ -210,10 +159,15 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
         fecha1="0001-01-01"
     if fecha2=="":
         fecha2="0001-01-01"
-    
     date1 = datetime.strptime(fecha1, "%Y-%m-%d")
     date2 = datetime.strptime(fecha2, "%Y-%m-%d")
-    return date1<date2
+    if  int(date1)<int(date2):
+        return -1 
+    elif int(date1)==int(date2):
+        return 0
+    else: 
+        return 1
+
 def cmpArtworkByDate(artwork1, artwork2):
     fecha1= (artwork1['Date'])
     fecha2=(artwork2['Date'])
