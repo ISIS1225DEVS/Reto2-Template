@@ -38,7 +38,30 @@ los mismos.
 """
 
 # Construccion de modelos
+def newCatalog():
+    """ Inicializa el catálogo de libros
 
+    Crea una lista vacia para guardar todos los libros
+
+    Se crean indices (Maps) por los siguientes criterios:
+    Autores
+    ID libros
+    Tags
+    Año de publicacion
+
+    Retorna el catalogo inicializado.
+    """
+    estructura= "SINGLE_LINKED"
+    catalog = {'obras': None,
+               'artistas': None,
+               'medium': None
+               }
+    catalog['artistas'] = lt.newList(estructura, cmpfunction=compareArtistId)
+    catalog['obras'] = lt.newList(estructura, cmpfunction=compareObraId)
+    catalog['medio'] = mp.newMap(2000,
+                                   maptype='CHAINING',
+                                   loadfactor=4.0,
+                                   comparefunction=compareMediumName)
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
@@ -46,5 +69,12 @@ los mismos.
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
-
+def compareMediumName(name, tag):
+    tagentry = me.getKey(tag)
+    if (name == tagentry):
+        return 0
+    elif (name > tagentry):
+        return 1
+    else:
+        return -1
 # Funciones de ordenamiento
