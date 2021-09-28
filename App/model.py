@@ -33,7 +33,7 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import shellsort as sh
-from DISClib.Algorithms.Sorting import mergesort as me
+from DISClib.Algorithms.Sorting import mergesort as m
 from DISClib.Algorithms.Sorting import quicksort as qu
 from datetime import datetime
 import time
@@ -47,30 +47,6 @@ los mismos.
 #VERSION RETO 2 (lo dejo comentado para comprobar que carga con la versión del reto1 luego de copiar y pegar todo)
 # Construccion de modelos
 #def newCatalog():
-    """Inicializa el catálogo de libros
-
-    Crea una lista vacia para guardar todos los libros
-
-    Se crean indices (Maps) por los siguientes criterios:
-    Autores
-    ID libros
-    Tags
-    Año de publicacion
-
-    Retorna el catalogo inicializado.
-    estructura= "SINGLE_LINKED"
-    catalog = {'obras': None,
-               'artistas': None,
-               'medium': None
-               }
-    catalog['artistas'] = lt.newList(estructura, cmpfunction=compareArtistId)
-    catalog['obras'] = lt.newList(estructura, cmpfunction=compareObraId)
-    catalog['medio'] = mp.newMap(2000,
-                                   maptype='CHAINING',
-                                   loadfactor=4.0,
-                                   comparefunction=compareMediumName) """
-
-
 
 #VERSION RETO1
 # Construccion de modelos
@@ -78,13 +54,89 @@ def newCatalog():
     estructura= "ARRAY_LIST"
     catalog = {'obras': None,
                'artistas': None,
+               "medio": None
                }
 
     catalog['artistas'] = lt.newList(estructura, cmpfunction=compareArtistId)
     catalog['obras'] = lt.newList(estructura, cmpfunction=compareObraId)
-
+    catalog["medio"]=mp.newMap(2000,maptype="CHAINING", loadfactor=4.0, comparefunction=CompareName)
     return catalog
 
+def CompareName (keyname, entry):
+    namentry=me.getKey(entry)
+    if (keyname == namentry):
+        return 0
+    elif (keyname > namentry):
+        return 1
+    else:
+        return -1
+
+def addArtist(catalog, artista):
+    """
+    Adiciona un artista a lista de artistas, se hace un diccionario vacio y luego 
+    se llena con los atributos que necesitamos en el reto, tambien se asigna un espacio
+    para las obras con una lista vacia.
+    """
+    artist= {}
+    artist["ConstituentID"]= artista["ConstituentID"]
+    artist["DisplayName"]= artista["DisplayName"]
+    artist["BeginDate"]= artista["BeginDate"]
+    artist["EndDate"]= artista["EndDate"]
+    artist["Nationality"]= artista["Nationality"]
+    artist["Gender"]= artista["Gender"]
+    artist["Artworks"]= lt.newList("ARRAY_LIST",cmpfunction= compareObraId)
+    lt.addLast(catalog['artistas'], artist)
+def addObra(catalog, obra):
+    """
+    Adiciona una obra a lista de obras, se hace un diccionario vacio y luego 
+    se llena con los atributos que necesitamos en el reto, tambien se asigna un espacio
+    para las obras con una lista vacia.
+    """
+    artwork={}
+    artwork["ObjectID"]= obra["ObjectID"]
+    artwork["Title"]= obra["Title"]
+    artwork["Medium"]= obra["Medium"]
+    artwork["Date"]= obra["Date"]
+    artwork["DateAcquired"]= obra["DateAcquired"]
+    artwork["Department"]= obra["Department"]
+    artwork["CreditLine"]= obra["CreditLine"]
+    artwork["Dimensions"]= obra["Dimensions"]
+    artwork["Depth (cm)"]= obra["Depth (cm)"]
+    artwork["Diameter (cm)"]= obra["Diameter (cm)"]
+    artwork["Height (cm)"]= obra["Height (cm)"]
+    artwork["Length (cm)"]= obra["Length (cm)"]
+    artwork["Weight (kg)"]= obra["Weight (kg)"]
+    artwork["Width (cm)"]= obra["Width (cm)"]
+    artwork["Classification"]= obra["Classification"]
+    artwork["Seat Height (cm)"]= obra["Seat Height (cm)"]
+    artwork["Artists"]= lt.newList("ARRAY_LIST",cmpfunction=compareArtistId)
+    """en obras los artistas estan como constituente id, en un formato [,] separado por comas, 
+    vamos a obtener de este formato el int del ID para cada artista y lo almacenaremos en una lista
+    primero quitamos los corchetes del string y luego haremos la lista usando , como separador
+    """
+    codigosArtistas= obra['ConstituentID']
+    codigosArtistas= codigosArtistas.replace("[","")
+    codigosArtistas= codigosArtistas.replace("]","")
+    codigosArtistas= codigosArtistas.replace(" ","")
+    codigosArtistas= codigosArtistas.split(",")
+    artwork["ConstituentID"]= codigosArtistas
+    """
+    vamos a hacer la conexión de referencias entre obras y artistas
+    al artista se le adiciona la info de la obra a la lista artworks
+     y viceversa con los artistas a la obra
+    """
+    for ID in codigosArtistas:
+        ID= int(ID)
+        for artista in lt.iterator(catalog["artistas"]):
+            IDArtista=(artista["ConstituentID"]).replace(" ","")
+            IDArtista= int(IDArtista)
+            if ID == IDArtista:
+                lt.addLast(artista["Artworks"],artwork)
+                lt.addLast(artwork["Artists"],artista)
+                
+    lt.addLast(catalog['obras'], artwork)
+    for i in lt.iterator(catalog["obras"]):
+        mp.put(catalog["medio"],i["Medium"],i)
 # Funciones para creacion de datos
 
 # Funciones de consulta
@@ -200,7 +252,7 @@ def sortArtistInDateRange(catalog, date1,date2):
     date1 = int(date1)
     date2 = int(date2)
     #primero ordeno la lista#
-    listaOrdenada= me.sort((catalog['artistas']),cmpArtistByDate)
+    listaOrdenada= m.sort((catalog['artistas']),cmpArtistByDate)
     listaEnRango = lt.newList("ARRAY_LIST") #porque luego se accede por pos#s
     for i in lt.iterator(listaOrdenada):
         date= int(i['BeginDate'])

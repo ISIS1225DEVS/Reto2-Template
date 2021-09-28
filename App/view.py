@@ -28,6 +28,7 @@ from DISClib.ADT import list as lt
 from datetime import datetime
 import time
 assert cf
+from DISClib.ADT import map as mp
 default_limit = 1000
 sys.setrecursionlimit(default_limit*10)
 
@@ -172,6 +173,7 @@ while True:
         loadData(catalog)
         print('Obras cargadas: ' + str(lt.size(catalog['obras'])))
         print('Artistas cargados: ' + str(lt.size(catalog['artistas'])))
+        print("Medio utilizados " + str(mp.size(catalog["medio"])))
         stop_time = time.process_time()
         timepaso= stop_time-start_time
         print("Tiempo transcurrido "+ str(timepaso))
