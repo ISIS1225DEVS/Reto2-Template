@@ -30,6 +30,7 @@ from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as ms
 from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 assert cf
 
 """
@@ -39,6 +40,7 @@ los mismos.
 def addArt(catalog, artwork):
 
     lt.addLast(catalog['Art'], artwork)
+    mp.put(catalog['Medium'], artwork['Medium'], artwork)
 
   
 
@@ -55,7 +57,9 @@ def newCatalog(estructuraDatos):
 
     catalog['Art'] = lt.newList(estructuraDatos)
 
-    catalog['Medium'] = mp.newMap()#Cómo sé qué caracteristicas le pongo a este mapa?, cant de espacio por ejemplo, ?????.
+    catalog['Medium'] = mp.newMap(1000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpMedio)#Cómo sé qué caracteristicas le pongo a este mapa?, cant de espacio por ejemplo, ?????.
+                                   #Creería que un map de tipo chaining para que las obrascon el mismo medium se guarden en la misma llave, no?
+                                   #Pero el tamño del mapa qué? Ni idea xd
 
     catalog['Artist'] = lt.newList(estructuraDatos)
  
@@ -72,6 +76,11 @@ def get_ultimos(lista_global, inicial, final):
     lista_filtrada= filtrar_anhos(lista_ordenada, inicial, final)
     lista_ultimos= lt.subList(lista_filtrada, (lt.size(lista_filtrada)-3),3)
     return lista_ultimos
+
+def obras_medio(catalog, Medio):
+    medium = mp.get(catalog['Medium'], Medio)
+    return medium
+    
 
 def get_conteo(lista_global, inicial, final):
     lista_ordenada= sortArtists(lista_global)
@@ -291,7 +300,15 @@ def verID(catalog):
 
 
 # Funciones utilizadas para comparar elementos dentro de una lista
-
+def cmpMedio(key, medio):
+    medentry = me.getKey(medio)
+    if key == medentry:
+        return 0
+    elif (key > medentry):
+        return 1
+    else:
+        return -1
+ 
 def cmpNumNacionalidad(nac1, nac2):
     a = (nac1[1])
     b = (nac2[1])
@@ -327,3 +344,11 @@ def OrganizarFecha(lista):
 
 def OrganizarNacionalidad(lista):
     return sa.sort(lista, cmpNumNacionalidad)
+
+def organizar_medio(lista, num):
+   # list = lt.newList()
+    listaOrganizadaPorAño = sa.sort(lista, ordenar_fecha)
+    listaRecortada = lt.sublist(listaOrganizadaPorAño, 0, num)
+    return listaRecortada
+
+

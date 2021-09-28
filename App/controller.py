@@ -89,7 +89,7 @@ def get_obras(catalog, nombre_artista):
 def get_info_transporte(arte, nombre_departamento):
     return model.get_transporte(arte, nombre_departamento)
 
-#Requerimiento 2
+
 def Req2(catalog, fechai, fechaf):
     Lista = lt.newList()
     Compras = 0
@@ -121,3 +121,9 @@ def Req4(catalog):
     nacionalidades = model.verID(catalog)
     list = model.OrganizarNacionalidad(nacionalidades)
     return list
+
+def obras_porMedio(catalog, num ,medio):
+    list = model.obras_medio(catalog, medio)
+    listaorganizada = model.organizar_medio(list, num)
+    return listaorganizada
+

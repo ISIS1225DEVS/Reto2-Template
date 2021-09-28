@@ -43,6 +43,7 @@ def printMenu():
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("6- Transportarcobras de un departamento ")
     print("7- Proponer una nueva exposición en el museo")
+    print("8- Listar las obras más antiguas para un medio especifico")
     print("0- Salir")
 
 catalog = None
@@ -153,6 +154,13 @@ while True:
         nombre_departamento= str(input())
         lista_respuesta_departamento= controller.get_info_transporte(catalog['Art'], nombre_departamento)
     
+    elif int(inputs[0]) == 8:
+        print("Ingrese el numero de obras que quiere conocer: ")
+        num = int(input())
+        print("Ingrese el medio especifico: ")
+        medio = input()
+        lista = controller.obras_porMedio(catalog, num, medio)
+        print(lista)
 
     else:
         sys.exit(0)
