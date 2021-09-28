@@ -33,11 +33,31 @@ Presenta el menu de opciones y por cada seleccion
 se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
+def printArtisbyBeginDate(list):
+
+    print('Lacantidad de obras dentro del rango es de ' + str(list[0]))
+    print('\nLos 3 primeros artistas son: ')
+    for i in range(1,len(list)):
+        a=list[i]
+
+        print('Nombre: '+ a['DisplayName'] ,'Año de Nacimiento: '+ a['BeginDate'],
+        'Genero: '+ a['Gender'], 'Nacionalidad: '+ a['Nationality'])
+
+        if i == 3:
+            print('\nLos 3 ultimos artistas son: ')
+
+
 
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("2- Listar cronológicamente los artistas")
+    print("3- Listar cronológicamente las adquisiciones ")
+    print("4- Clasificar las obras de un artista por técnica")
+    print("5- Clasificar las obras por la nacionalidad de sus creadores")
+    print("6- Costos transportar obras de un departamento")
+    print("7- Proponer una nueva exposición en el museo")
+    print("8- Salir")
 
 catalog = None
 
@@ -49,9 +69,22 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        catalog=controller.initCatalog()
+        controller.loadData(catalog)
 
+        print("\nArtistas cargadas: " + str(lt.size(catalog["Artists"])))
+        print("\nObras cargadas: " + str(lt.size(catalog["Artworks"])))
+        
     elif int(inputs[0]) == 2:
-        pass
+        print("Digite el rango de fechas en el que desea realizar la búsqueda (AAAA)")
+        min = int(input("Fecha Inicial: "))
+        max = int(input("Fecha Final: "))
+
+        list=controller.ArtistbyBeginDate(catalog,min,max)
+        printArtisbyBeginDate(list)
+
+
+    
 
     else:
         sys.exit(0)
