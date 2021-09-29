@@ -49,16 +49,7 @@ los mismos.
 
 
 # Construccion de modelos
-def newCatalog() : 
-    """
-    Inicializa el catálogo de los videos. Crea una lista para los videos y otra para las categorias. 
-    """
-    catalog = {'artWorks':None, 'artists':None}
-    catalog['artWork'] = mp.newMap(150000,maptype='PROBING',\
-        loadfactor=0.5)
-    catalog['artists'] = mp.newMap(150000,maptype = 'PROBING',\
-        loadfactor=0.5)
-    return catalog 
+
 
 def newCatalog():
 
@@ -70,43 +61,17 @@ def newCatalog():
 
     catalog['Artwork'] = lt.newList('SINGLE_LINKED', compareArtistID)
 
-    catalog['Medium'] = mp.newMap(34500,
+    catalog['Medium'] = mp.newMap(69000,
                                 maptype='PROBING',
                                 loadfactor=0.5,
-                                comparefunction=compareArtistMedium)
+                                comparefunction=compareArtistMedium) 
 
     return catalog
 
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
-def newArtWork (ConstituentID,date,medium,dimensions,creditLine,accessionNumber,clasification,department,\
-    dateAquired,Cataloged,objectId,URL,circumference,depth,diameter,height,length,weight,width,seatHeight,duration) : 
-    ArtWork = {'ConstituentID':'','Date':'','Medium':'','Dimensions':'','CreditLine':'','AccessionNumber':'',\
-        'Classification':'','Department':'','DateAcquired':'','Cataloged':'','ObjectID':'','URL':'','Circumference':'',\
-            'Depth':'','Diameter':'','Height':'','Length':'','Weight':'','Width':'','Seat Height':'','Duration':''}
-    ArtWork['ConstituentID'] = ConstituentID
-    ArtWork['Date'] = date
-    ArtWork['Medium'] = medium
-    ArtWork['Dimensions'] = dimensions
-    ArtWork['CreditLine'] = creditLine
-    ArtWork['AccessionNumber'] = accessionNumber
-    ArtWork['Classification'] = clasification
-    ArtWork['Department'] = department 
-    ArtWork['DateAcquired'] = dateAquired
-    ArtWork['Cataloged'] = Cataloged
-    ArtWork['ObjectID'] = objectId
-    ArtWork['URL'] = URL
-    ArtWork['Circumference'] =circumference
-    ArtWork['Depth'] = depth
-    ArtWork['Diameter'] = diameter
-    ArtWork['Height'] = height
-    ArtWork['Length'] = length
-    ArtWork['Weight'] = weight
-    ArtWork['Width'] = width
-    ArtWork['Seat Height'] = seatHeight
-    ArtWork['Duration'] = duration
-    return ArtWork 
+
 
 # Funciones de consulta
 
