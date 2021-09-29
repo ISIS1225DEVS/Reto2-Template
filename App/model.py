@@ -60,6 +60,23 @@ def newCatalog() :
         loadfactor=0.5)
     return catalog 
 
+def newCatalog():
+
+    catalog = {'Artist': None,
+               'ArtistID': None,
+               'Medium': None}
+
+    catalog['Artist'] = lt.newList('SINGLE_LINKED', compareArtistID)
+
+    catalog['Artwork'] = lt.newList('SINGLE_LINKED', compareArtistID)
+
+    catalog['Medium'] = mp.newMap(34500,
+                                maptype='PROBING',
+                                loadfactor=0.5,
+                                comparefunction=compareArtistMedium)
+
+    return catalog
+
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
@@ -94,5 +111,23 @@ def newArtWork (ConstituentID,date,medium,dimensions,creditLine,accessionNumber,
 # Funciones de consulta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+def compareArtistID(artistid1, artistid2):
+    if (int(artistid1) == int(artistid2)):
+        return 0
+    elif int(artistid1) > int(artistid2):
+        return 1
+    else:
+        return -1
+
+def compareArtistMedium(keyname, medium):
+    mediumentry = me.getKey(medium)
+    if (keyname == mediumentry):
+        return 0
+    elif (keyname > mediumentry):
+        return 1
+    else:
+        return -1
+
 
 # Funciones de ordenamiento
