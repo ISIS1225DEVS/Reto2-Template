@@ -25,23 +25,71 @@
  """
 
 
+from csv import DictReader
+from sys import call_tracing
+import sys 
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
-from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import insertionsort as ins
+from DISClib.Algorithms.Sorting import mergesort as mer
+from DISClib.Algorithms.Sorting import quicksort as quic
 assert cf
+import datetime as date
+from DISClib.Utils import error as error
+import time
+sys.setrecursionlimit(10**6)
+
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
 """
 
+
 # Construccion de modelos
+def newCatalog() : 
+    """
+    Inicializa el catálogo de los videos. Crea una lista para los videos y otra para las categorias. 
+    """
+    catalog = {'artWorks':None, 'artists':None}
+    catalog['artWork'] = mp.newMap(150000,maptype='PROBING',\
+        loadfactor=0.5)
+    catalog['artists'] = mp.newMap(150000,maptype = 'PROBING',\
+        loadfactor=0.5)
+    return catalog 
 
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
+def newArtWork (ConstituentID,date,medium,dimensions,creditLine,accessionNumber,clasification,department,\
+    dateAquired,Cataloged,objectId,URL,circumference,depth,diameter,height,length,weight,width,seatHeight,duration) : 
+    ArtWork = {'ConstituentID':'','Date':'','Medium':'','Dimensions':'','CreditLine':'','AccessionNumber':'',\
+        'Classification':'','Department':'','DateAcquired':'','Cataloged':'','ObjectID':'','URL':'','Circumference':'',\
+            'Depth':'','Diameter':'','Height':'','Length':'','Weight':'','Width':'','Seat Height':'','Duration':''}
+    ArtWork['ConstituentID'] = ConstituentID
+    ArtWork['Date'] = date
+    ArtWork['Medium'] = medium
+    ArtWork['Dimensions'] = dimensions
+    ArtWork['CreditLine'] = creditLine
+    ArtWork['AccessionNumber'] = accessionNumber
+    ArtWork['Classification'] = clasification
+    ArtWork['Department'] = department 
+    ArtWork['DateAcquired'] = dateAquired
+    ArtWork['Cataloged'] = Cataloged
+    ArtWork['ObjectID'] = objectId
+    ArtWork['URL'] = URL
+    ArtWork['Circumference'] =circumference
+    ArtWork['Depth'] = depth
+    ArtWork['Diameter'] = diameter
+    ArtWork['Height'] = height
+    ArtWork['Length'] = length
+    ArtWork['Weight'] = weight
+    ArtWork['Width'] = width
+    ArtWork['Seat Height'] = seatHeight
+    ArtWork['Duration'] = duration
+    return ArtWork 
 
 # Funciones de consulta
 
