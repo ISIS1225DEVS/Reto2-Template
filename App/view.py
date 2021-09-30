@@ -259,13 +259,7 @@ while True:
     elif int(inputs[0]) == 7:
         start_time = time.process_time()
         nombre= input("Indique el nombre del medio: ")
-        obras_medio= controller.ObrasPorMedio(catalog,nombre)
-        if Tecnicas != None and obrasArtista!= None:
-            Tecnica= controller.buscarTecnicaMasRep(Tecnicas)
-            print(str(nombre)+ " tiene un total de: "+ str(lt.size(obrasArtista))+" obras.")
-            print("La tecnica más utilizada es: "+ str(Tecnicas[Tecnica]["nombre"])+". Con "+str(lt.size(Tecnicas[Tecnica]["obras"]))+" obras.")
-            print("El listado de obras es: ")
-            printobras((Tecnicas[Tecnica]["obras"]),False)
+        obras_medio= controller.ObrasAntiguasPorMedio(catalog,nombre)
     elif int(inputs[0]) >= 8 :
         print ("Lo sentimos, Requerimiento no disponible")
         pass
