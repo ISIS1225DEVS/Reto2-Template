@@ -351,5 +351,5 @@ def cmpArtworkPorPrecio(Artwork1,Artwork2):
     precio1=Artwork1["precio"]
     precio2=Artwork2["precio"]
     return precio1< precio2
-def ObrasPorMedio(catalog,nombre):
+def ObrasAntiguasPorMedio(catalog,nombre):
     return None
