@@ -35,6 +35,7 @@ from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import mergesort as mer
 from DISClib.Algorithms.Sorting import quicksort as quic
+from DISClib.DataStructures import mapentry as me
 assert cf
 import datetime as date
 from DISClib.Utils import error as error
@@ -53,7 +54,7 @@ los mismos.
 
 def newCatalog():
 
-    catalog = {'Artist': None,
+    catalog = {'Artwork':None ,'Artist': None,
                'ArtistID': None,
                'Medium': None}
 
@@ -69,13 +70,52 @@ def newCatalog():
     return catalog
 
 # Funciones para agregar informacion al catalogo
+def addArtWork (catalog,artWork) : 
+    lt.addLast(catalog['Artwork'],artWork)
+    medium = artWork['Medium'] 
+    addArtWorkMedium(catalog,medium,artWork)
+
+
+
+def addArtWorkMedium(catalog,medium,artWork) : 
+    mediums = catalog['Medium']
+    existmedium = mp.contains(mediums,medium)
+    if existmedium : 
+        entry = mp.get(mediums,medium)
+        Medium = me.getValue(entry) 
+    else : 
+        Medium = newMedium(medium) 
+        mp.put(mediums,medium,Medium)
+    lt.addLast(Medium['artWorks'],artWork)
+
 
 # Funciones para creacion de datos
+def newMedium (medium) : 
+    """
+    Relaciona un medio con las obras. 
+    """
+    medium = {'Medium': '', 'artWorks': None} 
+    medium = medium['Medium'] = medium
+    medium['artWorks'] = lt.newList('ARRAY_LIST') 
+    return medium
 
 
 # Funciones de consulta
+def artWorksbyMedium(catalog,medium) :
+    Medium = mp.get(catalog['Medium'],medium)
+    if Medium : 
+        return me.getValue(Medium)
+def oldestn(artWorks,n) : 
+    size = lt.size(artWorks) 
+    i = 0
+    oldest = [] 
+    while i < n : 
+        pos = -n + size 
+        oldest.append(lt.getElement(artWorks,pos))
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+def compareArtworkDate(artwork1,artwork2) : 
+    return int(artwork1['Date']) < int(artwork2['Date'])
 
 def compareArtistID(artistid1, artistid2):
     if (int(artistid1) == int(artistid2)):
@@ -96,3 +136,12 @@ def compareArtistMedium(keyname, medium):
 
 
 # Funciones de ordenamiento
+def sortArtworkDate(artWorks,orden):
+    if orden == 1:
+      ins.sort(artWorks,compareArtworkDate)
+    elif orden == 2:
+      sa.sort(artWorks,compareArtworkDate)
+    elif orden == 3:
+      mer.sort(artWorks,compareArtworkDate)
+    elif orden == 4:
+      quic.sort(artWorks,compareArtworkDate)

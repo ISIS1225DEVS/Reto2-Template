@@ -37,9 +37,17 @@ operación solicitada
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("2- Imprimir los n mas antiguos por medio")
 
 catalog = None
+def initCatalog() : 
+    return controller.initCatalog() 
+
+def loadData (catalog) : 
+    controller.loadData(catalog) 
+def oldestArtworksbyMedium(catalog,medium,n): 
+    return controller.oldestbyMedium(catalog,medium,n) 
+
 
 """
 Menu principal
@@ -49,9 +57,22 @@ while True:
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
+        catalog = initCatalog() 
+        loadData(catalog)
+        print('Se cargaron: ' + str(lt.size(catalog['Artwork'])) + 'artworks')
+
+        
 
     elif int(inputs[0]) == 2:
-        pass
+        Medium = input('Ingrese un medio a buscar: ')
+        n = int(input('Ingrese el numero de obras a consultar: '))
+        oldestbymedium = oldestArtworksbyMedium(catalog,Medium,n)
+        for artWork in oldestbymedium : 
+            print(oldestbymedium)
+    
+    
+        
+        
 
     else:
         sys.exit(0)
