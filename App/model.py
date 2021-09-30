@@ -56,7 +56,7 @@ def newCatalog():
 
     catalog['artistas'] = lt.newList(estructura, cmpfunction=compareArtistId)
     catalog['obras'] = lt.newList(estructura, cmpfunction=compareObraId)
-    catalog["medio"]=mp.newMap(2000,maptype="CHAINING", loadfactor=4.0, comparefunction=compareMediumName)
+    catalog["medio"]=mp.newMap(2000,maptype="PROBING", loadfactor=0.5, comparefunction=compareMediumName)
     return catalog
 
 
@@ -125,8 +125,7 @@ def addObra(catalog, obra):
                 lt.addLast(artwork["Artists"],artista)
                 
     lt.addLast(catalog['obras'], artwork)
-    for i in lt.iterator(catalog["obras"]):
-        mp.put(catalog["medio"],i["Medium"],i)
+    mp.put(catalog["medio"],obra["Medium"],obra)
 # Funciones para creacion de datos
 
 # Funciones de consulta
@@ -352,4 +351,9 @@ def cmpArtworkPorPrecio(Artwork1,Artwork2):
     precio2=Artwork2["precio"]
     return precio1< precio2
 def ObrasAntiguasPorMedio(catalog,nombre):
-    return None
+    """
+    Retorna las obras de un medio 
+    """
+    medio = mp.get(catalog["medio"], nombre)
+    if medio:
+        return me.getValue(medio)
