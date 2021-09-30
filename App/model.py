@@ -37,10 +37,25 @@ assert cf
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
 """
+
+"""
+Esta función contiene un condicional el cual identifica si el medio ya esta identificado, para asi mismo incluir dentro, la obra encontrada (perteniciente).
+De lo contrario generaría una nueva lista del medio no encontrado y añadiria esa obra que encontro (perteneciente).
+"""
 def addArt(catalog, artwork):
 
     lt.addLast(catalog['Art'], artwork)
-    mp.put(catalog['Medium'], artwork['Medium'], artwork)
+    if mp.contains(catalog['Medium'], artwork['Medium']):
+        llave_valor=mp.get(catalog['Medium'],artwork['Medium'])
+        valor=me.getValue(llave_valor)
+        lt.addLast(valor, artwork)
+       # mp.put(catalog['Medium'], llave_valor,valor)
+        mp.put(catalog['Medium'], artwork['Medium'], artwork)
+    else:
+        lista_creada= lt.newList()
+        lt.addLast(lista_creada, artwork)
+        mp.put(catalog['Medium'],artwork['Medium'], lista_creada)
+        
 
   
 
@@ -79,7 +94,8 @@ def get_ultimos(lista_global, inicial, final):
 
 def obras_medio(catalog, Medio):
     medium = mp.get(catalog['Medium'], Medio)
-    return medium
+    mediofinal= me.getValue(medium)
+    return mediofinal
     
 
 def get_conteo(lista_global, inicial, final):
@@ -347,6 +363,7 @@ def OrganizarNacionalidad(lista):
 
 def organizar_medio(lista, num):
    # list = lt.newList()
+    print (lista)
     listaOrganizadaPorAño = sa.sort(lista, ordenar_fecha)
     listaRecortada = lt.sublist(listaOrganizadaPorAño, 0, num)
     return listaRecortada
