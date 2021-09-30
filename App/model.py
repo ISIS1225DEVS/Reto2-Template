@@ -30,6 +30,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.Algorithms.Sorting import mergesort as merge
 assert cf
 
 """
@@ -38,13 +39,33 @@ los mismos.
 """
 
 # Construccion de modelos
+def newCatalog():
+    catalog={"artists":None,"artworks":None ,"medio/tecnica":None}
+    catalog['artists'] = lt.newList('SINGLE_LINKED')
+    catalog['artworks'] = lt.newList('SINGLE_LINKED')
+    catalog["medio/tecnica"] = mp.newMap(30, maptype='PROBING',loadfactor=0.5)
+    return catalog
 
 # Funciones para agregar informacion al catalogo
+def addArtist(catalog, artist):              
+    lt.addLast(catalog['artists'], artist)
+def addArtwork(catalog, artwork):              
+    lt.addLast(catalog['artworks'], artwork)
+    mp.put(catalog["medio/tecnica"],artwork["Medium"],artwork) 
 
 # Funciones para creacion de datos
 
 # Funciones de consulta
-
+def medioEspecifico(obraPorMedios,medio): 
+    obrasEnMedio=mp.get(obraPorMedios,medio)
+    listR=lt.newList('SINGLE_LINKED')
+    for obra in lt.iterator(obrasEnMedio):
+        lt.addLast(listR,obra)
+    listR=merge.sort(listR, cmpDate)   
+    return listR 
 # Funciones utilizadas para comparar elementos dentro de una lista
+
+def cmpDate(obra1,obra2): 
+    return ((str(obra1['Date']) < str(obra2['Date'])))
 
 # Funciones de ordenamiento
