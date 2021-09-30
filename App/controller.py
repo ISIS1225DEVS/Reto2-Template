@@ -55,6 +55,8 @@ def loadObras(catalog):
     input_file = csv.DictReader(open(Obrasfile, encoding='utf-8'))
     for obra in input_file:
         model.addObra(catalog, obra)
+def ObrasAntiguasMedio (catalog,nombre,n):
+    return model.ObrasAntiguasPorMedio(catalog,nombre,n)
 
 # Funciones de ordenamiento
 def sortArtworksandRange(lista,inicial,final):

@@ -259,8 +259,8 @@ while True:
     elif int(inputs[0]) == 7:
         start_time = time.process_time()
         nombre= input("Indique el nombre del medio: ")
-        n= input("Indique el número de obras: ")
-        obras_medio= controller.ObrasAntiguasPorMedio(catalog,nombre)
+        n= int(input("Indique el número de obras: "))
+        obras_medio= controller.ObrasAntiguasMedio(catalog,nombre,n)
         print(str(obras_medio))
     elif int(inputs[0]) >= 8 :
         print ("Lo sentimos, Requerimiento no disponible")

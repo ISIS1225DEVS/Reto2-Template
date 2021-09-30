@@ -125,7 +125,8 @@ def addObra(catalog, obra):
                 lt.addLast(artwork["Artists"],artista)
                 
     lt.addLast(catalog['obras'], artwork)
-    mp.put(catalog["medio"],obra["Medium"],obra)
+    for i in lt.iterator(catalog["obras"]):
+        mp.put(catalog["medio"],obra["Medium"],obra)
 # Funciones para creacion de datos
 
 # Funciones de consulta
@@ -350,10 +351,17 @@ def cmpArtworkPorPrecio(Artwork1,Artwork2):
     precio1=Artwork1["precio"]
     precio2=Artwork2["precio"]
     return precio1< precio2
-def ObrasAntiguasPorMedio(catalog,nombre):
+def ObrasAntiguasPorMedio(catalog,nombre,n):
     """
     Retorna las obras de un medio 
     """
     medio = mp.get(catalog["medio"], nombre)
     if medio:
-        return me.getValue(medio)
+        lista= me.getValue(medio)
+    lista_nueva=lt.newList("ARRAY_LIST")
+    i=0
+    while i<=n:
+        element=lt.getElement(lista,i)
+        lt.addLast(lista_nueva,element)
+        i+=1
+    return lt.size(lista)
