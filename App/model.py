@@ -44,11 +44,8 @@ import operator
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
 """
-#VERSION RETO 2 (lo dejo comentado para comprobar que carga con la versión del reto1 luego de copiar y pegar todo)
-# Construccion de modelos
-#def newCatalog():
 
-#VERSION RETO1
+
 # Construccion de modelos
 def newCatalog():
     estructura= "ARRAY_LIST"
@@ -59,17 +56,10 @@ def newCatalog():
 
     catalog['artistas'] = lt.newList(estructura, cmpfunction=compareArtistId)
     catalog['obras'] = lt.newList(estructura, cmpfunction=compareObraId)
-    catalog["medio"]=mp.newMap(2000,maptype="CHAINING", loadfactor=4.0, comparefunction=CompareName)
+    catalog["medio"]=mp.newMap(2000,maptype="CHAINING", loadfactor=4.0, comparefunction=compareMediumName)
     return catalog
 
-def CompareName (keyname, entry):
-    namentry=me.getKey(entry)
-    if (keyname == namentry):
-        return 0
-    elif (keyname > namentry):
-        return 1
-    else:
-        return -1
+
 
 def addArtist(catalog, artista):
     """
@@ -172,8 +162,14 @@ def ObrasPorArtistaPorTecnica(catalogo,nombre):
             Tecnicas=None
     return (obrasArtista,Tecnicas) 
 # Funciones utilizadas para comparar elementos dentro de una lista
-# Funciones utilizadas para comparar elementos dentro de una lista
-
+def CompareName (keyname, entry):
+    namentry=me.getKey(entry)
+    if (keyname == namentry):
+        return 0
+    elif (keyname > namentry):
+        return 1
+    else:
+        return -1
 def compareArtistId(artist1, artist2):
     if artist1["ConstituentID"] < artist2["ConstituentID"]:
         return -1 
@@ -246,6 +242,7 @@ def compareMediumName(name, tag):
         return 1
     else:
         return -1
+
 # Funciones de ordenamiento
 def sortArtistInDateRange(catalog, date1,date2):
     # req1
@@ -354,3 +351,5 @@ def cmpArtworkPorPrecio(Artwork1,Artwork2):
     precio1=Artwork1["precio"]
     precio2=Artwork2["precio"]
     return precio1< precio2
+def ObrasPorMedio(catalog,nombre):
+    return None

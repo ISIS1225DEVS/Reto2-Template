@@ -78,5 +78,6 @@ def ObrasPorArtistaPorTecnica(catalogo,nombre):
     return model.ObrasPorArtistaPorTecnica(catalogo,nombre)
 def buscarTecnicaMasRep(dicTecnicas):
     return model.buscarTecnicaMasRep(dicTecnicas)
-  
+def ObrasPorMedio(catalog,nombre):
+    return model.ObrasPorMedio(catalog,nombre)
 

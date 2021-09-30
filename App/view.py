@@ -48,6 +48,7 @@ def printMenu():
     print("4-Clasificar las obras de un artista por técnica")
     print("5-Clasificar las obras por la nacionalidad de sus creadores ")
     print("6-Transportar obras de un departamento ")
+    print("7-LAB 5-“las n obras más antiguas para un medio específico ")
     print("0-Salir ")
  
 def initCatalog():
@@ -255,7 +256,17 @@ while True:
         stop_time = time.process_time()
         timepaso= stop_time-start_time
         print("Tiempo transcurrido "+ str(timepaso))
-    elif int(inputs[0]) >= 6 :
+    elif int(inputs[0]) == 7:
+        start_time = time.process_time()
+        nombre= input("Indique el nombre del medio: ")
+        obras_medio= controller.ObrasPorMedio(catalog,nombre)
+        if Tecnicas != None and obrasArtista!= None:
+            Tecnica= controller.buscarTecnicaMasRep(Tecnicas)
+            print(str(nombre)+ " tiene un total de: "+ str(lt.size(obrasArtista))+" obras.")
+            print("La tecnica más utilizada es: "+ str(Tecnicas[Tecnica]["nombre"])+". Con "+str(lt.size(Tecnicas[Tecnica]["obras"]))+" obras.")
+            print("El listado de obras es: ")
+            printobras((Tecnicas[Tecnica]["obras"]),False)
+    elif int(inputs[0]) >= 8 :
         print ("Lo sentimos, Requerimiento no disponible")
         pass
     else:
