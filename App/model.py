@@ -25,7 +25,7 @@
  """
 
 
-from DISClib.DataStructures.arraylist import  iterator, newList, size
+from DISClib.DataStructures.arraylist import  iterator, newList, size, subList
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -51,12 +51,14 @@ def newCatalog():
     estructura= "ARRAY_LIST"
     catalog = {'obras': None,
                'artistas': None,
-               "medio": None
+               "medio": None,
+               "nacionalidad":None
                }
 
     catalog['artistas'] = lt.newList(estructura, cmpfunction=compareArtistId)
     catalog['obras'] = lt.newList(estructura, cmpfunction=compareObraId)
     catalog["medio"]=mp.newMap(2000,maptype="PROBING", loadfactor=0.5, comparefunction=compareMediumName)
+    catalog["nacionalidad"]=mp.newMap(2000,maptype="CHAINING",loadfactor=0.5,comparefunction=compareNacionalidades)
     return catalog
 
 
@@ -125,8 +127,18 @@ def addObra(catalog, obra):
                 lt.addLast(artwork["Artists"],artista)
                 
     lt.addLast(catalog['obras'], artwork)
-    for i in lt.iterator(catalog["obras"]):
-        mp.put(catalog["medio"],obra["Medium"],obra)
+    if mp.contains(catalog["medio"],obra["Medium"])==False:
+        lista_nueva=lt.newList("ARRAY_LIST")
+        lt.addLast(lista_nueva,obra)
+        mp.put(catalog["medio"],obra["Medium"],lista_nueva)
+    else:
+        pareja=mp.get(catalog["medio"],obra["Medium"])
+        lista_existente=me.getValue(pareja)
+        print(lista_existente)
+        lt.addLast(lista_existente,obra)
+        
+        mp.put(catalog["medio"],obra["Medium"],lista_existente)
+
 # Funciones para creacion de datos
 
 # Funciones de consulta
@@ -358,10 +370,15 @@ def ObrasAntiguasPorMedio(catalog,nombre,n):
     medio = mp.get(catalog["medio"], nombre)
     if medio:
         lista= me.getValue(medio)
-    lista_nueva=lt.newList("ARRAY_LIST")
-    i=0
-    while i<=n:
-        element=lt.getElement(lista,i)
-        lt.addLast(lista_nueva,element)
-        i+=1
-    return lt.size(lista)
+    m.sort(lista,cmpArtworkByDate)
+    lista_nueva=lt.subList(lista,lt.size(lista)-n,n)
+    return lista_nueva
+
+def compareNacionalidades (name,tag):
+    tagentry = me.getKey(tag)
+    if (name == tagentry):
+        return 0
+    elif (name > tagentry):
+        return 1
+    else:
+        return -1
