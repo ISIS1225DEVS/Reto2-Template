@@ -30,11 +30,9 @@ import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
-from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Sorting import shellsort as sh
 from DISClib.Algorithms.Sorting import mergesort as m
-from DISClib.Algorithms.Sorting import quicksort as qu
 from datetime import datetime
 import time
 assert cf
@@ -51,16 +49,19 @@ def newCatalog():
     estructura= "ARRAY_LIST"
     catalog = {'obras': None,
                'artistas': None,
-               "medio": None,
-               "nacionalidad":None
                }
 
-    catalog['artistas'] = lt.newList(estructura, cmpfunction=compareArtistId)
-    catalog['obras'] = lt.newList(estructura, cmpfunction=compareObraId)
-    catalog["medio"]=mp.newMap(2000,maptype="PROBING", loadfactor=0.5, comparefunction=compareMediumName)
-    catalog["nacionalidad"]=mp.newMap(2000,maptype="CHAINING",loadfactor=0.5,comparefunction=compareNacionalidades)
+    catalog['artistas'] = {"mID":None,"mNacionalidad":None,"mAnoNacimiento": None}
+    catalog['artistas']["mNacionalidad"]=mp.newMap(20000,maptype="CHAINING",loadfactor=4)
+    catalog['artistas']["mID"]=mp.newMap(20000,maptype="CHAINING",loadfactor=4)
+    catalog['artistas']["mAnoNacimiento"]=mp.newMap(20000,maptype="CHAINING",loadfactor=4)
+    
+    catalog['obras'] =  {"mMedio":None,"mDepartamento": None, "mFechaAd": None,"mNacionalidad": None}
+    catalog['obras']["mDepartamento"]=mp.newMap(200000,maptype="CHAINING", loadfactor=4)
+    catalog['obras']["mNacionalidad"]=mp.newMap(200000,maptype="CHAINING", loadfactor=0.5, comparefunction=cmpArtworkByDateAcquired)
+    catalog['obras']["mMedio"]=mp.newMap(200000,maptype="CHAINING", loadfactor=4)
+    catalog['obras']["mFechaAd"]=mp.newMap(200000,maptype="CHAINING", loadfactor=4)
     return catalog
-
 
 
 def addArtist(catalog, artista):
@@ -76,14 +77,24 @@ def addArtist(catalog, artista):
     artist["EndDate"]= artista["EndDate"]
     artist["Nationality"]= artista["Nationality"]
     artist["Gender"]= artista["Gender"]
-    artist["Artworks"]= lt.newList("ARRAY_LIST",cmpfunction= compareObraId)
-    lt.addLast(catalog['artistas'], artist)
+    artist["Artworks"]= lt.newList("ARRAY_LIST",cmpfunction= cmpObraId)
+    mp.put(catalog["artistas"]["mID"],artist["ConstituentID"], artist)
+    addOrCreateListInMap(catalog["artistas"]["mNacionalidad"],artist["Nationality"],artist)
+    addOrCreateListInMap(catalog["artistas"]["mAnoNacimiento"],artist["BeginDate"],artist)
+
+
+def addOrCreateListInMap(mapa, llave, elemento):
+    if mp.contains(mapa,llave)==False:
+        lista_nueva=lt.newList("ARRAY_LIST")
+        lt.addLast(lista_nueva,elemento)
+        mp.put(mapa,llave,lista_nueva)
+    else:
+        pareja=mp.get(mapa,llave)
+        lista_existente=me.getValue(pareja)
+        lt.addLast(lista_existente,elemento)
+        mp.put(mapa,llave,lista_existente)
+
 def addObra(catalog, obra):
-    """
-    Adiciona una obra a lista de obras, se hace un diccionario vacio y luego 
-    se llena con los atributos que necesitamos en el reto, tambien se asigna un espacio
-    para las obras con una lista vacia.
-    """
     artwork={}
     artwork["ObjectID"]= obra["ObjectID"]
     artwork["Title"]= obra["Title"]
@@ -101,11 +112,7 @@ def addObra(catalog, obra):
     artwork["Width (cm)"]= obra["Width (cm)"]
     artwork["Classification"]= obra["Classification"]
     artwork["Seat Height (cm)"]= obra["Seat Height (cm)"]
-    artwork["Artists"]= lt.newList("ARRAY_LIST",cmpfunction=compareArtistId)
-    """en obras los artistas estan como constituente id, en un formato [,] separado por comas, 
-    vamos a obtener de este formato el int del ID para cada artista y lo almacenaremos en una lista
-    primero quitamos los corchetes del string y luego haremos la lista usando , como separador
-    """
+    artwork["Artists"]= lt.newList("ARRAY_LIST",cmpfunction=cmpArtistId)
     codigosArtistas= obra['ConstituentID']
     codigosArtistas= codigosArtistas.replace("[","")
     codigosArtistas= codigosArtistas.replace("]","")
@@ -118,30 +125,27 @@ def addObra(catalog, obra):
      y viceversa con los artistas a la obra
     """
     for ID in codigosArtistas:
-        ID= int(ID)
-        for artista in lt.iterator(catalog["artistas"]):
-            IDArtista=(artista["ConstituentID"]).replace(" ","")
-            IDArtista= int(IDArtista)
-            if ID == IDArtista:
-                lt.addLast(artista["Artworks"],artwork)
-                lt.addLast(artwork["Artists"],artista)
-                
-    lt.addLast(catalog['obras'], artwork)
-    if mp.contains(catalog["medio"],obra["Medium"])==False:
-        lista_nueva=lt.newList("ARRAY_LIST")
-        lt.addLast(lista_nueva,obra)
-        mp.put(catalog["medio"],obra["Medium"],lista_nueva)
+        par= mp.get(catalog["artistas"]["mID"], ID)
+        if par:
+            artista= me.getValue(par)
+            lt.addLast(artista["Artworks"],artwork)
+            lt.addLast(artwork["Artists"],artista)
+    "solo el mapa que tien ID de artista como key va a quedar también con la referencia de las obras"            
+
+    addOrCreateListInMap(catalog['obras']["mMedio"], artwork["Medium"],artwork)
+    addOrCreateListInMap(catalog['obras']["mDepartamento"], artwork["Department"],artwork)
+    addOrCreateListInMap(catalog['obras']["mFechaAd"], artwork["DateAcquired"],artwork)
+    #req4#addOrCreateListInMap(catalog['obras']["mNacionalidad"], artwork["Medium"],artwork)
+#Funcione Comparacion Mapa#
+def compareMap(nuevo, tag):
+    entry = me.getKey(tag)
+    if (nuevo == entry):
+        return 0
+    elif (nuevo > entry):
+        return 1
     else:
-        pareja=mp.get(catalog["medio"],obra["Medium"])
-        lista_existente=me.getValue(pareja)
-        print(lista_existente)
-        lt.addLast(lista_existente,obra)
-        
-        mp.put(catalog["medio"],obra["Medium"],lista_existente)
-
-# Funciones para creacion de datos
-
-# Funciones de consulta
+        return 0
+# Funciones de consulta para listas
 def buscarTecnicaMasRep(dicTecnicas):
         TecnicaMas= " "
         size_mayor=0
@@ -174,29 +178,20 @@ def ObrasPorArtistaPorTecnica(catalogo,nombre):
             Tecnicas=None
     return (obrasArtista,Tecnicas) 
 # Funciones utilizadas para comparar elementos dentro de una lista
-def CompareName (keyname, entry):
-    namentry=me.getKey(entry)
-    if (keyname == namentry):
-        return 0
-    elif (keyname > namentry):
-        return 1
-    else:
-        return -1
-def compareArtistId(artist1, artist2):
+def cmpArtistId(artist1, artist2):
     if artist1["ConstituentID"] < artist2["ConstituentID"]:
         return -1 
     elif artist1["ConstituentID"] == artist2["ConstituentID"]:
         return 0
     else: 
         return 1
-def compareObraId(obra1, obra2):
+def cmpObraId(obra1, obra2):
     if obra1["ObjectID"] < obra2["ObjectID"]:
         return -1 
     elif obra1["ObjectID"] == obra2["ObjectID"]:
         return 0
     else: 
         return 1
-
 def cmpArtistByDate(artist1, artist2):
     fecha1= (artist1['BeginDate'])
     fecha2=(artist2['BeginDate'])
@@ -245,8 +240,7 @@ def cmpArtworktByPrice(obra1, obra2):
     precio1= float(obra1["precio"])
     precio2=float(obra2["precio"])
     return precio1<precio2
-
-def compareMediumName(name, tag):
+def compareNacionalidades (name,tag):
     tagentry = me.getKey(tag)
     if (name == tagentry):
         return 0
@@ -254,7 +248,11 @@ def compareMediumName(name, tag):
         return 1
     else:
         return -1
-
+def cmpArtworkPorPrecio(Artwork1,Artwork2):
+    precio1=Artwork1["precio"]
+    precio2=Artwork2["precio"]
+    return precio1< precio2
+    
 # Funciones de ordenamiento
 def sortArtistInDateRange(catalog, date1,date2):
     # req1
@@ -359,26 +357,14 @@ def OrdenarDepartamentoAsignarPrecioyPeso(catalogo, departamento):
     lt.addLast(listaR, obrasPorDepartamento)
     return listaR
 
-def cmpArtworkPorPrecio(Artwork1,Artwork2):
-    precio1=Artwork1["precio"]
-    precio2=Artwork2["precio"]
-    return precio1< precio2
 def ObrasAntiguasPorMedio(catalog,nombre,n):
     """
     Retorna las obras de un medio 
     """
-    medio = mp.get(catalog["medio"], nombre)
+    medio = mp.get(catalog["obras"]["mMedio"], nombre)
     if medio:
         lista= me.getValue(medio)
     m.sort(lista,cmpArtworkByDate)
     lista_nueva=lt.subList(lista,lt.size(lista)-n,n)
     return lista_nueva
 
-def compareNacionalidades (name,tag):
-    tagentry = me.getKey(tag)
-    if (name == tagentry):
-        return 0
-    elif (name > tagentry):
-        return 1
-    else:
-        return -1
