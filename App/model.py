@@ -367,4 +367,3 @@ def ObrasAntiguasPorMedio(catalog,nombre,n):
     m.sort(lista,cmpArtworkByDate)
     lista_nueva=lt.subList(lista,lt.size(lista)-n,n)
     return lista_nueva
-
