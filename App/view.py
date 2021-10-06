@@ -78,7 +78,7 @@ while True:
         loadData(catalog)
         print('Artistas cargados: ' + str(mp.size(catalog['artistas']["mID"])))
         print("Medios utilizados " + str(mp.size(catalog["obras"]["mMedio"])))
-        print("Nacionalidades obras " + str(mp.size(catalog["obras"]["mNacionalidades"])))
+        print("Nacionalidades obras " + str(mp.size(catalog["artistas"]["mNacionalidad"])))
         stop_time = time.process_time()
         timepaso= stop_time-start_time
         print("Tiempo transcurrido "+ str(timepaso))
