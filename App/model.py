@@ -51,14 +51,14 @@ def newCatalog():
                'artistas': None,
                }
 
-    catalog['artistas'] = {"mID":None,"mNacionalidad":None,"mAnoNacimiento": None}
-    catalog['artistas']["mNacionalidad"]=mp.newMap(20000,maptype="CHAINING",loadfactor=4)
+    catalog['artistas'] = {"mID":None,"mAnoNacimiento": None, "mNombre": None}
     catalog['artistas']["mID"]=mp.newMap(20000,maptype="CHAINING",loadfactor=4)
+    catalog['artistas']["mNombre"]=mp.newMap(20000,maptype="CHAINING",loadfactor=4)
     catalog['artistas']["mAnoNacimiento"]=mp.newMap(20000,maptype="CHAINING",loadfactor=4)
     
     catalog['obras'] =  {"mMedio":None,"mDepartamento": None, "mFechaAd": None,"mNacionalidad": None}
     catalog['obras']["mDepartamento"]=mp.newMap(200000,maptype="CHAINING", loadfactor=4)
-    catalog['obras']["mNacionalidad"]=mp.newMap(200000,maptype="CHAINING", loadfactor=0.5, comparefunction=cmpArtworkByDateAcquired)
+    catalog['obras']["mNacionalidad"]=mp.newMap(200000,maptype="CHAINING", loadfactor=4)
     catalog['obras']["mMedio"]=mp.newMap(200000,maptype="CHAINING", loadfactor=4)
     catalog['obras']["mFechaAd"]=mp.newMap(200000,maptype="CHAINING", loadfactor=4)
     return catalog
@@ -79,9 +79,8 @@ def addArtist(catalog, artista):
     artist["Gender"]= artista["Gender"]
     artist["Artworks"]= lt.newList("ARRAY_LIST",cmpfunction= cmpObraId)
     mp.put(catalog["artistas"]["mID"],artist["ConstituentID"], artist)
-    addOrCreateListInMap(catalog["artistas"]["mNacionalidad"],artist["Nationality"],artist)
     addOrCreateListInMap(catalog["artistas"]["mAnoNacimiento"],artist["BeginDate"],artist)
-
+    addOrCreateListInMap(catalog["artistas"]["mNombre"],artist["DisplayName"],artist)
 
 def addOrCreateListInMap(mapa, llave, elemento):
     if mp.contains(mapa,llave)==False:
@@ -127,15 +126,24 @@ def addObra(catalog, obra):
     for ID in codigosArtistas:
         par= mp.get(catalog["artistas"]["mID"], ID)
         if par:
-            artista= me.getValue(par)
-            lt.addLast(artista["Artworks"],artwork)
-            lt.addLast(artwork["Artists"],artista)
-    "solo el mapa que tien ID de artista como key va a quedar también con la referencia de las obras"            
+            infoArtistaID= me.getValue(par)
+            nombre = infoArtistaID["DisplayName"]
+            lt.addLast(infoArtistaID["Artworks"],artwork)
+            lt.addLast(artwork["Artists"],infoArtistaID)
+            mp.put(catalog["artistas"]["mNombre"],nombre, infoArtistaID)
+    "tanto el mapa que tienE ID de artista como key  como el de nombre van a quedar también con la referencia de las obras"            
+    artwork["Nacionalidad"]= lt.newList("ARRAY_LIST")
+    for artista in lt.iterator(artwork["Artists"]):
+        nacionalidad= artista["Nationality"]
+        if lt.size(artwork["Nacionalidad"])==0 or lt.isPresent(artwork["Nacionalidad"], nacionalidad) !=0:
+            lt.addLast(artwork["Nacionalidad"],nacionalidad)
 
     addOrCreateListInMap(catalog['obras']["mMedio"], artwork["Medium"],artwork)
     addOrCreateListInMap(catalog['obras']["mDepartamento"], artwork["Department"],artwork)
     addOrCreateListInMap(catalog['obras']["mFechaAd"], artwork["DateAcquired"],artwork)
-    #req4#addOrCreateListInMap(catalog['obras']["mNacionalidad"], artwork["Medium"],artwork)
+    for nacionalidad in lt.iterator(artwork["Nacionalidad"]):
+        addOrCreateListInMap(catalog['obras']["mNacionalidad"],nacionalidad,artwork)
+
 #Funcione Comparacion Mapa#
 def compareMap(nuevo, tag):
     entry = me.getKey(tag)
@@ -258,14 +266,28 @@ def sortArtistInDateRange(catalog, date1,date2):
     # req1
     date1 = int(date1)
     date2 = int(date2)
-    #primero ordeno la lista#
-    listaOrdenada= m.sort((catalog['artistas']),cmpArtistByDate)
+    ListaAnosGen= mp.keySet(catalog["artistas"]["mAnoNacimiento"])
     listaEnRango = lt.newList("ARRAY_LIST") #porque luego se accede por pos#s
-    for i in lt.iterator(listaOrdenada):
-        date= int(i['BeginDate'])
-        if date != 0 and date >= date1 and date<=date2:
-            lt.addLast(listaEnRango, i)
+    for i in lt.iterator(ListaAnosGen):
+        AnoKey= int(i)
+        if AnoKey != 0 and AnoKey >= date1 and AnoKey<=date2:
+            lista_artistas_año= mp.get(catalog["artistas"]["mAnoNacimiento"],i)
+            for artitsa in lt.iterator(lista_artistas_año):
+                lt.addLast(listaEnRango, i)
+    listaOrdenada= m.sort((catalog['artistas']),cmpArtistByDate)
     return (listaEnRango)
+#RETO 1 VERSIÓN SIN MAPA
+# def sortArtistInDateRange(catalog, date1,date2):
+#     # req1
+#     date1 = int(date1)
+#     date2 = int(date2)
+#     listaEnRango = lt.newList("ARRAY_LIST") 
+#     for i in lt.iterator(catalog['artistas']):
+#         date= int(i['BeginDate'])
+#         if date != 0 and date >= date1 and date<=date2:
+#             lt.addLast(listaEnRango, i)
+#     listaOrdenada= m.sort(ListaEnRango,cmpArtistByDate)
+#     return (listaEnRango)
 
 def sortArtworksandRange(lista,inicial,final):
     inicial=datetime.strptime(str(inicial),"%Y-%m-%d")
@@ -367,3 +389,4 @@ def ObrasAntiguasPorMedio(catalog,nombre,n):
     m.sort(lista,cmpArtworkByDate)
     lista_nueva=lt.subList(lista,lt.size(lista)-n,n)
     return lista_nueva
+
