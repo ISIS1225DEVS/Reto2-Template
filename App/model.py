@@ -66,7 +66,11 @@ def newCatalog():
                                 maptype='PROBING',
                                 loadfactor=0.5,
                                 comparefunction=compareArtistMedium) 
-
+    
+    catalog['ArtistBeginYear'] = mp.newMap(69000,
+                                maptype='PROBING',
+                                loadfactor=0.5,
+                                comparefunction=compareArtistBeginYear)
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -74,6 +78,20 @@ def addArtWork (catalog,artWork) :
     lt.addLast(catalog['Artwork'],artWork)
     medium = artWork['Medium'] 
     addArtWorkMedium(catalog,medium,artWork)
+
+def addArtist(catalog,artist) : 
+    lt.addLast(catalog['Artist'],artist)
+    year = artist['BeginDate'] 
+    addArtistYear(catalog,year,artist) 
+
+def addArtistYear(catalog,year,artist) : 
+    years = catalog['ArtistBeginYear'] 
+    existedYear = mp.contains(years,year)
+    if existedYear : 
+        entry = mp.get(years,year)
+        Year = me.getValue(years,year)
+    else : 
+        Year = newArtistBeginYear(year)
 
 
 
@@ -114,6 +132,8 @@ def oldestn(artWorks,n) :
         oldest.append(lt.getElement(artWorks,pos))
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+def compareArtistBeginYear(artist1,artist2) : 
+    return int(artist1['BeginDate']) < int(artist2['BeginDate'])
 def compareArtworkDate(artwork1,artwork2) : 
     return int(artwork1['Date']) < int(artwork2['Date'])
 
@@ -145,3 +165,8 @@ def sortArtworkDate(artWorks,orden):
       mer.sort(artWorks,compareArtworkDate)
     elif orden == 4:
       quic.sort(artWorks,compareArtworkDate)
+
+#TODO: Funciones req 1 
+
+
+#TODO: Funciones req 2 
