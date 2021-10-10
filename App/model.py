@@ -135,6 +135,8 @@ def addObra(catalog, obra):
     artwork["Nacionalidad"]= lt.newList("ARRAY_LIST")
     for artista in lt.iterator(artwork["Artists"]):
         nacionalidad= artista["Nationality"]
+        if nacionalidad=="":
+            nacionalidad="Nationality Unkwonw"
         if lt.size(artwork["Nacionalidad"])==0 or lt.isPresent(artwork["Nacionalidad"], nacionalidad) !=0:
             lt.addLast(artwork["Nacionalidad"],nacionalidad)
 
