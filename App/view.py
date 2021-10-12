@@ -38,7 +38,7 @@ def printArtisbyBeginDate(list):
     print('Lacantidad de obras dentro del rango es de ' + str(list[0]))
     print('\nLos 3 primeros artistas son: ')
     for i in range(1,len(list)):
-        a=list[i]
+        a=list[i]["value"]
 
         print('Nombre: '+ a['value']['DisplayName'] ,'Año de Nacimiento: '+ a['value']['BeginDate'],
         'Genero: '+ a['value']['Gender'], 'Nacionalidad: '+ a['value']['Nationality'])
