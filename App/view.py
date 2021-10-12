@@ -40,8 +40,8 @@ def printArtisbyBeginDate(list):
     for i in range(1,len(list)):
         a=list[i]
 
-        print('Nombre: '+ a['DisplayName'] ,'Año de Nacimiento: '+ a['BeginDate'],
-        'Genero: '+ a['Gender'], 'Nacionalidad: '+ a['Nationality'])
+        print('Nombre: '+ a['value']['DisplayName'] ,'Año de Nacimiento: '+ a['value']['BeginDate'],
+        'Genero: '+ a['value']['Gender'], 'Nacionalidad: '+ a['value']['Nationality'])
 
         if i == 3:
             print('\nLos 3 ultimos artistas son: ')
