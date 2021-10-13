@@ -25,6 +25,7 @@
  """
 
 
+from math import atan2
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -60,9 +61,10 @@ def newCatalog():
                'years': None}
 
     
-    catalog['Artists'] = lt.newList('SINGLE_LINKED', compareArtistIds)
-    catalog['Artworks'] = lt.newList('SINGLE_LINKED', compareArtworksIds)
+    catalog['Artists'] = lt.newList('ARRAY_LIST', compareArtistIds)
+    catalog['Artworks'] = lt.newList('ARRAY_LIST', compareArtworksIds)
 
+    
 
     catalog['ArtistID'] = mp.newMap(10000,
                                    maptype='CHAINING',
@@ -71,16 +73,18 @@ def newCatalog():
 
     
     
-    catalog['BeginDate'] = mp.newMap(800,
+    catalog['BeginDate'] = mp.newMap(500,
                                    maptype='CHAINING',
-                                   loadfactor=4.0,
+                                   loadfactor=5,
                                    comparefunction=compareBeginDate)
-    '''
-    catalog['tags'] = mp.newMap(34500,
-                                maptype='PROBING',
-                                loadfactor=0.5,
-                                comparefunction=compareTagNames)
     
+    catalog['Medium'] = mp.newMap(34500,
+                                maptype='CHAINING',
+                                loadfactor=2,
+                                comparefunction=compareArtworksbymedium)
+
+
+    ''' 
     catalog['tagIds'] = mp.newMap(34500,
                                   maptype='CHAINING',
                                   loadfactor=4.0,
@@ -99,11 +103,50 @@ def newCatalog():
 def addArtist(catalog, artist):
     lt.addLast(catalog["Artists"], artist)
 
-    mp.put(catalog['ArtistID'],artist['ConstituentID'],artist)
-    mp.put(catalog['BeginDate'],artist['BeginDate'],artist)
+
+    if mp.contains(catalog['BeginDate'],artist['BeginDate']):
+
+    
+        if type(mp.get(catalog['BeginDate'],artist['BeginDate'])['value']) == type(artist):    
+            l=lt.newList(datastructure='ARRAY_LIST')
+            lt.addLast(l,mp.get(catalog['BeginDate'],artist['BeginDate'])['value'])
+            lt.addLast(l,artist)
+            mp.put(catalog['BeginDate'],artist['BeginDate'],l)
+            
+        else:     
+            entry=mp.get(catalog['BeginDate'],artist['BeginDate'])
+            list=entry['value']
+            #print(list)
+            lt.addLast(list,artist)
+            #print(mp.get(catalog['BeginDate'],artist['BeginDate']))
+            
+    else: 
+        mp.put(catalog['BeginDate'],artist['BeginDate'],artist)
+
+    
+    
 
 def addArtwork(catalog, artwork):
     lt.addLast(catalog["Artworks"], artwork)
+
+    if mp.contains(catalog['Medium'],artwork['Medium']):
+
+    
+        if type(mp.get(catalog['Medium'],artwork['Medium'])['value']) == type(artwork):    
+            l=lt.newList(datastructure='ARRAY_LIST')
+            lt.addLast(l,mp.get(catalog['Medium'],artwork['Medium'])['value'])
+            lt.addLast(l,artwork)
+            mp.put(catalog['Medium'],artwork['Medium'],l)
+            
+        else:     
+            entry=mp.get(catalog['Medium'],artwork['Medium'])
+            list=entry['value']
+            #print(list)
+            lt.addLast(list,artwork)
+            #print(mp.get(catalog['BeginDate'],artist['BeginDate']))
+            
+    else: 
+        mp.put(catalog['Medium'],artwork['Medium'],artwork)
 
 
 
@@ -116,8 +159,11 @@ def addArtwork(catalog, artwork):
 
 
 # Funciones de consulta
+#REQ 1
 
 def ArtistbyBeginDate(catalog, min, max):
+
+    rta=[]
 
     Dates=mp.keySet(catalog['BeginDate'])
     b=lt.newList(datastructure='ARRAY_LIST')
@@ -132,18 +178,58 @@ def ArtistbyBeginDate(catalog, min, max):
     mg.sort(b,cmpArtistBegindate)
 
     size=lt.size(b)
-    a1=mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))
-    a2=mp.get(catalog['BeginDate'],str(lt.getElement(b,2)))
-    a3=mp.get(catalog['BeginDate'],str(lt.getElement(b,3)))
-    a4=mp.get(catalog['BeginDate'],str(lt.getElement(b,size-2)))
-    a5=mp.get(catalog['BeginDate'],str(lt.getElement(b,size-1)))
-    a6=mp.get(catalog['BeginDate'],str(lt.getElement(b,size)))
-
-    print(a1,a2,a3,a4,a5,a6)
+    rta.append(size)
 
     
 
-    return [lt.size(b),a1,a2,a3,a4,a5,a6]
+    if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']) == type(lt.getElement(catalog['Artists'],1)):
+        a1=mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']
+        rta.append(a1)
+    if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,2)))['value']) == type(lt.getElement(catalog['Artists'],1)):
+        a2=mp.get(catalog['BeginDate'],str(lt.getElement(b,2)))['value']
+        rta.append(a2)
+
+    if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,3)))['value']) == type(lt.getElement(catalog['Artists'],1)):
+        a3=mp.get(catalog['BeginDate'],str(lt.getElement(b,3)))['value']
+        rta.append(a3)
+
+    else: 
+        mg.sort(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value'],cmpArtistNationality)
+        if lt.size(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']) >= 3:
+            for i in range(1,4):
+                a=lt.getElement(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value'],i)
+                rta.append(a)
+        else:
+            for i in range(1,3):
+                a=lt.getElement(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value'],i)
+                rta.append(a)
+            af=mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']
+            rta.append(af)
+
+    
+
+    print(rta)    
+
+    return rta
+
+#lab5
+
+def ArtworksbyMedium(catalog,Name,n):
+
+    Artworks = mp.get(catalog['Medium'],Name)
+    
+    list=Artworks['value']
+    
+    mg.sort(list,cmpArtworkDate)
+    
+    rta=lt.newList(datastructure='ARRAY_LIST')
+    for i in range(1,int(n)+1):
+        
+        lt.addLast(rta,lt.getElement(list,i))
+        
+    
+    
+    return rta
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
@@ -185,6 +271,19 @@ def compareBeginDate(date, entry):
     else:
         return -1
 
+def compareArtworksbymedium(Medium, artwork):
+    """
+    Compara dos nombres de autor. El primero es una cadena
+    y el segundo un entry de un map
+    """
+    artentry = me.getKey(artwork)
+    if (Medium == artentry):
+        return 0
+    elif (Medium > artentry):
+        return 1
+    else:
+        return -1
+
 def compareAuthorsByName(keyname, author):
     """
     Compara dos nombres de autor. El primero es una cadena
@@ -204,6 +303,25 @@ def compareAuthorsByName(keyname, author):
 def cmpArtistBegindate(Date1, Date2):
 
     if Date1 < Date2:
+        return True
+    else:
+        return False
+
+def cmpArtworkDate(artwork1, artwork2):
+
+    if artwork1["Date"] == '':
+        artwork1["Date"]='No se sabe'
+    if artwork2["Date"] == '':
+        artwork2["Date"]='No se sabe'
+
+    if (artwork1["Date"]) < (artwork2["Date"]):
+        return True
+    else:
+        return False
+
+def cmpArtistNationality(artist1, artist2):
+
+    if artist1['ArtistBio'] < artist2['ArtistBio']:
         return True
     else:
         return False

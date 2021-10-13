@@ -61,6 +61,9 @@ def loadAdworks(catalog):
 def ArtistbyBeginDate(catalog, min, max):
     return model.ArtistbyBeginDate(catalog, min, max)
 
+def ArtworksbyMedium(catalog,Name,n):
+    return model.ArtworksbyMedium(catalog,Name,n)
+
 
 # Funciones de ordenamiento
 

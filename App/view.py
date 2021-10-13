@@ -24,6 +24,8 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 assert cf
 
 
@@ -35,13 +37,13 @@ operación solicitada
 """
 def printArtisbyBeginDate(list):
 
-    print('Lacantidad de obras dentro del rango es de ' + str(list[0]))
+    print('La cantidad de artistas dentro del rango es de ' + str(list[0]))
     print('\nLos 3 primeros artistas son: ')
     for i in range(1,len(list)):
         a=list[i]["value"]
 
-        print('Nombre: '+ a['value']['DisplayName'] ,'Año de Nacimiento: '+ a['value']['BeginDate'],
-        'Genero: '+ a['value']['Gender'], 'Nacionalidad: '+ a['value']['Nationality'])
+        print('Nombre: '+ a['DisplayName'] ,'Año de Nacimiento: '+ a['BeginDate'],
+        'Genero: '+ a['Gender'], 'Nacionalidad: '+ a['Nationality'])
 
         if i == 3:
             print('\nLos 3 ultimos artistas son: ')
@@ -51,6 +53,7 @@ def printArtisbyBeginDate(list):
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
+    print("0- Numero de obras mas antiguas por medio")
     print("2- Listar cronológicamente los artistas")
     print("3- Listar cronológicamente las adquisiciones ")
     print("4- Clasificar las obras de un artista por técnica")
@@ -74,6 +77,8 @@ while True:
 
         print("\nArtistas cargadas: " + str(lt.size(catalog["Artists"])))
         print("\nObras cargadas: " + str(lt.size(catalog["Artworks"])))
+
+        #print(mp.get(catalog['BeginDate'],'1920'))
         
     elif int(inputs[0]) == 2:
         print("Digite el rango de fechas en el que desea realizar la búsqueda (AAAA)")
@@ -84,7 +89,17 @@ while True:
         printArtisbyBeginDate(list)
 
 
-    
+    elif int(inputs[0]) == 0:
+
+        Name=input("El nombre del medio:  ")
+        n=input("Numero de obras:  ")
+        
+        list=controller.ArtworksbyMedium(catalog,Name,n)
+      
+        for i in list['elements']:
+            print('Title: '+ i['Title'] +' / ' ,'ConstituentID: '+ i['ConstituentID'] +' / ',
+                    'Date: '+ i['Date'] +' / ', 'Medium - tecnica: '+ i['Medium'])
+        
 
     else:
         sys.exit(0)
