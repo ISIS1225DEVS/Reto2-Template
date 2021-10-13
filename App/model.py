@@ -66,6 +66,11 @@ def newCatalog():
                                 maptype='PROBING',
                                 loadfactor=0.5,
                                 comparefunction=compareArtistMedium) 
+    
+    catalog["Nationality"] = mp.newMap(20000,
+                                maptype='PROBING',
+                                loadfactor=0.5,
+                                comparefunction=compareNationality)
 
     return catalog
 
@@ -134,6 +139,15 @@ def compareArtistMedium(keyname, medium):
     else:
         return -1
 
+def compareNationality(keyname, nationality):
+    nationalityentry = me.getKey(nationality)
+    if (keyname == nationalityentry):
+        return 0
+    elif (keyname > nationalityentry):
+        return 1
+    else:
+        return -1
+
 
 # Funciones de ordenamiento
 def sortArtworkDate(artWorks,orden):
@@ -145,3 +159,10 @@ def sortArtworkDate(artWorks,orden):
       mer.sort(artWorks,compareArtworkDate)
     elif orden == 4:
       quic.sort(artWorks,compareArtworkDate)
+
+# Funciones conteo
+def countobrasnationality(nationality, catalog):
+    nationality = mp.get(catalog['Nationality'], nationality)
+    if nationality:
+        return me.getValue(nationality)['ArtWork']
+    return None
