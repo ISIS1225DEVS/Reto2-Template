@@ -164,5 +164,6 @@ def sortArtworkDate(artWorks,orden):
 def countobrasnationality(nationality, catalog):
     nationality = mp.get(catalog['Nationality'], nationality)
     if nationality:
-        return me.getValue(nationality)['ArtWork']
+        listnationality = me.getValue(nationality)['ArtWork']
+        return lt.size(listnationality)
     return None

@@ -56,3 +56,7 @@ def oldestbyMedium(catalog,medium,n) :
     sortedArtworks = model.sortArtworkDate(Artworks,3)
     return model.oldestn(sortedArtworks,n)
    
+# Funciones de conteo
+def countobrasnationality(nationality, catalog):
+    obras = model.countobrasnationality(nationality, catalog)
+    return obras

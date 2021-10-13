@@ -38,6 +38,7 @@ def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
     print("2- Imprimir los n mas antiguos por medio")
+    print("3- Número de obras según nacionalidad indicada")
 
 catalog = None
 def initCatalog() : 
@@ -70,7 +71,9 @@ while True:
         for artWork in oldestbymedium : 
             print(oldestbymedium)
     
-    
+    elif int(inputs[0]) == 3:
+        nationality = input("Buscando obras de la nacionalidad: ")
+        books = controller.countobrasnationality(nationality, catalog)
         
         
 
