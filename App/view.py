@@ -50,7 +50,7 @@ def oldestArtworksbyMedium(catalog,medium,n):
     return controller.oldestbyMedium(catalog,medium,n) 
 def printcountobrasnationality(numberArtWorks):
     if numberArtWorks:
-        print('Se encontraron: ' + str(numberArtWorks) + ' obras')
+        print('Se encontraron: ' + str(lt.size(numberArtWorks)) + ' obras')
     else:
         print('No se encontraron obras')
 
