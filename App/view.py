@@ -48,7 +48,11 @@ def loadData (catalog) :
     controller.loadData(catalog) 
 def oldestArtworksbyMedium(catalog,medium,n): 
     return controller.oldestbyMedium(catalog,medium,n) 
-
+def printcountobrasnationality(numberArtWorks):
+    if numberArtWorks:
+        print('Se encontraron: ' + str(numberArtWorks) + ' obras')
+    else:
+        print('No se encontraron obras')
 
 """
 Menu principal
@@ -73,8 +77,8 @@ while True:
     
     elif int(inputs[0]) == 3:
         nationality = input("Buscando obras de la nacionalidad: ")
-        books = controller.countobrasnationality(nationality, catalog)
-        
+        numberArtWorks = controller.countobrasnationality(nationality, catalog)
+        print(printcountobrasnationality(numberArtWorks))
         
 
     else:
