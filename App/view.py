@@ -53,15 +53,18 @@ def printArtisbyBeginDate(list):
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
+
     print("0- Numero de obras mas antiguas por medio")
+    print('3- Numero de obras por nacionalidad ')
     print("2- Listar cronológicamente los artistas")
+    '''
     print("3- Listar cronológicamente las adquisiciones ")
     print("4- Clasificar las obras de un artista por técnica")
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("6- Costos transportar obras de un departamento")
     print("7- Proponer una nueva exposición en el museo")
     print("8- Salir")
-
+    '''
 catalog = None
 
 """
@@ -79,6 +82,8 @@ while True:
         print("\nObras cargadas: " + str(lt.size(catalog["Artworks"])))
 
         #print(mp.get(catalog['BeginDate'],'1920'))
+        #sssssssssprint((lt.getElement(catalog['Artworks'],3)['ConstituentID']).replace('[','').replace(']','').split(','))
+        #print(type(mp.get(catalog['Work_Nationality'],'American')['value']))
         
     elif int(inputs[0]) == 2:
         print("Digite el rango de fechas en el que desea realizar la búsqueda (AAAA)")
@@ -99,7 +104,13 @@ while True:
         for i in list['elements']:
             print('Title: '+ i['Title'] +' / ' ,'ConstituentID: '+ i['ConstituentID'] +' / ',
                     'Date: '+ i['Date'] +' / ', 'Medium - tecnica: '+ i['Medium'])
+
+    elif int(inputs[0]) == 3:
+
+        Nation=input("Ingrese la nacionalidad:  ")
         
+        rta=controller.ArtworksbyNationality(catalog,Nation)
+        print('De la nacionalidad '+ Nation+ ' hay '+ str(rta) + ' obras')
 
     else:
         sys.exit(0)

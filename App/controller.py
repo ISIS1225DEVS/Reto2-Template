@@ -64,6 +64,8 @@ def ArtistbyBeginDate(catalog, min, max):
 def ArtworksbyMedium(catalog,Name,n):
     return model.ArtworksbyMedium(catalog,Name,n)
 
+def ArtworksbyNationality(catalog,Nation):
+    return model.ArtworksbyNationality(catalog,Nation)
 
 # Funciones de ordenamiento
 

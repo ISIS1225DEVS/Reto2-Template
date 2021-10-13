@@ -84,71 +84,81 @@ def newCatalog():
                                 comparefunction=compareArtworksbymedium)
 
 
-    ''' 
-    catalog['tagIds'] = mp.newMap(34500,
+    
+    catalog['Work_Nationality'] = mp.newMap(34500,
                                   maptype='CHAINING',
                                   loadfactor=4.0,
-                                  comparefunction=compareTagIds)
+                                  comparefunction=compareNationality)
     
-    catalog['years'] = mp.newMap(40,
+    catalog['Artists_ConstituentID'] = mp.newMap(16000,
                                  maptype='PROBING',
-                                 loadfactor=0.5,
-                                 comparefunction=compareMapYear)
-                                 '''
+                                 loadfactor=0.5,)
+    '''
+    catalog['Work_ConstituentID'] = mp.newMap(16000,
+                                 maptype='PROBING',
+                                 loadfactor=0.5,)
+                                 
+    '''
+
     return catalog
   
 
 # Funciones para agregar informacion al catalogo
+def addtomap(map,key,object):
+
+    if mp.contains(map,key):
+
+        if type(mp.get(map,key)['value']) == type(object):    
+            l=lt.newList(datastructure='ARRAY_LIST')
+            lt.addLast(l,mp.get(map,key)['value'])
+            lt.addLast(l,object)
+            mp.put(map,key,l)
+            
+        else:     
+            entry=mp.get(map,key)
+            list=entry['value']
+            #print(list)
+            lt.addLast(list,object)
+            #print(mp.get(catalog['BeginDate'],artist['BeginDate']))
+            
+    else: 
+        mp.put(map,key,object)
+
+ 
 
 def addArtist(catalog, artist):
     lt.addLast(catalog["Artists"], artist)
 
+    addtomap(catalog['BeginDate'],artist['BeginDate'],artist)
+    mp.put(catalog['Artists_ConstituentID'],artist['ConstituentID'],artist)
 
-    if mp.contains(catalog['BeginDate'],artist['BeginDate']):
 
-    
-        if type(mp.get(catalog['BeginDate'],artist['BeginDate'])['value']) == type(artist):    
-            l=lt.newList(datastructure='ARRAY_LIST')
-            lt.addLast(l,mp.get(catalog['BeginDate'],artist['BeginDate'])['value'])
-            lt.addLast(l,artist)
-            mp.put(catalog['BeginDate'],artist['BeginDate'],l)
-            
-        else:     
-            entry=mp.get(catalog['BeginDate'],artist['BeginDate'])
-            list=entry['value']
-            #print(list)
-            lt.addLast(list,artist)
-            #print(mp.get(catalog['BeginDate'],artist['BeginDate']))
-            
-    else: 
-        mp.put(catalog['BeginDate'],artist['BeginDate'],artist)
 
     
-    
-
 def addArtwork(catalog, artwork):
     lt.addLast(catalog["Artworks"], artwork)
 
-    if mp.contains(catalog['Medium'],artwork['Medium']):
+    addtomap(catalog['Medium'],artwork['Medium'],artwork)
+    #mp.put(catalog['Work_ConstituentID'],artwork['ConstituentID'],artwork)
+    ArtworksbyNationalityMap(catalog,artwork)
 
+
+
+def ArtworksbyNationalityMap(catalog,artwork):
+
+    list=artwork['ConstituentID'].replace('[','').replace(']','').split(',')
+    Nations=[]
+    for i in list:
+
+        Artist=mp.get(catalog['Artists_ConstituentID'],i)
+        if Artist != None:
+            Nation=mp.get(catalog['Artists_ConstituentID'],i)['value']['Nationality']
+            if Nation not in Nations:
+                Nations.append(Nation)
+                addtomap(catalog['Work_Nationality'],Nation,artwork)
     
-        if type(mp.get(catalog['Medium'],artwork['Medium'])['value']) == type(artwork):    
-            l=lt.newList(datastructure='ARRAY_LIST')
-            lt.addLast(l,mp.get(catalog['Medium'],artwork['Medium'])['value'])
-            lt.addLast(l,artwork)
-            mp.put(catalog['Medium'],artwork['Medium'],l)
-            
-        else:     
-            entry=mp.get(catalog['Medium'],artwork['Medium'])
-            list=entry['value']
-            #print(list)
-            lt.addLast(list,artwork)
-            #print(mp.get(catalog['BeginDate'],artist['BeginDate']))
-            
-    else: 
-        mp.put(catalog['Medium'],artwork['Medium'],artwork)
 
-
+   
 
 
 
@@ -227,9 +237,19 @@ def ArtworksbyMedium(catalog,Name,n):
         
         lt.addLast(rta,lt.getElement(list,i))
         
-    
-    
     return rta
+
+#Lab6
+
+def ArtworksbyNationality(catalog,Nation):
+
+    size=0
+    if type(mp.get(catalog['Work_Nationality'],Nation)['value']) == dict:
+
+        size=lt.size(mp.get(catalog['Work_Nationality'],Nation)['value'])
+    elif type(mp.get(catalog['Work_Nationality'],Nation)['value']) == type(lt.getElement(catalog['Artists'],1)):
+        size=1
+    return size
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
@@ -296,6 +316,17 @@ def compareAuthorsByName(keyname, author):
         return 1
     else:
         return -1
+
+def compareNationality(Nationality,entry):
+    NationalityE = me.getKey(entry)
+    if Nationality == NationalityE:
+        return 0
+    elif Nationality > NationalityE:
+        return 1
+    else:
+        return -1
+
+
 ##################################################
 ##################################################
 
