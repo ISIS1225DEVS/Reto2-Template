@@ -25,6 +25,7 @@
  """
 
 
+from DISClib.DataStructures.arraylist import size
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
@@ -45,23 +46,54 @@ De lo contrario generaría una nueva lista del medio no encontrado y añadiria e
 def addArt(catalog, artwork):
 
     lt.addLast(catalog['Art'], artwork)
+
     if mp.contains(catalog['Medium'], artwork['Medium']):
         llave_valor=mp.get(catalog['Medium'],artwork['Medium'])
         valor=me.getValue(llave_valor)
         lt.addLast(valor, artwork)
-       # mp.put(catalog['Medium'], llave_valor,valor)
-        mp.put(catalog['Medium'], artwork['Medium'], artwork)
+       #mp.put(catalog['Medium'], llave_valor,valor)
+        #mp.put(catalog['Medium'], artwork['Medium'], artwork)
     else:
-        lista_creada= lt.newList()
+        lista_creada= lt.newList(cmpfunction=cmpMedio)
         lt.addLast(lista_creada, artwork)
         mp.put(catalog['Medium'],artwork['Medium'], lista_creada)
-        
 
+    if mp.contains(catalog['ID'], artwork['ConstituentID']):
+        llave_valor=mp.get(catalog['ID'],artwork['ConstituentID'])
+        valor=me.getValue(llave_valor)
+        lt.addLast(valor, artwork)
+        #mp.put(catalog['ID'], artwork['ConstituentID'], artwork)
+    else:
+        lista_creada= lt.newList(cmpfunction=cmpMedio)
+        lt.addLast(lista_creada, artwork)
+        txt = artwork['ConstituentID']
+        x = txt.strip('[]')
+
+        mp.put(catalog['ID'],x, lista_creada)
+        
+   
+
+    
   
 
 def addArtist(catalog, artistname):
 
     lt.addLast(catalog['Artist'], artistname)
+
+
+    mp.put(catalog['IDA'],artistname['ConstituentID'],artistname['Nationality'])
+
+    #if mp.contains(catalog['IDA'], artistname['ConstituentID']):
+    #    llave_valor=mp.get(catalog['IDA'],artistname['ConstituentID'])
+    #    valor=me.getValue(llave_valor)
+    #    lt.addLast(valor, artistname)
+    #else:
+    #    lista_creada= lt.newList(cmpfunction=cmpMedio)
+    #    lt.addLast(lista_creada, artistname)
+    #    mp.put(catalog['IDA'],artistname['ConstituentID'], lista_creada)
+
+
+    
 
 def newCatalog(estructuraDatos):
     
@@ -70,32 +102,47 @@ def newCatalog(estructuraDatos):
                'Medium': None,
                'Artist': None}
 
-    catalog['Art'] = lt.newList(estructuraDatos)
+    catalog['Art'] = lt.newList(datastructure=estructuraDatos)
 
-    catalog['Medium'] = mp.newMap(1000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpMedio)#Cómo sé qué caracteristicas le pongo a este mapa?, cant de espacio por ejemplo, ?????.
-                                   #Creería que un map de tipo chaining para que las obrascon el mismo medium se guarden en la misma llave, no?
-                                   #Pero el tamño del mapa qué? Ni idea xd
-
-    catalog['Artist'] = lt.newList(estructuraDatos)
+    catalog['Medium'] = mp.newMap(1000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpMedio)
+    catalog['Nationality'] = mp.newMap(300, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpMedio)
+    catalog['ID'] = mp.newMap(1000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpMedio)
+    catalog['Artist'] = lt.newList(datastructure=estructuraDatos)
+    catalog['IDA'] = mp.newMap(1000, maptype='PROBING', loadfactor=0.5, comparefunction=cmpMedio)
+    
  
     return catalog
 
-def get_primeros(lista_global, inicial, final):
-    lista_ordenada= sortArtists(lista_global)
-    lista_filtrada= filtrar_anhos(lista_ordenada, inicial, final)
-    lista_primeros= lt.subList(lista_filtrada, 1, 3)
-    return lista_primeros
-
-def get_ultimos(lista_global, inicial, final):
-    lista_ordenada= sortArtists(lista_global)
-    lista_filtrada= filtrar_anhos(lista_ordenada, inicial, final)
-    lista_ultimos= lt.subList(lista_filtrada, (lt.size(lista_filtrada)-3),3)
-    return lista_ultimos
 
 def obras_medio(catalog, Medio):
     medium = mp.get(catalog['Medium'], Medio)
     mediofinal= me.getValue(medium)
     return mediofinal
+
+def nacionalidadPorObra(catalog):
+    IDs = mp.keySet(catalog['ID'])
+    size = lt.size(IDs)
+    for pos in range(size):
+        ID = lt.getElement(IDs, pos)
+        obras = mp.get((catalog['ID']), ID)
+        
+        #sizeobras = lt.size(obras)
+
+        Nacionalidad = (mp.get(catalog['IDA'], ID))['value']
+        
+        if Nacionalidad is not None:
+            print(Nacionalidad)
+        
+        #for x in range(sizeobras):
+           # obra = lt.getElement(obras, x)
+            #mp.put(catalog['Nationality'], Nacionalidad, obra)
+            mp.put(catalog['Nationality'], Nacionalidad, obras)
+
+
+def tamañoMapaNacionalidad(catalog, nacionalidad):
+    valor = mp.get(catalog['Nationality'], nacionalidad)
+    print(valor)
+    return lt.size(valor)
     
 
 def get_conteo(lista_global, inicial, final):
@@ -281,39 +328,6 @@ def AddArtFecha(art, fechai, fechaf, Lista):
 def escompra(artwork):
     if artwork['CreditLine'] == 'Purchase':
         return True
-
-def verID(catalog):
-    nacionalidades = []
-    nacionalidades1 = []
-    listanacionalidades = lt.newList()
-    for keys in catalog['Art']:   
-         listaArte = catalog['Art'][keys]
-         if type(listaArte) == list:
-            for Artworks in listaArte:
-                idx = Artworks['ConstituentID']
-                id = idx.strip('[],')
-                
-
-                for keysa in catalog['Artist']:   
-                    listaArtista = catalog['Artist'][keysa]
-                    if type(listaArtista) == list:
-                        for Artista in listaArtista:
-                            ida = Artista['ConstituentID']
-                            if(ida == id):
-                                nacion = Artista['Nationality']
-                                nacionalidades.append(nacion)
-                                    
-    for nacion in nacionalidades:
-        a = [nacion, nacionalidades.count(nacion)]
-
-        if nacion not in nacionalidades1:
-            lt.addLast(listanacionalidades, a)
-            nacionalidades1.append(nacion)
-        
-        
-    return listanacionalidades
-
-
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 def cmpMedio(key, medio):
