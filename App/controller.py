@@ -24,6 +24,7 @@ from App.model import oldestn
 import config as cf
 import model
 import csv
+import timeit
 
 
 
@@ -40,10 +41,12 @@ def initCatalog():
     catalog = model.newCatalog()
     return catalog  
 # Funciones para la carga de datos
-def loadData(catalog) : 
-    loadArtists(catalog)
+def loadData(catalog) :
+    start = timeit.timeit() 
     loadArtworks(catalog)
     loadArtists(catalog)
+    end = timeit.timeit()
+    print(end-start)
 
 def loadArtists(catalog) : 
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv' 

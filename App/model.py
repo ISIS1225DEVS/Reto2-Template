@@ -63,17 +63,17 @@ def newCatalog():
     catalog['Artwork'] = lt.newList('SINGLE_LINKED', compareArtistID)
 
     catalog['Medium'] = mp.newMap(69000,
-                                maptype='PROBING',
+                                maptype='CHAINING',
                                 loadfactor=0.5,
                                 comparefunction=compareArtistMedium) 
     
     catalog["Nationality"] = mp.newMap(20000,
-                                maptype='PROBING',
+                                maptype='CHAINING',
                                 loadfactor=0.5,
                                 comparefunction=compareNationality)
 
     catalog['ArtistBeginYear'] = mp.newMap(69000,
-                                maptype='PROBING',
+                                maptype='CHAINING',
                                 loadfactor=0.5,
                                 comparefunction=compareMapYear)
     return catalog

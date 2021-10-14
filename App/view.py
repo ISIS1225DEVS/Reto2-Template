@@ -39,6 +39,7 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- Imprimir los n mas antiguos por medio")
     print("3- Número de obras según nacionalidad indicada")
+    print("4- listar cronológicamente los artistas")
 
 catalog = None
 def initCatalog() : 
