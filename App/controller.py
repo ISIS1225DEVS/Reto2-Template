@@ -63,4 +63,12 @@ def oldestbyMedium(catalog,medium,n) :
     Artworks = model.artWorksbyMedium(catalog,medium)
     sortedArtworks = model.sortArtworkDate(Artworks,3)
     return model.oldestn(sortedArtworks,n)
+
+def listCronoArtist(anioinicial,aniofinal,catalog):
+
+    artists = model.listCronoArtist(int(anioinicial),int(aniofinal),catalog) 
+    model.sortArtistBegin(artists,3)
+    return artists
+
+
    

@@ -141,7 +141,9 @@ def oldestn(artWorks,n) :
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 def compareArtistBeginYear(artist1,artist2) : 
-    return int(artist1['BeginDate']) < int(artist2['BeginDate'])
+    D1 = int(artist1['BeginDate'])
+    D2 = int(artist2['BeginDate'])
+    return D1 < D2 
 def compareArtworkDate(artwork1,artwork2) : 
     return int(artwork1['Date']) < int(artwork2['Date'])
 def compareMapYear(id, tag):
@@ -171,6 +173,16 @@ def compareArtistMedium(keyname, medium):
 
 
 # Funciones de ordenamiento
+def sortArtistBegin(artists,orden) : 
+    if orden == 1:
+      ins.sort(artists,compareArtistBeginYear)
+    elif orden == 2:
+      sa.sort(artists,compareArtistBeginYear)
+    elif orden == 3:
+      mer.sort(artists,compareArtistBeginYear)
+    elif orden == 4:
+      quic.sort(artists,compareArtistBeginYear)
+
 def sortArtworkDate(artWorks,orden):
     if orden == 1:
       ins.sort(artWorks,compareArtworkDate)
@@ -188,7 +200,22 @@ def listCronoArtist(anioinicial,aniofinal,catalog) :
     La funcion retorna los artistas nacidos en un anio.
 
     """
-    pass
+    beginYears = catalog['ArtistBeginYear']
+    anios = mp.keySet(catalog['ArtistBeginYear'])
+    artists = lt.newList('ARRAY_LIST')
+    i = 1 
+    while i <= lt.size(anios) : 
+        anio = int(lt.getElement(anios,i))
+        if anio >= anioinicial and anio <= aniofinal : 
+            entry = mp.get(beginYears, str(anio))
+            valor = me.getValue(entry)
+            j = 1 
+            while j <= lt.size(valor['Artists']) :
+                artista = lt.getElement(valor['Artists'],j)
+                lt.addLast(artists, artista)
+                j +=1 
+        i += 1 
+    return artists
 
 
 #TODO: Funciones req 2 
