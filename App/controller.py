@@ -41,7 +41,13 @@ def initCatalog():
     return catalog  
 # Funciones para la carga de datos
 def loadData(catalog) : 
+    loadArtist(catalog)
     loadArtworks(catalog)
+def loadArtist(catalog):
+    artistfile = cf.data_dir + 'Artists-utf8-small.csv'
+    input_file = csv.DictReader(open(artistfile,encoding='utf-8'))
+    for artist in input_file : 
+        model.addArtist(catalog, artist)
 def loadArtworks(catalog): 
     artworksfile = cf.data_dir + 'Artworks-utf8-small.csv'
     input_file = csv.DictReader(open(artworksfile,encoding='utf-8'))

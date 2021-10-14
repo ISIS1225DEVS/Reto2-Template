@@ -75,6 +75,21 @@ def newCatalog():
     return catalog
 
 # Funciones para agregar informacion al catalogo
+def addArtist(catalog, name, id,bio,nationality,gender,begin,end,wiki,ulan):
+    artist = {'DisplayName': '','ConstituentID': 0,'ArtistBio': '',
+        'Nationality': '','Gender': '','BeginDate': 0, 'EndDate': 0,
+            'Wiki QID': '','ULAN': 0}
+    artist['DisplayName'] = name
+    artist['ConstituentID'] = id  
+    artist['ArtistBio'] = bio 
+    artist['Nationality'] = nationality
+    artist['Gender'] = gender
+    artist['BeginDate'] = begin
+    artist['EndDate'] = end
+    artist['Wiki QID'] = wiki 
+    artist['ULAN'] = ulan
+    return artist
+
 def addArtWork (catalog,artWork) : 
     lt.addLast(catalog['Artwork'],artWork)
     medium = artWork['Medium'] 
