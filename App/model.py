@@ -70,7 +70,7 @@ def newCatalog():
     catalog['ArtistBeginYear'] = mp.newMap(69000,
                                 maptype='PROBING',
                                 loadfactor=0.5,
-                                comparefunction=compareArtistBeginYear)
+                                comparefunction=compareMapYear)
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -89,9 +89,11 @@ def addArtistYear(catalog,year,artist) :
     existedYear = mp.contains(years,year)
     if existedYear : 
         entry = mp.get(years,year)
-        Year = me.getValue(years,year)
+        Year = me.getValue(entry)
     else : 
         Year = newArtistBeginYear(year)
+        mp.put(years,year,Year)
+    lt.addLast(Year['Artists'],artist)
 
 
 
@@ -118,7 +120,11 @@ def newMedium (medium) :
     medium = medium['Medium'] = medium
     medium['artWorks'] = lt.newList('ARRAY_LIST') 
     return medium
-
+def newArtistBeginYear(Year) : 
+    year = {'Begin Year': '', 'Artists': None}
+    year['Begin Year'] = Year 
+    year['Artists'] = lt.newList('ARRAY_LIST')
+    return year
 
 # Funciones de consulta
 def artWorksbyMedium(catalog,medium) :
@@ -138,7 +144,14 @@ def compareArtistBeginYear(artist1,artist2) :
     return int(artist1['BeginDate']) < int(artist2['BeginDate'])
 def compareArtworkDate(artwork1,artwork2) : 
     return int(artwork1['Date']) < int(artwork2['Date'])
-
+def compareMapYear(id, tag):
+    tagentry = me.getKey(tag)
+    if (id == tagentry):
+        return 0
+    elif (id > tagentry):
+        return 1
+    else:
+        return 0
 def compareArtistID(artistid1, artistid2):
     if (int(artistid1) == int(artistid2)):
         return 0
@@ -169,6 +182,13 @@ def sortArtworkDate(artWorks,orden):
       quic.sort(artWorks,compareArtworkDate)
 
 #TODO: Funciones req 1 
+
+def listCronoArtist(anioinicial,aniofinal,catalog) : 
+    """
+    La funcion retorna los artistas nacidos en un anio.
+
+    """
+    pass
 
 
 #TODO: Funciones req 2 
