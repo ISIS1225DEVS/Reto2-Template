@@ -64,7 +64,8 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = initCatalog() 
         loadData(catalog)
-        print('Se cargaron: ' + str(lt.size(catalog['Artwork'])) + 'artworks')
+        print('Se cargaron: ' + str(lt.size(catalog['Artwork'])) + ' artworks')
+
 
         
 
@@ -79,6 +80,25 @@ while True:
         nationality = input("Buscando obras de la nacionalidad: ")
         numberArtWorks = controller.countobrasnationality(nationality, catalog)
         print(printcountobrasnationality(numberArtWorks))
+    
+    elif int(inputs[0]) == 4 : 
+        anioinicial = int(input("Ingrese el año inicial: "))
+        aniofinal = int(input("Ingrese el año final: ")) 
+        artistas = controller.listCronoArtist(anioinicial,aniofinal,catalog) 
+        i = 1 
+        while i <= 3 :
+            print(lt.getElement(artistas,i))
+            i += 1 
+        j = lt.size(artistas) 
+        print('-'*50)
+        while j > lt.size(artistas) - 3 : 
+            print(lt.getElement(artistas,j))
+            j -= 1 
+        
+
+
+
+        
         
 
     else:

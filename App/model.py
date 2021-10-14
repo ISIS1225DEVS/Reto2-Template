@@ -72,6 +72,10 @@ def newCatalog():
                                 loadfactor=0.5,
                                 comparefunction=compareNationality)
 
+    catalog['ArtistBeginYear'] = mp.newMap(69000,
+                                maptype='PROBING',
+                                loadfactor=0.5,
+                                comparefunction=compareMapYear)
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -95,6 +99,22 @@ def addArtWork (catalog,artWork) :
     medium = artWork['Medium'] 
     addArtWorkMedium(catalog,medium,artWork)
 
+def addArtist(catalog,artist) : 
+    lt.addLast(catalog['Artist'],artist)
+    year = artist['BeginDate'] 
+    addArtistYear(catalog,year,artist) 
+
+def addArtistYear(catalog,year,artist) : 
+    years = catalog['ArtistBeginYear'] 
+    existedYear = mp.contains(years,year)
+    if existedYear : 
+        entry = mp.get(years,year)
+        Year = me.getValue(entry)
+    else : 
+        Year = newArtistBeginYear(year)
+        mp.put(years,year,Year)
+    lt.addLast(Year['Artists'],artist)
+
 
 
 def addArtWorkMedium(catalog,medium,artWork) : 
@@ -110,6 +130,8 @@ def addArtWorkMedium(catalog,medium,artWork) :
 
 
 # Funciones para creacion de datos
+
+    
 def newMedium (medium) : 
     """
     Relaciona un medio con las obras. 
@@ -118,7 +140,11 @@ def newMedium (medium) :
     medium = medium['Medium'] = medium
     medium['artWorks'] = lt.newList('ARRAY_LIST') 
     return medium
-
+def newArtistBeginYear(Year) : 
+    year = {'Begin Year': '', 'Artists': None}
+    year['Begin Year'] = Year 
+    year['Artists'] = lt.newList('ARRAY_LIST')
+    return year
 
 # Funciones de consulta
 def artWorksbyMedium(catalog,medium) :
@@ -134,9 +160,20 @@ def oldestn(artWorks,n) :
         oldest.append(lt.getElement(artWorks,pos))
 
 # Funciones utilizadas para comparar elementos dentro de una lista
+def compareArtistBeginYear(artist1,artist2) : 
+    D1 = int(artist1['BeginDate'])
+    D2 = int(artist2['BeginDate'])
+    return D1 < D2 
 def compareArtworkDate(artwork1,artwork2) : 
     return int(artwork1['Date']) < int(artwork2['Date'])
-
+def compareMapYear(id, tag):
+    tagentry = me.getKey(tag)
+    if (id == tagentry):
+        return 0
+    elif (id > tagentry):
+        return 1
+    else:
+        return 0
 def compareArtistID(artistid1, artistid2):
     if (int(artistid1) == int(artistid2)):
         return 0
@@ -165,6 +202,16 @@ def compareNationality(keyname, nationality):
 
 
 # Funciones de ordenamiento
+def sortArtistBegin(artists,orden) : 
+    if orden == 1:
+      ins.sort(artists,compareArtistBeginYear)
+    elif orden == 2:
+      sa.sort(artists,compareArtistBeginYear)
+    elif orden == 3:
+      mer.sort(artists,compareArtistBeginYear)
+    elif orden == 4:
+      quic.sort(artists,compareArtistBeginYear)
+
 def sortArtworkDate(artWorks,orden):
     if orden == 1:
       ins.sort(artWorks,compareArtworkDate)
@@ -181,3 +228,29 @@ def countobrasnationality(nationality, catalog):
     if nationality:
         return me.getValue(nationality)['ArtWork']
     return None
+#TODO: Funciones req 1 
+
+def listCronoArtist(anioinicial,aniofinal,catalog) : 
+    """
+    La funcion retorna los artistas nacidos en un anio.
+
+    """
+    beginYears = catalog['ArtistBeginYear']
+    anios = mp.keySet(catalog['ArtistBeginYear'])
+    artists = lt.newList('ARRAY_LIST')
+    i = 1 
+    while i <= lt.size(anios) : 
+        anio = int(lt.getElement(anios,i))
+        if anio >= anioinicial and anio <= aniofinal : 
+            entry = mp.get(beginYears, str(anio))
+            valor = me.getValue(entry)
+            j = 1 
+            while j <= lt.size(valor['Artists']) :
+                artista = lt.getElement(valor['Artists'],j)
+                lt.addLast(artists, artista)
+                j +=1 
+        i += 1 
+    return artists
+
+
+#TODO: Funciones req 2 
