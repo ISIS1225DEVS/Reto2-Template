@@ -108,6 +108,8 @@ def addArtWorkMedium(catalog,medium,artWork) :
 
 
 # Funciones para creacion de datos
+
+    
 def newMedium (medium) : 
     """
     Relaciona un medio con las obras. 
