@@ -44,7 +44,8 @@ def printMenu():
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("6- Transportar obras de un departamento")
     print("7- Realizar prueba de rendimiento")
-    print("8- Salir")
+    print("8- Encontrar el número total de obras para una nacionalidad")
+    print("9- Salir")
 
 def printPerfMenu():
     print("1- Listar cronológicamente los artistas para un rango de años")
@@ -238,7 +239,9 @@ def printReq5Answer(moveDepartmentAns, department, sort_type, artists,list_type)
         'Medio:', artwork['Medium'] + ',', 'Dimensiones:', artwork['Dimensions'] + ',', 'Costo:', str(round(artwork['EstPrice'],2)) + '.')
         i += 1
 
-
+#Requirement 7
+def printReq7Answer(n_artworks,nationality):
+    print('\nEl número de obras de arte encontradas para la nacionalidad', nationality, 'es de', str(n_artworks),'obras.')
 
 """
 Menu principal
@@ -295,7 +298,12 @@ while True:
         n = int(input('Establezca el número de obras: '))
         sort_type = 5
         n_artworks = controller.oldestArtworks(catalog,medium,sort_type,list_type)
+        start_time = controller.start_endPerfTest()
         printReq0Answer(n_artworks,Artists,n)
+        stop_time = controller.start_endPerfTest()
+        total_time = (stop_time - start_time)*1000
+        print('\nEl tiempo usado para llevar a cabo el algoritmo es de ' + str(total_time) + ' mseg.')
+        input('Presione "Enter" para continuar.\n')
     
     elif int(inputs[0]) == 2:
         StartYear = int(input('Brinde el año inicial del rango: '))
@@ -481,6 +489,24 @@ while True:
         else:
             pass
     elif int(inputs[0]) == 8:
+        valid_nationality = False
+        while not(valid_nationality):
+            nationality = input('Brinde la nacionalidad para la cual desea conocer el número de obras: ')
+            if controller.encounterNationality(catalog,nationality):
+                valid_nationality= True
+            else:
+                print('Debe seleccionar una nacionalidad válida.')
+                input('Presione "Enter" para continuar.\n')
+        
+        n_artworks = controller.countArtworksNationality(catalog,nationality)
+        start_time = controller.start_endPerfTest()
+        printReq7Answer(n_artworks,nationality)
+        stop_time = controller.start_endPerfTest()
+        total_time = (stop_time - start_time)*1000
+        print('\nEl tiempo usado para llevar a cabo el algoritmo es de ' + str(total_time) + ' mseg.')
+        input('Presione "Enter" para continuar.\n')
+    
+    elif int(inputs[0]) == 9:
         sys.exit(0)
     else:
         print('Debe seleccionar una opción válida')

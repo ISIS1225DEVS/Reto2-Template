@@ -55,6 +55,7 @@ def loadArtworks(catalog,list_type):
     for artwork in input_file:
         model.addArtworks(catalog,artwork)
         model.loadMedium(catalog,artwork,list_type)
+        model.loadNationality(catalog,artwork,catalog['artists'],list_type)
 
 #Requirement 0
 def encounterMedium(catalog,medium):
@@ -152,6 +153,13 @@ def SortArtworksByPrice(artworks_dep,sort_type):
     else:
         sort_type = "MERGE"
     return model.SortArtworksByPrice(artworks_dep,sort_type)
+
+#Requirement 0
+def encounterNationality(catalog,nationality):
+    return model.encounterNationality(catalog,nationality)
+
+def countArtworksNationality(catalog,nationality):
+    return model.countArtworksNationality(catalog,nationality)
 
 #Performance & Efficiency
 def createSample(listArt,sample_size):

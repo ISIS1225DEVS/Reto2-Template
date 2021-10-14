@@ -47,7 +47,7 @@ def newCatalog(list_type):
     """
     Inicializa el catálogo de artistas y obras.
     """
-    catalog = {'artists': lt.newList(datastructure=list_type),'artworks':lt.newList(datastructure=list_type), 'Medium':map.newMap()}
+    catalog = {'artists': lt.newList(datastructure=list_type),'artworks':lt.newList(datastructure=list_type), 'Medium':map.newMap(), 'Nationality':map.newMap()}
     return catalog
 
 # Funciones para la carga de datos
@@ -82,6 +82,21 @@ def loadMedium(catalog, artwork, list_type):
     else:
         artworks_med = map.get(map_medium,medium)
         lt.addLast(artworks_med['value'],artwork)
+
+def loadNationality(catalog, artwork, artists, list_type):
+    artists_IDs = artwork['ConstituentID']
+    nationalities = findArtistNationality(artists,artists_IDs)
+    for nationality in nationalities:
+        if nationality == '':
+            nationality = 'Unknown'
+        map_nationality = catalog['Nationality']
+        if not( map.contains(map_nationality,nationality) ):
+            artworks_med = lt.newList(datastructure=list_type)
+            lt.addLast(artworks_med,artwork)
+            map.put(map_nationality,nationality,artworks_med)
+        else:
+            artworks_med = map.get(map_nationality,nationality)
+            lt.addLast(artworks_med['value'],artwork)
 
 # Funciones de consulta sobre el catálogo
 
@@ -415,6 +430,14 @@ def SortArtworksByPrice(artworks_dep,sort_type):
     else:
         sortedList = ms.sort(artworks_dep,cmpArtworkByEstPrice)
     return sortedList
+
+#Requirement 7
+def encounterNationality(catalog,nationality):
+    return map.contains(catalog['Nationality'],nationality)
+
+def countArtworksNationality(catalog,nationality):
+    artworks = map.get(catalog['Nationality'],nationality)
+    return lt.size(artworks['value'])
 
 #Performance & Efficiency
 def createSample(listArt,sample_size):
