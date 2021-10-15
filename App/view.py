@@ -115,14 +115,16 @@ while True:
     elif int(inputs[0]) == 4:
         start_time = time.process_time()
         nombre= input("Indique el nombre del artista: ")
-        (obrasArtista, Tecnicas)= controller.ObrasPorArtistaPorTecnica(catalog,nombre)
-        if Tecnicas != None and obrasArtista!= None:
-            Tecnica= controller.buscarTecnicaMasRep(Tecnicas)
-            print(str(nombre)+ " tiene un total de: "+ str(lt.size(obrasArtista))+" obras.")
-            print("La tecnica más utilizada es: "+ str(Tecnicas[Tecnica]["nombre"])+". Con "+str(lt.size(Tecnicas[Tecnica]["obras"]))+" obras.")
-            print("El listado de obras es: ")
-        else:
-            print("Entrada invalida")
+        (Tecnicas, tecnicaRep)= controller.ObrasPorArtistaPorTecnica(catalog,nombre)
+        print(str(nombre)+ " tiene un total de: "+ str(mp.size(Tecnicas))+" tecnicas.")
+        print("La tecnica más utilizada es: "+ str(tecnicaRep)+". Con "+str(mp.size(Tecnicas[tecnicaRep]+" obras."))
+        # (obrasArtista, Tecnicas)= controller.ObrasPorArtistaPorTecnica(catalog,nombre)
+        # if Tecnicas != None and obrasArtista!= None:
+        #     Tecnica= controller.buscarTecnicaMasRep(Tecnicas)
+        #     print(str(nombre)+ " tiene un total de: "+ str(lt.size(obrasArtista))+" obras.")
+        #     print("El listado de obras es: ")
+        # else:
+        #     print("Entrada invalida")
         stop_time = time.process_time()
         timepaso= stop_time-start_time
         print("Tiempo transcurrido "+ str(timepaso))
