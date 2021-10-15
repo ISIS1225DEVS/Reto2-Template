@@ -93,6 +93,17 @@ def addOrCreateListInMap(mapa, llave, elemento):
         lt.addLast(lista_existente,elemento)
         mp.put(mapa,llave,lista_existente)
 
+# def addOrCreateListInMapHistograma(mapa, llave, elemento):
+#     if mp.contains(mapa,llave)==False:
+#         lista_nueva=lt.newList("ARRAY_LIST")
+#         lt.addLast(lista_nueva,elemento)
+#         mp.put(mapa,llave,lista_nueva)
+#     else:
+#         pareja=mp.get(mapa,llave)
+#         lista_existente=me.getValue(pareja)
+#         lt.addLast(lista_existente,elemento)
+#         mp.put(mapa,llave,lista_existente)
+
 def addObra(catalog, obra):
     artwork={}
     artwork["ObjectID"]= obra["ObjectID"]
@@ -165,17 +176,17 @@ def ObrasPorArtistaPorTecnica(catalogo,nombre):
         artista= me.getValue(par)
         mapaTecnicas= artista["mArtworksTecnica"]
     TecnicaMasRep= buscarTecnicaMasRep(mapaTecnicas)
-    return(mapaTecnicas,TecnicaMasRep)
+    numeroObras= lt.size(artista["Artworks"])
+    return(mapaTecnicas,TecnicaMasRep, numeroObras)
 
 def buscarTecnicaMasRep(Tecnicas):
-        Tecnicas= " "
-        size_mayor=0
-        for tecnica in lt.iterator(mp.keySet(Tecnicas)):
-            size= lt.size(Tecnicas[tecnica])
-            if size>size_mayor:
-                size_mayor= size
-                TecnicaMas= tecnica
-        return TecnicaMas
+    size_mayor=0
+    for tecnica in lt.iterator(mp.keySet(Tecnicas)):
+        size= lt.size(me.getValue(mp.get(Tecnicas,tecnica)))
+        if size>size_mayor:
+            size_mayor= size
+            TecnicaMas= tecnica
+    return TecnicaMas
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 def cmpArtistId(artist1, artist2):

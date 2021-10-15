@@ -28,6 +28,7 @@ from datetime import datetime
 import time
 assert cf
 from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 default_limit = 1000
 sys.setrecursionlimit(default_limit*10)
 
@@ -79,7 +80,6 @@ while True:
         print('Artistas cargados: ' + str(mp.size(catalog['artistas']["mID"])))
         print("Medios utilizados " + str(mp.size(catalog["obras"]["mMedio"])))
         print("Nacionalidades obras " + str(mp.size(catalog["obras"]["mNacionalidad"])))
-        print("Nacionalidades  " + str(mp.keySet(catalog["obras"]["mNacionalidad"])))
         stop_time = time.process_time()
         timepaso= stop_time-start_time
         print("Tiempo transcurrido "+ str(timepaso))
@@ -115,16 +115,11 @@ while True:
     elif int(inputs[0]) == 4:
         start_time = time.process_time()
         nombre= input("Indique el nombre del artista: ")
-        (Tecnicas, tecnicaRep)= controller.ObrasPorArtistaPorTecnica(catalog,nombre)
+        (Tecnicas, tecnicaRep, numeroObras)= controller.ObrasPorArtistaPorTecnica(catalog,nombre)
         print(str(nombre)+ " tiene un total de: "+ str(mp.size(Tecnicas))+" tecnicas.")
-        print("La tecnica más utilizada es: "+ str(tecnicaRep)+". Con "+str(mp.size(Tecnicas[tecnicaRep]+" obras.")))
-        # (obrasArtista, Tecnicas)= controller.ObrasPorArtistaPorTecnica(catalog,nombre)
-        # if Tecnicas != None and obrasArtista!= None:
-        #     Tecnica= controller.buscarTecnicaMasRep(Tecnicas)
-        #     print(str(nombre)+ " tiene un total de: "+ str(lt.size(obrasArtista))+" obras.")
-        #     print("El listado de obras es: ")
-        # else:
-        #     print("Entrada invalida")
+        listaObras= me.getValue(mp.get(Tecnicas,tecnicaRep))
+        print("La tecnica más utilizada es: "+ str(tecnicaRep) +". Con "+ str(numeroObras)+ " obras.")
+
         stop_time = time.process_time()
         timepaso= stop_time-start_time
         print("Tiempo transcurrido "+ str(timepaso))
