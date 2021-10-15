@@ -117,7 +117,7 @@ while True:
         nombre= input("Indique el nombre del artista: ")
         (Tecnicas, tecnicaRep)= controller.ObrasPorArtistaPorTecnica(catalog,nombre)
         print(str(nombre)+ " tiene un total de: "+ str(mp.size(Tecnicas))+" tecnicas.")
-        print("La tecnica más utilizada es: "+ str(tecnicaRep)+". Con "+str(mp.size(Tecnicas[tecnicaRep]+" obras."))
+        print("La tecnica más utilizada es: "+ str(tecnicaRep)+". Con "+str(mp.size(Tecnicas[tecnicaRep]+" obras.")))
         # (obrasArtista, Tecnicas)= controller.ObrasPorArtistaPorTecnica(catalog,nombre)
         # if Tecnicas != None and obrasArtista!= None:
         #     Tecnica= controller.buscarTecnicaMasRep(Tecnicas)
