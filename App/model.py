@@ -122,27 +122,36 @@ def obras_medio(catalog, Medio):
 def nacionalidadPorObra(catalog):
     IDs = mp.keySet(catalog['ID'])
     size = lt.size(IDs)
+    
+    
     for pos in range(size):
-        ID = lt.getElement(IDs, pos)
-        obras = mp.get((catalog['ID']), ID)
+        ID = lt.getElement(IDs, pos)        # O()
+        obras = mp.get((catalog['ID']), ID) # O(1)
         
-        #sizeobras = lt.size(obras)
 
-        Nacionalidad = (mp.get(catalog['IDA'], ID))['value']
+        valornacionalidad = (mp.get(catalog['IDA'], ID))
+        nacionalidad = me.getValue(valornacionalidad)
+
+        if nacionalidad is not None:
+
+            if not mp.contains(catalog['Nationality'], nacionalidad):
+                lista_creada= lt.newList(cmpfunction=cmpMedio)
+                lt.addLast(lista_creada, obras)
+                mp.put(catalog['Nationality'], nacionalidad, obras)    
         
-        if Nacionalidad is not None:
-            print(Nacionalidad)
-        
-        #for x in range(sizeobras):
-           # obra = lt.getElement(obras, x)
-            #mp.put(catalog['Nationality'], Nacionalidad, obra)
-            mp.put(catalog['Nationality'], Nacionalidad, obras)
+            else:
+                llave_valor = mp.get(catalog['Nationality'],nacionalidad)
+                valor = me.getValue(llave_valor)
+                lt.addLast(valor, obras)
+                mp.put(catalog['Nationality'], llave_valor, valor)
+                 
+
 
 
 def tamañoMapaNacionalidad(catalog, nacionalidad):
     valor = mp.get(catalog['Nationality'], nacionalidad)
-    print(valor)
-    return lt.size(valor)
+    print(valor['value'])
+    return lt.size(valor['value'])
     
 
 def get_conteo(lista_global, inicial, final):
@@ -335,6 +344,15 @@ def cmpMedio(key, medio):
     if key == medentry:
         return 0
     elif (key > medentry):
+        return 1
+    else:
+        return -1
+
+
+def cmpArtistID(artist1, artist2):
+    if artist1['ConstituentID'] == artist2['ConstituentID']:
+        return 0
+    elif (artist1['ConstituentID'] > artist2['ConstituentID']):
         return 1
     else:
         return -1
