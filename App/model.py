@@ -48,15 +48,14 @@ def addArt(catalog, artwork):
     if mp.contains(catalog['Medium'], artwork['Medium']):
         llave_valor=mp.get(catalog['Medium'],artwork['Medium'])
         valor=me.getValue(llave_valor)
+        #print(llave_valor)
         lt.addLast(valor, artwork)
-       # mp.put(catalog['Medium'], llave_valor,valor)
-        mp.put(catalog['Medium'], artwork['Medium'], artwork)
+        #mp.put(catalog['Medium'], llave_valor,valor)
+        #mp.put(catalog['Medium'], artwork['Medium'], artwork)
     else:
-        lista_creada= lt.newList()
+        lista_creada= lt.newList(cmpfunction=cmpMedio)
         lt.addLast(lista_creada, artwork)
         mp.put(catalog['Medium'],artwork['Medium'], lista_creada)
-        
-
   
 
 def addArtist(catalog, artistname):
