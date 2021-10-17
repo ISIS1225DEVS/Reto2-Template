@@ -47,7 +47,9 @@ def newCatalog(list_type):
     """
     Inicializa el catálogo de artistas y obras.
     """
-    catalog = {'artists': lt.newList(datastructure=list_type),'artworks':lt.newList(datastructure=list_type), 'Medium':map.newMap(), 'Nationality':map.newMap()}
+    catalog = {'artists': lt.newList(datastructure=list_type),'artworks':lt.newList(datastructure=list_type), 
+    'ArtistID':map.newMap(), 'Medium':map.newMap(maptype='PROBING',loadfactor=0.50,numelements=42503), 
+    'Nationality':map.newMap(maptype='PROBING',loadfactor=0.50,numelements=233)}
     return catalog
 
 # Funciones para la carga de datos
@@ -55,6 +57,11 @@ def newCatalog(list_type):
 def addArtists(catalog,artist):
     artists = catalog['artists']
     lt.addLast(artists,artist)
+
+def addArtistsIDs(catalog,artist):
+    artist_ID = artist['ConstituentID']
+    artist_map = catalog['ArtistID']
+    map.put(artist_map,artist_ID,artist)
 
 def addArtworks(catalog, artwork):
     artworks = catalog['artworks']
@@ -83,10 +90,11 @@ def loadMedium(catalog, artwork, list_type):
         artworks_med = map.get(map_medium,medium)
         lt.addLast(artworks_med['value'],artwork)
 
-def loadNationality(catalog, artwork, artists, list_type):
-    artists_IDs = artwork['ConstituentID']
-    nationalities = findArtistNationality(artists,artists_IDs)
-    for nationality in nationalities:
+def loadNationality(catalog, artwork, list_type):
+    artist_IDs = artwork['ConstituentID']
+    artistsIDs_map = catalog['ArtistID']
+    nationalities = findArtistNationality(artistsIDs_map,artist_IDs,list_type)
+    for nationality in lt.iterator(nationalities):
         if nationality == '':
             nationality = 'Unknown'
         map_nationality = catalog['Nationality']
@@ -228,16 +236,13 @@ def artistMediumInfo(artworks,artist_ID,list_type):
     return artist_artworks, artist_mediums, mostUsed, mediums[mostUsed]
 
 #Requirement 4
-def findArtistNationality(artists,artist_IDs):
-    artists_artworks = []
+def findArtistNationality(artistsIDs_map,artist_IDs,list_type):
+    artwork_nationalities = lt.newList(datastructure=list_type)
     for artist_ID in (artist_IDs.replace('[','')).replace(']','').split(','):
-        pos = 0
-        while pos < lt.size(artists):
-            artist = lt.getElement(artists,pos)
-            if artist['ConstituentID'] == artist_ID:
-                artists_artworks.append(artist['Nationality'])
-            pos += 1
-    return artists_artworks
+        if map.contains(artistsIDs_map,artist_ID):
+            artist = map.get(artistsIDs_map,artist_ID)['value']
+            lt.addLast(artwork_nationalities,artist['Nationality']) 
+    return artwork_nationalities
 
 def nationalityArtworks(artworks,artists,list_type):
     artworksNationality = lt.newList(datastructure=list_type)

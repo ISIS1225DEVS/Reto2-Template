@@ -263,9 +263,13 @@ while True:
                 listaValida = True
         
         print("Cargando información de los archivos ....")
+        start_time = controller.start_endPerfTest()
         catalog = controller.initCatalog(list_type)
         controller.loadArtists(catalog)
         controller.loadArtworks(catalog,list_type)
+        stop_time = controller.start_endPerfTest()
+        total_time = (stop_time - start_time)*1000
+
         Artists = catalog['artists']
         Artworks = catalog['artworks']
         print('Total de artistas cargados: ' + str(lt.size(Artists)))
@@ -278,6 +282,9 @@ while True:
 
         print('\nInformación de últimas obras de la lista:\n')
         printLastArtworks(Artworks)
+        input('Presione "Enter" para continuar.\n')
+        
+        print('\nEl tiempo usado para llevar a cabo el algoritmo es de ' + str(total_time) + ' mseg.')
         input('Presione "Enter" para continuar.\n')
         
     

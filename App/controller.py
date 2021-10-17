@@ -44,18 +44,19 @@ def initCatalog(list_type):
 
 # Funciones para la carga de datos
 def loadArtists(catalog):
-    filename = cf.data_dir + 'MoMA/Artists-utf8-small.csv'
+    filename = cf.data_dir + 'MoMA/Artists-utf8-large.csv'
     input_file = csv.DictReader(open(filename, encoding='utf-8'))
     for artist in input_file:
         model.addArtists(catalog,artist)
+        model.addArtistsIDs(catalog,artist)
 
 def loadArtworks(catalog,list_type):
-    filename = cf.data_dir + 'MoMA/Artworks-utf8-small.csv'
+    filename = cf.data_dir + 'MoMA/Artworks-utf8-large.csv'
     input_file = csv.DictReader(open(filename, encoding='utf-8'))
     for artwork in input_file:
         model.addArtworks(catalog,artwork)
         model.loadMedium(catalog,artwork,list_type)
-        model.loadNationality(catalog,artwork,catalog['artists'],list_type)
+        model.loadNationality(catalog,artwork,list_type)
 
 #Requirement 0
 def encounterMedium(catalog,medium):
