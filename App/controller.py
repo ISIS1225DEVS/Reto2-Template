@@ -42,7 +42,7 @@ def loadArtistas(catalog):
     """
     Carga todos los artistas del archivo y la agrega a la lista de obras en el catalogo general
     """
-    Artistfile = cf.data_dir + 'Artists-utf8-small.csv'
+    Artistfile = cf.data_dir + 'Artists-utf8-large.csv'
     input_file = csv.DictReader(open(Artistfile, encoding='utf-8'))
     for artist in input_file:
         model.addArtist(catalog, artist)
@@ -51,13 +51,10 @@ def loadObras(catalog):
     """
     Carga todas las obras del archivo y la agrega a la lista de obras en el catalogo general
     """
-    Obrasfile = cf.data_dir + 'Artworks-utf8-small.csv'
+    Obrasfile = cf.data_dir + 'Artworks-utf8-large.csv'
     input_file = csv.DictReader(open(Obrasfile, encoding='utf-8'))
     for obra in input_file:
         model.addObra(catalog, obra)
-def ObrasAntiguasMedio (catalog,nombre,n):
-    return model.ObrasAntiguasPorMedio(catalog,nombre,n)
-
 # Funciones de ordenamiento
 def sortArtworksandRange(lista,inicial,final):
     return model.sortArtworksandRange(lista,inicial,final)
@@ -80,6 +77,4 @@ def ObrasPorArtistaPorTecnica(catalogo,nombre):
     return model.ObrasPorArtistaPorTecnica(catalogo,nombre)
 def buscarTecnicaMasRep(dicTecnicas):
     return model.buscarTecnicaMasRep(dicTecnicas)
-def ObrasAntiguasPorMedio(catalog,nombre):
-    return model.ObrasAntiguasPorMedio(catalog,nombre)
 
