@@ -172,11 +172,6 @@ while True:
         nacionalidades=controller.RankingCountriesByArtworks(catalog,obras)
         print("El top 10 de los países en el MoMa son: ")
         num=0
-        #for i in nacionalidades:
-            #print(str(i)+ ":"+ str(nacionalidades[i]))
-            #num+=1
-            #if num==10:
-                #break
         print (nacionalidades)
         stop_time = time.process_time()
         timepaso= stop_time-start_time
@@ -193,16 +188,11 @@ while True:
         print("El peso estimado de las obras es de "+ str(peso_total))
         listaporprecio= controller.sortArtworksByPrice(listaObrasdeDepto)
         listaporfecha= controller.sortArtworksByDate(listaObrasdeDepto)
+
         stop_time = time.process_time()
         timepaso= stop_time-start_time
         print("Tiempo transcurrido "+ str(timepaso))
-    elif int(inputs[0]) == 7:
-        start_time = time.process_time()
-        nombre= input("Indique el nombre del medio: ")
-        n= int(input("Indique el número de obras: "))
-        obras_medio= controller.ObrasAntiguasMedio(catalog,nombre,n)
-        print(str(obras_medio))
-    elif int(inputs[0]) >= 8 :
+    elif int(inputs[0]) >= 7 :
         print ("Lo sentimos, Requerimiento no disponible")
         pass
     else:

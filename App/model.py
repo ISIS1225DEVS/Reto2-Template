@@ -194,6 +194,32 @@ def cmpArtistByDate(artist1, artist2):
 #             lt.addLast(listaEnRango, i)
 #     listaOrdenada= m.sort(ListaEnRango,cmpArtistByDate)
 #     return (listaEnRango)
+#REQ 2#
+def sortArtworksandRange(lista,inicial,final):
+    inicial=datetime.strptime(str(inicial),"%Y-%m-%d")
+    final=datetime.strptime(str(final),"%Y-%m-%d")
+    listaEnRango= lt.newList("ARRAY_LIST")
+    purchased=0
+    for i in lt.iterator(lista):
+        date=i['DateAcquired']
+        if date=="":
+            date="0001-01-01"
+        date_format=datetime.strptime(str(date),"%Y-%m-%d")
+        if date_format<= final and date_format>=inicial:
+                lt.addLast(listaEnRango,i)
+                credit_line= str(i["CreditLine"]).lower()
+                if ("Purchase").lower() in credit_line or ("Purchased").lower() in credit_line :
+                    purchased+=1
+    lista_ordenada= ins.sort(listaEnRango,cmpArtworkByDateAcquired)
+    return (lista_ordenada,purchased)
+def sortArtworksByDate(lista):
+    lista_ordenada= lista.copy()
+    lista_ordenada= m.sort(lista_ordenada,cmpArtworkByDate)
+    return lista_ordenada
+def sortArtworksByPrice(listaog):
+    lista= listaog.copy()
+    m.sort(lista,cmpArtworktByPrice)
+    return lista
 
 #REQ 3#
 def ObrasPorArtistaPorTecnica(catalogo,nombre):
@@ -217,6 +243,65 @@ def buscarTecnicaMasRep(Tecnicas):
             size_mayor= size
             TecnicaMas= tecnica
     return TecnicaMas
+#REQ 4#
+def RankingCountriesByArtworks (catalog,obras):
+    lista_artistas=catalog["artistas"]
+    dict_nacionalidades= {}
+    for i in obras:
+        for n in lt.iterator(lista_artistas):
+            if i in n["Artworks"]:
+                nacionalidad= n["Nationality"]
+                if nacionalidad not in dict_nacionalidades:
+                    dict_nacionalidades[nacionalidad]=1
+                else:
+                    dict_nacionalidades[nacionalidad]+=1
+    return (dict_nacionalidades)
+
+#REQ 5#
+def AsignarPrecio(object):
+    #considerar datos vacios revisar reglas#
+    m3=-1
+    if object["Width (cm)"]!="" and object["Height (cm)"]!="" and object["Depth (cm)"]!="":
+        m3= ((float(object["Width (cm)"]))*(float(object["Height (cm)"]))*(float(object["Depth (cm)"])))
+        m3= m3/1000000
+    m2=-1
+    if object["Width (cm)"]!="" and object["Height (cm)"]!="":
+        m2=(float(object["Width (cm)"]))*(float(object["Height (cm)"]))
+        m2=m2/10000
+    precio=-1
+    preciom3= 0
+    preciom2= 0
+    precioKg= 0
+    if object["Weight (kg)"] != "":
+        precioKg= 72* float(object["Weight (kg)"])
+    if m3>0:
+        preciom3= 72* float(m3)
+    if m2>0:
+        preciom2= 72* float(m2)
+    if preciom3 ==0 and preciom2==0 and precioKg==0:
+        precio=48
+    elif preciom2> preciom3 and preciom2> precioKg:
+        precio= preciom2
+    elif preciom3> preciom2 and preciom3> precioKg:
+        precio= preciom3
+    elif precioKg> preciom2 and precioKg> preciom3:
+        precio= precioKg 
+    return (precio)
+
+def OrdenarDepartamentoAsignarPrecioyPeso(catalogo, departamento):
+    obrasPorDepartamento= mp.get(catalogo['obras']["mDepartamento"],departamento)["value"]
+    listaR = lt.newList("ARRAY_LIST") #la lista R va a tener peso,precio,listaobras#
+    precio=0
+    peso=0
+    for obra in lt.iterator (obrasPorDepartamento):
+        obra["precio"]=AsignarPrecio(obra)
+        precio+=float(obra["precio"])
+        if obra["Weight (kg)"] != "":
+            peso+=float(obra["Weight (kg)"])
+    lt.addLast(listaR, peso)
+    lt.addLast(listaR, round(precio,3))
+    lt.addLast(listaR, obrasPorDepartamento)
+    return listaR
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 def cmpArtistId(artist1, artist2):
@@ -233,10 +318,7 @@ def cmpObraId(obra1, obra2):
         return 0
     else: 
         return 1
-
-
 def cmpArtworkByDateAcquired(artwork1, artwork2):
-    #req 2, re utilizò la librerìa datetime#
     fecha1= str(artwork1['DateAcquired'])
     fecha2=str(artwork2['DateAcquired'])
     if fecha1=="":
@@ -281,107 +363,3 @@ def cmpArtworkPorPrecio(Artwork1,Artwork2):
     precio1=Artwork1["precio"]
     precio2=Artwork2["precio"]
     return precio1< precio2
-    
-# Funciones de ordenamiento
-
-def sortArtworksandRange(lista,inicial,final):
-    inicial=datetime.strptime(str(inicial),"%Y-%m-%d")
-    final=datetime.strptime(str(final),"%Y-%m-%d")
-    listaEnRango= lt.newList("ARRAY_LIST")
-    purchased=0
-    for i in lt.iterator(lista):
-        date=i['DateAcquired']
-        if date=="":
-            date="0001-01-01"
-        date_format=datetime.strptime(str(date),"%Y-%m-%d")
-        if date_format<= final and date_format>=inicial:
-                lt.addLast(listaEnRango,i)
-                credit_line= str(i["CreditLine"]).lower()
-                if ("Purchase").lower() in credit_line or ("Purchased").lower() in credit_line :
-                    purchased+=1
-    lista_ordenada= ins.sort(listaEnRango,cmpArtworkByDateAcquired)
-    return (lista_ordenada,purchased)
-def sortArtworksByDate(lista):
-    lista_ordenada= lista.copy()
-    lista_ordenada= me.sort(lista_ordenada,cmpArtworkByDate)
-    return lista_ordenada
-
-def sortArtworksByPrice(listaog):
-    lista= listaog.copy()
-    me.sort(lista,cmpArtworktByPrice)
-    return lista
-def RankingCountriesByArtworks (catalog,obras):
-    #req4
-    lista_artistas=catalog["artistas"]
-    dict_nacionalidades= {}
-    for i in obras:
-        for n in lt.iterator(lista_artistas):
-            if i in n["Artworks"]:
-                nacionalidad= n["Nationality"]
-                if nacionalidad not in dict_nacionalidades:
-                    dict_nacionalidades[nacionalidad]=1
-                else:
-                    dict_nacionalidades[nacionalidad]+=1
-    return (dict_nacionalidades)
-
-
-#Requisito 5#
-def AsignarPrecio(object):
-    #considerar datos vacios revisar reglas#
-    m3=-1
-    if object["Width (cm)"]!="" and object["Height (cm)"]!="" and object["Depth (cm)"]!="":
-        m3= ((float(object["Width (cm)"]))*(float(object["Height (cm)"]))*(float(object["Depth (cm)"])))
-        m3= m3/1000000
-    m2=-1
-    if object["Width (cm)"]!="" and object["Height (cm)"]!="":
-        m2=(float(object["Width (cm)"]))*(float(object["Height (cm)"]))
-        m2=m2/10000
-    precio=-1
-    preciom3= 0
-    preciom2= 0
-    precioKg= 0
-    if object["Weight (kg)"] != "":
-        precioKg= 72* float(object["Weight (kg)"])
-    if m3>0:
-        preciom3= 72* float(m3)
-    if m2>0:
-        preciom2= 72* float(m2)
-    if preciom3 ==0 and preciom2==0 and precioKg==0:
-        precio=48
-    elif preciom2> preciom3 and preciom2> precioKg:
-        precio= preciom2
-    elif preciom3> preciom2 and preciom3> precioKg:
-        precio= preciom3
-    elif precioKg> preciom2 and precioKg> preciom3:
-        precio= precioKg 
-    return (precio)
-
-def OrdenarDepartamentoAsignarPrecioyPeso(catalogo, departamento):
-    obrasPorDepartamento= lt.newList()
-    lista_artwork= catalogo["obras"]
-    listaR = lt.newList("ARRAY_LIST") #la lista R va a tener peso,precio,listaobras#
-    precio=0
-    peso=0
-    for obra in lt.iterator (lista_artwork):
-        if obra["Department"]== departamento:
-            obra["precio"]=AsignarPrecio(obra)
-            lt.addLast(obrasPorDepartamento,obra)
-            precio+=float(obra["precio"])
-            if obra["Weight (kg)"] != "":
-                peso+=float(obra["Weight (kg)"])
-    lt.addLast(listaR, peso)
-    lt.addLast(listaR, round(precio,3))
-    lt.addLast(listaR, obrasPorDepartamento)
-    return listaR
-
-def ObrasAntiguasPorMedio(catalog,nombre,n):
-    """
-    Retorna las obras de un medio 
-    """
-    medio = mp.get(catalog["obras"]["mMedio"], nombre)
-    if medio:
-        lista= me.getValue(medio)
-    m.sort(lista,cmpArtworkByDate)
-    lista_nueva=lt.subList(lista,lt.size(lista)-n,n)
-    return lista_nueva
-
