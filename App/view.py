@@ -94,6 +94,28 @@ while True:
             print("No hay artistas nacidos en el rango")
         else:
             print("Hay "+ str(lt.size(listaEnRango))+ " artistas que nacieron entre "+ str(date1) +" y "+ str(date2))
+        if lt.size(listaEnRango) <= 3:
+            print("Hay 3 o menos artistas en el rango, estos son:")
+            x = PrettyTable() 
+            x.field_names = ["Nombre", "Año de nacimiento", "Año de fallecimiento", "Nacionalidad", "Genero"]
+            for i in lt.iterator(listaEnRango):
+                x.add_row([str(i["DisplayName"]),str(i["BeginDate"]),str(i["EndDate"]),str(i["Nationality"]),str(i["Gender"])])
+            print(x)
+        elif lt.size(listaEnRango) > 3:
+            primeras= lt.subList(listaEnRango,1,3)
+            a = PrettyTable() 
+            a.field_names = ["Nombre", "Año de nacimiento", "Año de fallecimiento", "Nacionalidad", "Genero"]
+            for i in lt.iterator(primeras):
+                a.add_row([str(i["DisplayName"]),str(i["BeginDate"]),str(i["EndDate"]),str(i["Nationality"]),str(i["Gender"])])
+            ultimas= lt.subList(listaEnRango,lt.size(listaEnRango)-2,3)
+            b = PrettyTable() 
+            b.field_names = ["Nombre", "Año de nacimiento", "Año de fallecimiento", "Nacionalidad", "Genero"]
+            for i in lt.iterator(ultimas):
+                b.add_row([str(i["DisplayName"]),str(i["BeginDate"]),str(i["EndDate"]),str(i["Nationality"]),str(i["Gender"])])
+            print("Los primeros 3  artistas en rango son:")  
+            print(a)
+            print("Los ultimas 3  artistas en rango son:") 
+            print(b)
         stop_time = time.process_time()
         timepaso= stop_time-start_time
         print("Tiempo transcurrido "+ str(timepaso))
@@ -136,7 +158,7 @@ while True:
             b = PrettyTable() 
             b.field_names = ["Titulo", "Fecha de la Obra", "Medio", "Dimensiones"]
             for i in lt.iterator(primeras):
-            b.add_row([str(i["Title"]),str(i["Date"]),str(i["Medium"]),str(i["Dimensions"])])
+                b.add_row([str(i["Title"]),str(i["Date"]),str(i["Medium"]),str(i["Dimensions"])])
             print("Las primeras 3  obras en esta técnica son:")  
             print(a)
             print("Las ultimas 3  obras en esta técnica son:") 

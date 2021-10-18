@@ -93,17 +93,6 @@ def addOrCreateListInMap(mapa, llave, elemento):
         lt.addLast(lista_existente,elemento)
         mp.put(mapa,llave,lista_existente)
 
-# def addOrCreateListInMapHistograma(mapa, llave, elemento):
-#     if mp.contains(mapa,llave)==False:
-#         lista_nueva=lt.newList("ARRAY_LIST")
-#         lt.addLast(lista_nueva,elemento)
-#         mp.put(mapa,llave,lista_nueva)
-#     else:
-#         pareja=mp.get(mapa,llave)
-#         lista_existente=me.getValue(pareja)
-#         lt.addLast(lista_existente,elemento)
-#         mp.put(mapa,llave,lista_existente)
-
 def addObra(catalog, obra):
     artwork={}
     artwork["ObjectID"]= obra["ObjectID"]
@@ -167,18 +156,56 @@ def compareMap(nuevo, tag):
         return 1
     else:
         return 0
-# Funciones de consulta para listas
+#REQ 1#
+def sortArtistInDateRange(catalog, date1,date2):
+    date1 = int(date1)
+    date2 = int(date2)
+    ListaAnosGen= mp.keySet(catalog["artistas"]["mAnoNacimiento"])
+    listaEnRango = lt.newList("ARRAY_LIST") #porque luego se accede por pos#s
+    lista_artistas_año= lt.newList("ARRAY_LIST")
+    for i in lt.iterator(ListaAnosGen):
+        AnoKey= int(i)
+        if AnoKey != 0 and AnoKey >= date1 and AnoKey<=date2:
+            lista_artistas_año= mp.get(catalog["artistas"]["mAnoNacimiento"],i)["value"]
+            for artista in lt.iterator(lista_artistas_año):
+                lt.addLast(listaEnRango, artista)
+    listaOrdenada= listaEnRango.copy()
+    listaOrdenada= m.sort(listaOrdenada,cmpArtistByDate)
+    return (listaOrdenada)
+def cmpArtistByDate(artist1, artist2):
+    fecha1= (artist1['BeginDate'])
+    fecha2=(artist2['BeginDate'])
+    temp=False
+    if fecha1=="":
+        fecha1=0 
+    if fecha2=="":
+        fecha2=0
+    temp= int(fecha1)<int(fecha2)
+    return temp
+#RETO 1 VERSIÓN SIN MAPA
+# def sortArtistInDateRange(catalog, date1,date2):
+#     # req1
+#     date1 = int(date1)
+#     date2 = int(date2)
+#     listaEnRango = lt.newList("ARRAY_LIST") 
+#     for i in lt.iterator(catalog['artistas']):
+#         date= int(i['BeginDate'])
+#         if date != 0 and date >= date1 and date<=date2:
+#             lt.addLast(listaEnRango, i)
+#     listaOrdenada= m.sort(ListaEnRango,cmpArtistByDate)
+#     return (listaEnRango)
+
 #REQ 3#
 def ObrasPorArtistaPorTecnica(catalogo,nombre):
-    mapaTecnicas=""
+    mapaTecnicas=mp.newMap(200,maptype="CHAINING", loadfactor=4)
     par= mp.get(catalogo["artistas"]["mNombre"], nombre)
     if par:
         artista= me.getValue(par)
         mapaTecnicas= artista["mArtworksTecnica"]
-    TecnicaMasRep= buscarTecnicaMasRep(mapaTecnicas)
+        TecnicaMasRep= buscarTecnicaMasRep(mapaTecnicas)
+        lista= me.getValue(mp.get(mapaTecnicas,TecnicaMasRep))
+        listaObrasTecnica= lista.copy()
     numeroObras= lt.size(artista["Artworks"])
-    lista= me.getValue(mp.get(mapaTecnicas,TecnicaMasRep))
-    listaObrasTecnica= lista.copy()
     m.sort(listaObrasTecnica,cmpArtworkByDate)
     return(mapaTecnicas,TecnicaMasRep, numeroObras,listaObrasTecnica)
 
@@ -206,19 +233,7 @@ def cmpObraId(obra1, obra2):
         return 0
     else: 
         return 1
-def cmpArtistByDate(artist1, artist2):
-    fecha1= (artist1['BeginDate'])
-    fecha2=(artist2['BeginDate'])
-    if fecha1=="":
-        fecha1=0 
-    if fecha2=="":
-        fecha2=0
-    if  int(fecha1)<int(fecha2):
-        return -1 
-    elif int(fecha1)==int(fecha2):
-        return 0
-    else: 
-        return 1
+
 
 def cmpArtworkByDateAcquired(artwork1, artwork2):
     #req 2, re utilizò la librerìa datetime#
@@ -268,32 +283,6 @@ def cmpArtworkPorPrecio(Artwork1,Artwork2):
     return precio1< precio2
     
 # Funciones de ordenamiento
-def sortArtistInDateRange(catalog, date1,date2):
-    # req1
-    date1 = int(date1)
-    date2 = int(date2)
-    ListaAnosGen= mp.keySet(catalog["artistas"]["mAnoNacimiento"])
-    listaEnRango = lt.newList("ARRAY_LIST") #porque luego se accede por pos#s
-    for i in lt.iterator(ListaAnosGen):
-        AnoKey= int(i)
-        if AnoKey != 0 and AnoKey >= date1 and AnoKey<=date2:
-            lista_artistas_año= mp.get(catalog["artistas"]["mAnoNacimiento"],i)
-            for artitsa in lt.iterator(lista_artistas_año):
-                lt.addLast(listaEnRango, i)
-    listaOrdenada= m.sort((catalog['artistas']),cmpArtistByDate)
-    return (listaEnRango)
-#RETO 1 VERSIÓN SIN MAPA
-# def sortArtistInDateRange(catalog, date1,date2):
-#     # req1
-#     date1 = int(date1)
-#     date2 = int(date2)
-#     listaEnRango = lt.newList("ARRAY_LIST") 
-#     for i in lt.iterator(catalog['artistas']):
-#         date= int(i['BeginDate'])
-#         if date != 0 and date >= date1 and date<=date2:
-#             lt.addLast(listaEnRango, i)
-#     listaOrdenada= m.sort(ListaEnRango,cmpArtistByDate)
-#     return (listaEnRango)
 
 def sortArtworksandRange(lista,inicial,final):
     inicial=datetime.strptime(str(inicial),"%Y-%m-%d")
