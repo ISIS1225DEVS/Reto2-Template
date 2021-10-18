@@ -136,7 +136,7 @@ while True:
             b = PrettyTable() 
             b.field_names = ["Titulo", "Fecha de la Obra", "Medio", "Dimensiones"]
             for i in lt.iterator(primeras):
-                b.add_row([str(i["Title"]),str(i["Date"]),str(i["Medium"]),str(i["Dimensions"])])
+            b.add_row([str(i["Title"]),str(i["Date"]),str(i["Medium"]),str(i["Dimensions"])])
             print("Las primeras 3  obras en esta técnica son:")  
             print(a)
             print("Las ultimas 3  obras en esta técnica son:") 
