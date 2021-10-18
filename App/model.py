@@ -177,7 +177,10 @@ def ObrasPorArtistaPorTecnica(catalogo,nombre):
         mapaTecnicas= artista["mArtworksTecnica"]
     TecnicaMasRep= buscarTecnicaMasRep(mapaTecnicas)
     numeroObras= lt.size(artista["Artworks"])
-    return(mapaTecnicas,TecnicaMasRep, numeroObras)
+    lista= me.getValue(mp.get(mapaTecnicas,TecnicaMasRep))
+    listaObrasTecnica= lista.copy()
+    m.sort(listaObrasTecnica,cmpArtworkByDate)
+    return(mapaTecnicas,TecnicaMasRep, numeroObras,listaObrasTecnica)
 
 def buscarTecnicaMasRep(Tecnicas):
     size_mayor=0

@@ -29,6 +29,7 @@ import time
 assert cf
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+from prettytable import PrettyTable
 default_limit = 1000
 sys.setrecursionlimit(default_limit*10)
 
@@ -115,11 +116,31 @@ while True:
     elif int(inputs[0]) == 4:
         start_time = time.process_time()
         nombre= input("Indique el nombre del artista: ")
-        (Tecnicas, tecnicaRep, numeroObras)= controller.ObrasPorArtistaPorTecnica(catalog,nombre)
-        print(str(nombre)+ " tiene un total de: "+ str(mp.size(Tecnicas))+" tecnicas.")
-        listaObras= me.getValue(mp.get(Tecnicas,tecnicaRep))
-        print("La tecnica más utilizada es: "+ str(tecnicaRep) +". Con "+ str(numeroObras)+ " obras.")
-
+        (Tecnicas, tecnicaRep, numeroObrasGeneral,listaObrasTecnica )= controller.ObrasPorArtistaPorTecnica(catalog,nombre)
+        print(str(nombre)+ " tiene un total de: "+ str(mp.size(Tecnicas))+" tecnicas y "+ str(numeroObrasGeneral)+ " obras.")
+        print("La tecnica más utilizada es: "+ str(tecnicaRep) +" con "+ str(lt.size(listaObrasTecnica))+ " obras.")
+        if lt.size(listaObrasTecnica) <= 3:
+            print("Hay 3 o menos obras en esta técnica, estas son:")
+            x = PrettyTable() 
+            x.field_names = ["Titulo", "Fecha de la Obra", "Medio", "Dimensiones"]
+            for i in lt.iterator(listaObrasTecnica):
+                x.add_row([str(i["Title"]),str(i["Date"]),str(i["Medium"]),str(i["Dimensions"])])
+            print(x)
+        elif lt.size(listaObrasTecnica) > 3:
+            primeras= lt.subList(listaObrasTecnica,1,3)
+            a = PrettyTable() 
+            a.field_names = ["Titulo", "Fecha de la Obra", "Medio", "Dimensiones"]
+            for i in lt.iterator(primeras):
+                a.add_row([str(i["Title"]),str(i["Date"]),str(i["Medium"]),str(i["Dimensions"])])
+            ultimas= lt.subList(listaObrasTecnica,lt.size(listaObrasTecnica)-3,3)
+            b = PrettyTable() 
+            b.field_names = ["Titulo", "Fecha de la Obra", "Medio", "Dimensiones"]
+            for i in lt.iterator(primeras):
+                b.add_row([str(i["Title"]),str(i["Date"]),str(i["Medium"]),str(i["Dimensions"])])
+            print("Las primeras 3  obras en esta técnica son:")  
+            print(a)
+            print("Las ultimas 3  obras en esta técnica son:") 
+            print(b)
         stop_time = time.process_time()
         timepaso= stop_time-start_time
         print("Tiempo transcurrido "+ str(timepaso))
