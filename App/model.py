@@ -55,7 +55,6 @@ def newCatalog():
     catalog['artistas']["mID"]=mp.newMap(20000,maptype="CHAINING",loadfactor=4)
     catalog['artistas']["mNombre"]=mp.newMap(20000,maptype="CHAINING",loadfactor=4)
     catalog['artistas']["mAnoNacimiento"]=mp.newMap(20000,maptype="CHAINING",loadfactor=4)
-    
     catalog['obras'] =  {"mMedio":None,"mDepartamento": None, "mFechaAd": None,"mNacionalidad": None}
     catalog['obras']["mDepartamento"]=mp.newMap(200000,maptype="CHAINING", loadfactor=4)
     catalog['obras']["mNacionalidad"]=mp.newMap(200000,maptype="CHAINING", loadfactor=4)
@@ -78,6 +77,7 @@ def addArtist(catalog, artista):
     artist["Nationality"]= artista["Nationality"]
     artist["Gender"]= artista["Gender"]
     artist["Artworks"]= lt.newList("ARRAY_LIST",cmpfunction= cmpObraId)
+    artist["mArtworksTecnica"]= mp.newMap(200,maptype="CHAINING",loadfactor=4)
     mp.put(catalog["artistas"]["mID"],artist["ConstituentID"], artist)
     addOrCreateListInMap(catalog["artistas"]["mAnoNacimiento"],artist["BeginDate"],artist)
     addOrCreateListInMap(catalog["artistas"]["mNombre"],artist["DisplayName"],artist)
@@ -92,6 +92,17 @@ def addOrCreateListInMap(mapa, llave, elemento):
         lista_existente=me.getValue(pareja)
         lt.addLast(lista_existente,elemento)
         mp.put(mapa,llave,lista_existente)
+
+# def addOrCreateListInMapHistograma(mapa, llave, elemento):
+#     if mp.contains(mapa,llave)==False:
+#         lista_nueva=lt.newList("ARRAY_LIST")
+#         lt.addLast(lista_nueva,elemento)
+#         mp.put(mapa,llave,lista_nueva)
+#     else:
+#         pareja=mp.get(mapa,llave)
+#         lista_existente=me.getValue(pareja)
+#         lt.addLast(lista_existente,elemento)
+#         mp.put(mapa,llave,lista_existente)
 
 def addObra(catalog, obra):
     artwork={}
@@ -129,6 +140,7 @@ def addObra(catalog, obra):
             infoArtistaID= me.getValue(par)
             nombre = infoArtistaID["DisplayName"]
             lt.addLast(infoArtistaID["Artworks"],artwork)
+            addOrCreateListInMap(infoArtistaID["mArtworksTecnica"], artwork["Medium"],artwork)
             lt.addLast(artwork["Artists"],infoArtistaID)
             mp.put(catalog["artistas"]["mNombre"],nombre, infoArtistaID)
     "tanto el mapa que tienE ID de artista como key  como el de nombre van a quedar también con la referencia de las obras"            
@@ -156,37 +168,26 @@ def compareMap(nuevo, tag):
     else:
         return 0
 # Funciones de consulta para listas
-def buscarTecnicaMasRep(dicTecnicas):
-        TecnicaMas= " "
-        size_mayor=0
-        for tecnica in dicTecnicas:
-            size= lt.size(dicTecnicas[tecnica]["obras"])
-            if size>size_mayor:
-                size_mayor= size
-                TecnicaMas= tecnica
-        return TecnicaMas
+#REQ 3#
 def ObrasPorArtistaPorTecnica(catalogo,nombre):
-    artistas= catalogo["artistas"]
-    for artista in lt.iterator(artistas):
-        if nombre == artista["DisplayName"]:
-            obrasArtista= artista["Artworks"]
-            Tecnicas={}
-            if lt.isEmpty(obrasArtista)==False: 
-                for obra in lt.iterator(obrasArtista):
-                    tecnica= obra["Medium"]
-                    if tecnica != "":
-                        if tecnica not in Tecnicas:
-                            Tecnicas[tecnica]={}
-                            Tecnicas[tecnica]["nombre"]= tecnica
-                            Tecnicas[tecnica]["obras"]= lt.newList("ARRAY_LIST")
-                            lt.addLast(Tecnicas[tecnica]["obras"],obra)
-                        else:
-                            lt.addLast(Tecnicas[tecnica]["obras"],obra)
-                break
-        else:
-            obrasArtista=None
-            Tecnicas=None
-    return (obrasArtista,Tecnicas) 
+    mapaTecnicas=""
+    par= mp.get(catalogo["artistas"]["mNombre"], nombre)
+    if par:
+        artista= me.getValue(par)
+        mapaTecnicas= artista["mArtworksTecnica"]
+    TecnicaMasRep= buscarTecnicaMasRep(mapaTecnicas)
+    numeroObras= lt.size(artista["Artworks"])
+    return(mapaTecnicas,TecnicaMasRep, numeroObras)
+
+def buscarTecnicaMasRep(Tecnicas):
+    size_mayor=0
+    for tecnica in lt.iterator(mp.keySet(Tecnicas)):
+        size= lt.size(me.getValue(mp.get(Tecnicas,tecnica)))
+        if size>size_mayor:
+            size_mayor= size
+            TecnicaMas= tecnica
+    return TecnicaMas
+
 # Funciones utilizadas para comparar elementos dentro de una lista
 def cmpArtistId(artist1, artist2):
     if artist1["ConstituentID"] < artist2["ConstituentID"]:
