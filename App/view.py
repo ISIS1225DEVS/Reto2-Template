@@ -49,7 +49,6 @@ def printMenu():
     print("4-Clasificar las obras de un artista por técnica")
     print("5-Clasificar las obras por la nacionalidad de sus creadores ")
     print("6-Transportar obras de un departamento ")
-    print("7-LAB 5-“las n obras más antiguas para un medio específico ")
     print("0-Salir ")
  
 def initCatalog():
@@ -187,8 +186,30 @@ while True:
         print ("El estimado en USD del precio de servicio es de "+str(precio_total))
         print("El peso estimado de las obras es de "+ str(peso_total))
         listaporprecio= controller.sortArtworksByPrice(listaObrasdeDepto)
+        obrasCaras= lt.subList(listaporprecio,lt.size(listaporprecio)-4,5)
         listaporfecha= controller.sortArtworksByDate(listaObrasdeDepto)
-
+        obrasantiguas= lt.subList(listaporfecha,1,5)
+        if lt.size(listaObrasdeDepto) <= 5:
+            print("Hay 5 o menos obras en este departamento, estas son:")
+            x = PrettyTable() 
+            x.field_names = ["Titulo", "Fecha de la Obra", "Medio", "Dimensiones"]
+            for i in lt.iterator(listaObrasdeDepto):
+                x.add_row([str(i["Title"]),str(i["Date"]),str(i["Medium"]),str(i["Dimensions"])])
+            print(x)
+        elif lt.size(listaObrasdeDepto) > 5:
+            print("Las 5 obras mas costosas son:")
+            a = PrettyTable() 
+            a.field_names = ["Titulo", "Fecha de la Obra", "Medio", "Dimensiones"]
+            for i in lt.iterator(obrasCaras):
+                #TODO añadir info requerida en tabla#
+                a.add_row([str(i["Title"]),str(i["Date"]),str(i["Medium"]),str(i["Dimensions"])])
+            print(a)
+            print("Las 5 obras mas antiguas son:")
+            b = PrettyTable() 
+            b.field_names = ["Titulo", "Fecha de la Obra", "Medio", "Dimensiones"]
+            for i in lt.iterator(obrasantiguas):
+                b.add_row([str(i["Title"]),str(i["Date"]),str(i["Medium"]),str(i["Dimensions"])])
+            print(b)
         stop_time = time.process_time()
         timepaso= stop_time-start_time
         print("Tiempo transcurrido "+ str(timepaso))
