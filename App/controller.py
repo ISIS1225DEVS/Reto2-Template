@@ -47,8 +47,7 @@ def loadData(catalog):
     """
     loadArt(catalog)
     loadArtist(catalog)
-    #print(catalog['IDA'])
-    model.nacionalidadPorObra(catalog)
+    
 
 def loadArt(catalog):
    
@@ -96,7 +95,17 @@ def obras_porMedio(catalog, num ,medio):
     return listaorganizada
 
    
-def obrasPorNacionalidad(catalog, nac):
+def obrasPorNacionalidadEspecifica(catalog, nac):
+    model.nacionalidadPorObra(catalog)
     return model.tamañoMapaNacionalidad(catalog, nac)
+
+def ObrasPorNacionalidades(catalog):
+    model.nacionalidadPorObra(catalog)
+    lista = model.listaNacionalidad(catalog)
+    return lista
+    
+
+def obrasPorAnio(catalog, fechai, fechaf):
+    pass
     
 

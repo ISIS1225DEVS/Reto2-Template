@@ -24,6 +24,8 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 assert cf
 
 
@@ -88,6 +90,44 @@ while True:
         print('Ultimos 3 artistas: ') #+ str(lt.size(catalog[''])))
         print('Ultimas 3 obras ' ) #str(lt.size(catalog[''])))
     
+    elif int(inputs[0]) == 3:
+        print("Ingrese la fecha inicial")
+        fechai = int(input())
+        print("Ingrese la fecha final")
+        fechaf = input()
+    
+    elif int(inputs[0]) == 5:
+        lista = controller.ObrasPorNacionalidades(catalog)
+        size = lt.size(lista)
+        top1 = (lt.getElement(lista, size))[0]
+
+        llave_valor = mp.get(catalog['Nationality'], top1)
+        valor = me.getValue(llave_valor)
+        sizevalor = lt.size(valor)
+
+        print('Las TOP 10 Nacionalidades son:')
+        print(lt.getElement(lista, size))
+        print(lt.getElement(lista, size-1))
+        print(lt.getElement(lista, size-2))
+        print(lt.getElement(lista, size-3))
+        print(lt.getElement(lista, size-4))
+        print(lt.getElement(lista, size-5))
+        print(lt.getElement(lista, size-6))
+        print(lt.getElement(lista, size-7))
+        print(lt.getElement(lista, size-8))
+        print(lt.getElement(lista, size-9))
+        print('')
+        print('Las primeras 3 obras son')
+        print(lt.getElement(lt.getElement(valor, 1), 1))
+        print(lt.getElement(lt.getElement(valor, 2), 1))
+        print(lt.getElement(lt.getElement(valor, 3), 1))
+        print('')
+        print('Las ultimas 3 obras')
+        print(lt.getElement(lt.getElement(valor, sizevalor), 1))
+        print(lt.getElement(lt.getElement(valor, sizevalor-1), 1))
+        print(lt.getElement(lt.getElement(valor, sizevalor-2), 1))
+
+        
     elif int(inputs[0]) == 8:
         print("Ingrese el numero de obras que quiere conocer: ")
         num = int(input())
@@ -99,8 +139,8 @@ while True:
     elif int(inputs[0]) == 9:
         print("Ingrese la nacionalidad")
         nac = input()
-        num = controller.obrasPorNacionalidad(catalog, nac)
-        print('Hay ' + num + ' obras de la nacionalidad ' + nac)
+        num = controller.obrasPorNacionalidadEspecifica(catalog, nac)
+        print('Hay ' + str(num) + ' obras de la nacionalidad ' + nac)
        
 
     else:

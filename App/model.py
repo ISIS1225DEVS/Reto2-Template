@@ -25,7 +25,7 @@
  """
 
 
-from DISClib.DataStructures.arraylist import size
+from DISClib.DataStructures.arraylist import newList, size
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.Algorithms.Sorting import shellsort as sa
@@ -51,26 +51,41 @@ def addArt(catalog, artwork):
         llave_valor=mp.get(catalog['Medium'],artwork['Medium'])
         valor=me.getValue(llave_valor)
         lt.addLast(valor, artwork)
-       #mp.put(catalog['Medium'], llave_valor,valor)
-        #mp.put(catalog['Medium'], artwork['Medium'], artwork)
+
     else:
-        lista_creada= lt.newList(cmpfunction=cmpMedio)
+        lista_creada= lt.newList()
         lt.addLast(lista_creada, artwork)
         mp.put(catalog['Medium'],artwork['Medium'], lista_creada)
 
-    if mp.contains(catalog['ID'], artwork['ConstituentID']):
-        llave_valor=mp.get(catalog['ID'],artwork['ConstituentID'])
-        valor=me.getValue(llave_valor)
-        lt.addLast(valor, artwork)
-        #mp.put(catalog['ID'], artwork['ConstituentID'], artwork)
-    else:
-        lista_creada= lt.newList(cmpfunction=cmpMedio)
-        lt.addLast(lista_creada, artwork)
-        txt = artwork['ConstituentID']
-        x = txt.strip('[]')
+    txt = artwork['ConstituentID']
+    id = txt.strip('[]')
+    if ',' in id:
+        ids = id.strip(' ')
+        lista = ids.split(',')
+        for ID in lista:
+            if mp.contains(catalog['ID'], ID):
+                llave_valor=mp.get(catalog['ID'], ID)
+                valor=me.getValue(llave_valor)
+                lt.addLast(valor, artwork)
+                
+            else:
+                lista_creada= lt.newList()
+                lt.addLast(lista_creada, artwork)
+                
 
-        mp.put(catalog['ID'],x, lista_creada)
+                mp.put(catalog['ID'],ID , lista_creada)
+    else:
+        if mp.contains(catalog['ID'], id):
+                llave_valor=mp.get(catalog['ID'], id)
+                valor=me.getValue(llave_valor)
+                lt.addLast(valor, artwork)
+                
+        else:
+            lista_creada= lt.newList()
+            lt.addLast(lista_creada, artwork)
         
+            mp.put(catalog['ID'],id , lista_creada)
+            
    
 
     
@@ -120,38 +135,53 @@ def obras_medio(catalog, Medio):
     return mediofinal
 
 def nacionalidadPorObra(catalog):
-    IDs = mp.keySet(catalog['ID'])
-    size = lt.size(IDs)
-    
+    ids = mp.keySet(catalog['ID'])
+    size = lt.size(ids)
     
     for pos in range(size):
-        ID = lt.getElement(IDs, pos)        # O()
-        obras = mp.get((catalog['ID']), ID) # O(1)
-        
+        id = lt.getElement(ids, pos)
 
-        valornacionalidad = (mp.get(catalog['IDA'], ID))
-        nacionalidad = me.getValue(valornacionalidad)
+        if id is not None:
 
-        if nacionalidad is not None:
+            valorobras = mp.get((catalog['ID']), id) 
+            obras = me.getValue(valorobras)
 
-            if not mp.contains(catalog['Nationality'], nacionalidad):
-                lista_creada= lt.newList(cmpfunction=cmpMedio)
-                lt.addLast(lista_creada, obras)
-                mp.put(catalog['Nationality'], nacionalidad, obras)    
-        
-            else:
-                llave_valor = mp.get(catalog['Nationality'],nacionalidad)
-                valor = me.getValue(llave_valor)
-                lt.addLast(valor, obras)
-                mp.put(catalog['Nationality'], llave_valor, valor)
+            valornacionalidad = (mp.get(catalog['IDA'], id))
+            
+            if valornacionalidad is not None:
+                nacionalidad = me.getValue(valornacionalidad)
+                
+            
+                if mp.contains(catalog['Nationality'], nacionalidad):
+
+                    llave_valor = mp.get(catalog['Nationality'],nacionalidad)
+                    valor = me.getValue(llave_valor)
+                    lt.addLast(valor, obras)
+                    #mp.put(catalog['Nationality'], llave_valor, valor)
+
+                else:
+                    lista_creada= lt.newList()
+                    lt.addLast(lista_creada, obras)
+                    mp.put(catalog['Nationality'], nacionalidad, lista_creada)
+
                  
 
+def listaNacionalidad(catalog):
+    listaNacionalidades = lt.newList()
+    lista = mp.keySet(catalog['Nationality'])
+    size = lt.size(lista)
+    for pos in range(size):
+        nacionalidad = lt.getElement(lista, pos)
+        num = tamañoMapaNacionalidad(catalog, nacionalidad)
+        lst = [nacionalidad, num]
+        lt.addLast(listaNacionalidades, lst)
 
-
+    ms.sort(listaNacionalidades, cmpNumNacionalidad)
+    return listaNacionalidades
+    
 def tamañoMapaNacionalidad(catalog, nacionalidad):
     valor = mp.get(catalog['Nationality'], nacionalidad)
-    print(valor['value'])
-    return lt.size(valor['value'])
+    return lt.size(me.getValue(valor))
     
 
 def get_conteo(lista_global, inicial, final):
@@ -348,7 +378,6 @@ def cmpMedio(key, medio):
     else:
         return -1
 
-
 def cmpArtistID(artist1, artist2):
     if artist1['ConstituentID'] == artist2['ConstituentID']:
         return 0
@@ -357,10 +386,11 @@ def cmpArtistID(artist1, artist2):
     else:
         return -1
  
+
 def cmpNumNacionalidad(nac1, nac2):
-    a = (nac1[1])
-    b = (nac2[1])
-    return int(a) > int(b)
+    num1 = nac1[1]
+    num2 = nac2[1]
+    return num1 < num2
     
 def cmpArtworkByDateAcquired(artwork1, artwork2):
                     # Devuelve verdadero (True) si el 'DateAcquired' de artwork1 es menores que el de artwork
@@ -395,7 +425,6 @@ def OrganizarNacionalidad(lista):
 
 def organizar_medio(lista, num):
    # list = lt.newList()
-    print (lista)
     listaOrganizadaPorAño = sa.sort(lista, ordenar_fecha)
     listaRecortada = lt.sublist(listaOrganizadaPorAño, 0, num)
     return listaRecortada
