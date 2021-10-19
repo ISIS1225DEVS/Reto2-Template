@@ -55,10 +55,7 @@ def newCatalog():
     """
     catalog = {'Artists': None,
                'Artworks': None,
-               'Constituen ID': None,
-               'tags': None,
-               'tagIds': None,
-               'years': None}
+                 }
 
     
     catalog['Artists'] = lt.newList('ARRAY_LIST', compareArtistIds)
@@ -124,7 +121,7 @@ def addtomap(map,key,object):
     else: 
         mp.put(map,key,object)
 
- 
+############################## 
 
 def addArtist(catalog, artist):
     lt.addLast(catalog["Artists"], artist)
@@ -186,39 +183,115 @@ def ArtistbyBeginDate(catalog, min, max):
             lt.addLast(b,date)
 
     mg.sort(b,cmpArtistBegindate)
+    
+  
+    size=0
+    for i in range(1,lt.size(b)+1):
 
-    size=lt.size(b)
+        if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,i)))['value']) == type(lt.getElement(catalog['Artists'],1)):
+            size+=1
+
+        else:
+            size+=lt.size(mp.get(catalog['BeginDate'],str(lt.getElement(b,i)))['value'])
+
+
+
+
     rta.append(size)
 
+####
+
+
+
+#REQ 3
+    pos=1
+    x=True
     
+    while pos <=3 and x :
 
-    if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']) == type(lt.getElement(catalog['Artists'],1)):
-        a1=mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']
-        rta.append(a1)
-    if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,2)))['value']) == type(lt.getElement(catalog['Artists'],1)):
-        a2=mp.get(catalog['BeginDate'],str(lt.getElement(b,2)))['value']
-        rta.append(a2)
+        if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) == type(lt.getElement(catalog['Artists'],1)):
+            listvalues=mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']
+            rta.append(listvalues)
+            pos+=1
 
-    if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,3)))['value']) == type(lt.getElement(catalog['Artists'],1)):
-        a3=mp.get(catalog['BeginDate'],str(lt.getElement(b,3)))['value']
-        rta.append(a3)
+        if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) != type(lt.getElement(catalog['Artists'],1)):
+            listvalues=mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']
+            mg.sort(listvalues,cmpArtistConstituentID)
 
-    else: 
-        mg.sort(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value'],cmpArtistNationality)
-        if lt.size(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']) >= 3:
-            for i in range(1,4):
-                a=lt.getElement(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value'],i)
-                rta.append(a)
-        else:
-            for i in range(1,3):
-                a=lt.getElement(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value'],i)
-                rta.append(a)
-            af=mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']
-            rta.append(af)
+            if lt.size(listvalues) >= 3:
 
+                if len(rta)==1:
+                    for i in range(1,4):
+                        rta.append(lt.getElement(listvalues,i))
+                elif len(rta)==2:
+                    for i in range(1,3):
+                        rta.append(lt.getElement(listvalues,i))
+                elif len(rta)==3:
+                    rta.append(lt.getElement(listvalues,1))
+                x=False
+                
+            elif lt.size(listvalues) == 2:
+                
+                if len(rta)==1:
+                    for i in range(1,3):
+                        rta.append(lt.getElement(listvalues,i))
+                    pos+=1   
+                elif len(rta)==2:
+                    for i in range(1,3):
+                        rta.append(lt.getElement(listvalues,i))
+                    x=False
+                elif len(rta)==3:
+                    rta.append(lt.getElement(listvalues,1))
+                    x=False
+              
     
+    pos=lt.size(b)
+    x=True
+    l=lt.newList(datastructure='ARRAY_LIST')
+    while pos >=lt.size(b)-2 and x :
+        print('1',type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) == type(lt.getElement(catalog['Artists'],1)))
+        if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) == type(lt.getElement(catalog['Artists'],1)):
+            listvalues=mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']
+            lt.addLast(l,listvalues)
+            pos-=1
+        print('2',type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) != type(lt.getElement(catalog['Artists'],1)))
+        if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) != type(lt.getElement(catalog['Artists'],1)):
+            listvalues=mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']
+            mg.sort(listvalues,cmpArtistConstituentID)
 
-    print(rta)    
+            if lt.size(listvalues) >= 3:
+
+                if lt.size(l)==0:
+                    for i in range(1,4):
+                        lt.addLast(l,lt.getElement(listvalues,i))
+                elif lt.size(l)==1:
+                    for i in range(1,3):
+                        lt.addLast(l,lt.getElement(listvalues,i))
+                elif lt.size(l)==2:
+                    lt.addLast(l,lt.getElement(listvalues,1))
+                x=False
+                
+            elif lt.size(listvalues) == 2:
+                
+                if lt.size(l)==0:
+                    for i in range(1,3):
+                        lt.addLast(l,lt.getElement(listvalues,i))
+                elif lt.size(l)==1:
+                    for i in range(1,3):
+                        lt.addLast(l,lt.getElement(listvalues,i))
+                    x=False
+                elif lt.size(l)==2:
+                    lt.addLast(l,lt.getElement(listvalues,1))
+                    x=False
+        pos-=1      
+
+    mg.sort(l,cmpArtistBeginDateSublist)
+
+    for i in l['elements']:
+      
+        rta.append(i)
+
+      
 
     return rta
 
@@ -350,9 +423,16 @@ def cmpArtworkDate(artwork1, artwork2):
     else:
         return False
 
-def cmpArtistNationality(artist1, artist2):
+def cmpArtistConstituentID(artist1, artist2):
 
-    if artist1['ArtistBio'] < artist2['ArtistBio']:
+    if int(artist1['ConstituentID']) < int(artist2['ConstituentID']):
+        return False
+    else:
+        return True
+
+def cmpArtistBeginDateSublist(artist1, artist2):
+
+    if int(artist1['BeginDate']) < int(artist2['BeginDate']):
         return True
     else:
         return False

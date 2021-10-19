@@ -26,6 +26,7 @@ import controller
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+from DISClib.Algorithms.Sorting import mergesort as mg
 assert cf
 
 
@@ -40,10 +41,10 @@ def printArtisbyBeginDate(list):
     print('La cantidad de artistas dentro del rango es de ' + str(list[0]))
     print('\nLos 3 primeros artistas son: ')
     for i in range(1,len(list)):
-        a=list[i]["value"]
+        a=list[i]
 
-        print('Nombre: '+ a['DisplayName'] ,'Año de Nacimiento: '+ a['BeginDate'],
-        'Genero: '+ a['Gender'], 'Nacionalidad: '+ a['Nationality'])
+        print('Nombre: '+ a['DisplayName']+' | ' ,'Año de Nacimiento: '+ a['BeginDate']+' | ',
+        'Genero: '+ a['Gender']+' | ', 'Nacionalidad: '+ a['Nationality'])
 
         if i == 3:
             print('\nLos 3 ultimos artistas son: ')
@@ -57,8 +58,8 @@ def printMenu():
     print("0- Numero de obras mas antiguas por medio")
     print('3- Numero de obras por nacionalidad ')
     print("2- Listar cronológicamente los artistas")
-    '''
     print("3- Listar cronológicamente las adquisiciones ")
+    '''
     print("4- Clasificar las obras de un artista por técnica")
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("6- Costos transportar obras de un departamento")
@@ -81,7 +82,8 @@ while True:
         print("\nArtistas cargadas: " + str(lt.size(catalog["Artists"])))
         print("\nObras cargadas: " + str(lt.size(catalog["Artworks"])))
 
-        #print(mp.get(catalog['BeginDate'],'1920'))
+        #mg.sort(mp.get(catalog['BeginDate'],'1920'['value']),controller.)
+        print(mp.get(catalog['BeginDate'],'1984'))
         #sssssssssprint((lt.getElement(catalog['Artworks'],3)['ConstituentID']).replace('[','').replace(']','').split(','))
         #print(type(mp.get(catalog['Work_Nationality'],'American')['value']))
         
