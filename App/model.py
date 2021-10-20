@@ -421,20 +421,18 @@ def listCronoArtist(anioinicial,aniofinal,catalog) :
 
 def listArtworkbyDate(fechainicial,fechafinal,catalog):
     date = catalog["DateAcquired"]
-    dates = mp.keySet(catalog["DateAcquired"])
     sortArtwork(catalog,3)
     datosart = lt.newList("ARRAY_LIST")
     stop = False
     i = 1
-    while i <= lt.size(dates) and not stop:
-        obra = lt.getElement(catalog["Artwork"],i)
-        if len(obra['DateAcquired']) > 0:
+    while i <= lt.size(date) and not stop:
+        obra = lt.getElement(catalog['artWork'],i)
+        print(obra)
+        if len(obra['DateAcquired']) > 0 :
             fecha_obra  = date.datetime.strptime(obra['DateAcquired'],'%Y-%m-%d') 
-            if fechainicial <= fecha_obra and fechafinal >= fecha_obra: 
-                entry = mp.get(date, str(obra))
-                valor = me.getValue(entry)
-                lt.addLast(datosart,valor) 
-            elif fecha_obra > fechafinal: 
+            if fechainicial <= fecha_obra and fechafinal >= fecha_obra : 
+                lt.addLast(datosart,obra) 
+            elif fecha_obra > fechafinal : 
                 stop = True 
         i += 1
     return datosart
