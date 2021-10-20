@@ -39,7 +39,12 @@ def printMenu():
     print("1- Cargar información en el catálogo")
     print("2- Imprimir los n mas antiguos por medio")
     print("3- Número de obras según nacionalidad indicada")
-    print("4- listar cronológicamente los artistas")
+    print("4- Listar cronológicamente los artistas")
+    print("5- Listar cronológicamente las adquisiciones")
+    print("6- Clasificar las obras de un artista por técnica")
+    print("7- Clasificar las obras por la hnacionalidad de sus creadores")
+    print("8- Transportar obras de un departamento")
+    print("9- Salir del programa")
 
 catalog = None
 def initCatalog() : 
@@ -47,15 +52,34 @@ def initCatalog() :
 
 def loadData (catalog) : 
     controller.loadData(catalog) 
+
 def oldestArtworksbyMedium(catalog,medium,n): 
     return controller.oldestbyMedium(catalog,medium,n) 
+
 def printcountobrasnationality(numberArtWorks):
     if numberArtWorks:
         print('Se encontraron: ' + str(lt.size(numberArtWorks)) + ' obras')
     else:
         print('No se encontraron obras')
+
 def transportarObras(depto,catalog) : 
     return controller.transportarObras(depto,catalog)
+
+def printTransportarObras(transporte, depto):
+    if transporte[4] > 0:
+        print("El MoMA va a transportar " + str(transporte[4])+" obras del departamento " + str(depto))
+        if transporte[1]:
+            print("El peso estimado es de: " + str(transporte[1]) +" Kg")
+        if transporte[0]:
+            print("El costo estimado es de: " + str(transporte[0]) + " USD")
+        if transporte[2]:
+            print("Las 5 obras más costosas a transportar son: ")
+            print(transporte[2])
+        if transporte[3]:
+            print("Las 5 obras más antiguas a transportar son: ")
+            print(transporte[3])
+    else:
+        print("No se encuentran obras a transportar de ese departamento")
 
 """
 Menu principal
@@ -67,10 +91,7 @@ while True:
         print("Cargando información de los archivos ....")
         catalog = initCatalog() 
         loadData(catalog)
-        print('Se cargaron: ' + str(lt.size(catalog['Artwork'])) + ' artworks')
-
-
-        
+        print('Se cargaron: ' + str(lt.size(catalog['Artwork'])) + ' artworks')        
 
     elif int(inputs[0]) == 2:
         Medium = input('Ingrese un medio a buscar: ')
@@ -84,7 +105,7 @@ while True:
         numberArtWorks = controller.countobrasnationality(nationality, catalog)
         print(printcountobrasnationality(numberArtWorks))
     
-    elif int(inputs[0]) == 4 : 
+    elif int(inputs[0]) == 4: 
         anioinicial = int(input("Ingrese el año inicial: "))
         aniofinal = int(input("Ingrese el año final: ")) 
         artistas = controller.listCronoArtist(anioinicial,aniofinal,catalog) 
@@ -97,15 +118,11 @@ while True:
         while j > lt.size(artistas) - 3 : 
             print(lt.getElement(artistas,j))
             j -= 1 
-    elif int(inputs[0]) == 5 : 
-        Depto = input('Ingrese el departamento a transportar: ')
-        Transporte = transportarObras(Depto,catalog)
-        
 
-
-
-        
-        
+    elif int(inputs[0]) == 8: 
+        depto = input('Ingrese el departamento a transportar: ')
+        transporte = transportarObras(depto,catalog)
+        print(printTransportarObras(transporte, depto))
 
     else:
         sys.exit(0)
