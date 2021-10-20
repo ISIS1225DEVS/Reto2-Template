@@ -298,6 +298,17 @@ def compareNationality(keyname, nationality):
     else:
         return -1
 
+def cmpArtworkByDateAcquired(artwork1,artwork2):
+    cadena_fecha_A = artwork1['DateAcquired']
+    cadena_fecha_B = artwork2['DateAcquired']
+    if len(cadena_fecha_A) > 0 and len(cadena_fecha_B) > 0: 
+        fecha_A = date.datetime.strptime(cadena_fecha_A,'%Y-%m-%d')
+        fecha_B = date.datetime.strptime(cadena_fecha_B,'%Y-%m-%d')
+        return fecha_A < fecha_B
+    elif len(cadena_fecha_A) > 0 and len(cadena_fecha_B) == 0 : 
+        return True
+    elif len(cadena_fecha_A) == 0 and len(cadena_fecha_B) > 0 : 
+        return False 
 
 # Funciones de ordenamiento
 def sortArtistID(artists,orden) : 
@@ -329,6 +340,16 @@ def sortArtworkDate(artWorks,orden):
       mer.sort(artWorks,compareArtworkDate)
     elif orden == 4:
       quic.sort(artWorks,compareArtworkDate)
+
+def sortArtwork(catalog,orden):
+    if orden == 1:
+      ins.sort(catalog['artWork'], cmpArtworkByDateAcquired)
+    elif orden == 2:
+      sa.sort(catalog['artWork'], cmpArtworkByDateAcquired)
+    elif orden == 3:
+      mer.sort(catalog['artWork'], cmpArtworkByDateAcquired)
+    elif orden == 4:
+      quic.sort(catalog['artWork'], cmpArtworkByDateAcquired)
 
 # Funciones conteo
 def countobrasnationality(nationality, catalog):
@@ -370,6 +391,35 @@ def listCronoArtist(anioinicial,aniofinal,catalog) :
         i += 1 
     return artists
 
+#TODO: Funciones req 2
+
+def listArtworkbyDate(fechainicial,fechafinal,catalog):
+    sortArtwork(catalog,3)
+    anios = mp.keySet(catalog["DateAcquired"])
+    datosart = lt.newList("ARRAY_LIST")
+    stop = False
+    i = 1
+    while i <= lt.size(anios) and not stop:
+        obra = lt.getElement(catalog['artWork'],i)
+        if len(obra['DateAcquired']) > 0:
+            fecha_obra  = date.datetime.strptime(obra['DateAcquired'],'%Y-%m-%d') 
+            if fechainicial <= fecha_obra and fechafinal >= fecha_obra : 
+                lt.addLast(datosart,obra) 
+            elif fecha_obra > fechafinal : 
+                stop = True 
+        i += 1
+    return datosart
+
+def countPurchasedArtwork(artworks) : 
+    size = lt.size(artworks)
+    i = 1 
+    count = 0 
+    while i < size : 
+        artwork = lt.getElement(artworks, i)
+        if 'Purchase' in artwork['CreditLine'] : 
+            count += 1 
+        i += 1 
+    return count 
 
 #TODO: Funciones req 3
 def ArtistArtworksbyMedium (DisplayName,catalog) : 

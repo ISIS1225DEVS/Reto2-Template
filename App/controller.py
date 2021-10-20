@@ -25,7 +25,7 @@ import config as cf
 import model
 import csv
 import timeit
-
+import datetime as date
 
 
 
@@ -67,10 +67,16 @@ def oldestbyMedium(catalog,medium,n) :
     return model.oldestn(sortedArtworks,n)
 
 def listCronoArtist(anioinicial,aniofinal,catalog):
-
     artists = model.listCronoArtist(int(anioinicial),int(aniofinal),catalog) 
     model.sortArtistBegin(artists,3)
     return artists
+
+def listArtworkbyDate (fecha_inicial, fecha_final,catalog) : 
+    fecha_A = date.datetime.strptime(fecha_inicial,'%Y-%m-%d')
+    fecha_B = date.datetime.strptime(fecha_final,'%Y-%m-%d')
+    artWorks = model.listArtworkbyDate(fecha_A, fecha_B,catalog)
+    Cuenta_purchase = model.countPurchasedArtwork(artWorks)
+    return artWorks,Cuenta_purchase 
 
 def transportarObras(depto,catalog) : 
     transportar = model.transportarObras(depto,catalog)

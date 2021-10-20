@@ -62,6 +62,13 @@ def printcountobrasnationality(numberArtWorks):
     else:
         print('No se encontraron obras')
 
+def listArtworkbyDate (fecha_inicial, fecha_final,catalog) : 
+    return controller.listArtworkbyDate(fecha_inicial, fecha_final,catalog)
+
+def printArtWork(artWork): 
+    print("ObjectID: " + artWork['ObjectID'] + '\t|\t' + 'DateAc ' + artWork['DateAcquired'] + '\t|\t' +  
+    "ArtistID: " + artWork['ConstituentID'] + '\t|\t' + "Date: " + artWork['Date'] + "\t|\t" + artWork['Medium'] + "\t|\t" + artWork['Dimensions'])
+
 def transportarObras(depto,catalog) : 
     return controller.transportarObras(depto,catalog)
 
@@ -128,6 +135,21 @@ while True:
         while j > lt.size(artistas) - 3 : 
             print(lt.getElement(artistas,j))
             j -= 1 
+
+    elif int(inputs[0]) == 5: 
+        fecha_inicial = input("Fecha inicial(AAAA-MM-DD): ")
+        fecha_final = input("Fecha final(AAAA-MM-DD): ")
+        result = listArtworkbyDate(fecha_inicial,fecha_final,catalog)
+        print("El numero total de obras en el rango especificado es: " + str(lt.size(result[0]))) 
+        print("El numero de obras adquiridas por compra es: " + str(result[1]))
+        print('Las ultimas 3 obras en el rango son: \n')
+        for i in range(lt.size(result[0])-3,lt.size(result[0])): 
+            artwork = lt.getElement(result[0],i) 
+            printArtWork(artwork) 
+        print("\n" +"Las primeras 3 obras son: \n")
+        for i in range(1,4):
+            artwork = lt.getElement(result[0],i) 
+            printArtWork(artwork)
 
     elif int(inputs[0]) == 8: 
         depto = input('Ingrese el departamento a transportar: ')
