@@ -343,13 +343,13 @@ def sortArtworkDate(artWorks,orden):
 
 def sortArtwork(catalog,orden):
     if orden == 1:
-      ins.sort(catalog['artWork'], cmpArtworkByDateAcquired)
+      ins.sort(catalog['Artwork'], cmpArtworkByDateAcquired)
     elif orden == 2:
-      sa.sort(catalog['artWork'], cmpArtworkByDateAcquired)
+      sa.sort(catalog['Artwork'], cmpArtworkByDateAcquired)
     elif orden == 3:
-      mer.sort(catalog['artWork'], cmpArtworkByDateAcquired)
+      mer.sort(catalog['Artwork'], cmpArtworkByDateAcquired)
     elif orden == 4:
-      quic.sort(catalog['artWork'], cmpArtworkByDateAcquired)
+      quic.sort(catalog['Artwork'], cmpArtworkByDateAcquired)
 
 # Funciones conteo
 def countobrasnationality(nationality, catalog):
@@ -400,7 +400,7 @@ def listArtworkbyDate(fechainicial,fechafinal,catalog):
     stop = False
     i = 1
     while i <= lt.size(anios) and not stop:
-        obra = lt.getElement(catalog['artWork'],i)
+        obra = lt.getElement(catalog['Artwork'],i)
         if len(obra['DateAcquired']) > 0:
             fecha_obra  = date.datetime.strptime(obra['DateAcquired'],'%Y-%m-%d') 
             if fechainicial <= fecha_obra and fechafinal >= fecha_obra : 
