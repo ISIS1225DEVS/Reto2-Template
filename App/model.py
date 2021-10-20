@@ -166,7 +166,9 @@ def ArtworksbyNationalityMap(catalog,artwork):
 
 
 # Funciones de consulta
-#REQ 1
+
+
+####### REQ 1 #######
 
 def ArtistbyBeginDate(catalog, min, max):
 
@@ -199,11 +201,8 @@ def ArtistbyBeginDate(catalog, min, max):
 
     rta.append(size)
 
-####
+#######
 
-
-
-#REQ 3
     pos=1
     x=True
     
@@ -294,6 +293,15 @@ def ArtistbyBeginDate(catalog, min, max):
       
 
     return rta
+
+
+####### REQ 3 #######
+
+
+
+
+
+
 
 #lab5
 

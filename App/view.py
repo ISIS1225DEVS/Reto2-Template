@@ -54,18 +54,16 @@ def printArtisbyBeginDate(list):
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-
-    print("0- Numero de obras mas antiguas por medio")
-    print('3- Numero de obras por nacionalidad ')
+    #print("0- Numero de obras mas antiguas por medio")
+    #print('3- Numero de obras por nacionalidad ')
     print("2- Listar cronológicamente los artistas")
     print("3- Listar cronológicamente las adquisiciones ")
-    '''
     print("4- Clasificar las obras de un artista por técnica")
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("6- Costos transportar obras de un departamento")
     print("7- Proponer una nueva exposición en el museo")
     print("8- Salir")
-    '''
+   
 catalog = None
 
 """
@@ -94,6 +92,9 @@ while True:
 
         list=controller.ArtistbyBeginDate(catalog,min,max)
         printArtisbyBeginDate(list)
+
+    elif int(inputs[0]) == 4:
+        input
 
 
     elif int(inputs[0]) == 0:
