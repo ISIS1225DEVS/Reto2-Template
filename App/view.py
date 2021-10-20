@@ -66,6 +66,7 @@ def listArtworkbyDate (fecha_inicial, fecha_final,catalog) :
     return controller.listArtworkbyDate(fecha_inicial, fecha_final,catalog)
 
 def printArtWork(artWork): 
+    print(artWork)
     print("ObjectID: " + artWork['ObjectID'] + '\t|\t' + 'Title ' + artWork['Title'] + '\t|\t' + "ArtistsNames: " + artWork['ArtistsNames'] + '\t|\t' + 
     "Medium: " + artWork['Medium'] + "\t|\t" + "Dimensions: " + artWork['Dimensions'] + "\t|\t" + "Date: " + artwork['Date'] + "\t|\t" +
     'DateAcquired: ' + artWork['DateAcquired'] + "\t|\t" + "URL: " + artWork['URL'])
