@@ -66,7 +66,6 @@ def listArtworkbyDate (fecha_inicial, fecha_final,catalog) :
     return controller.listArtworkbyDate(fecha_inicial, fecha_final,catalog)
 
 def printArtWork(artWork): 
-    print(artWork)
     print("ObjectID: " + artWork['ObjectID'] + '\t|\t' + 'Title ' + artWork['Title'] + '\t|\t'  + 
     "Medium: " + artWork['Medium'] + "\t|\t" + "Dimensions: " + artWork['Dimensions'] + "\t|\t" + "Date: " + artwork['Date'] + "\t|\t" +
     'DateAcquired: ' + artWork['DateAcquired'] + "\t|\t" + "URL: " + artWork['URL'])
@@ -142,15 +141,15 @@ while True:
         result = listArtworkbyDate(fecha_inicial,fecha_final,catalog)
         print("El numero total de obras entre" + str(fecha_inicial) + " y " + str(fecha_final) + "es: " + str(lt.size(result[0]))) 
         print("El numero de obras adquiridas por compra es: " + str(result[1]))
-        print('Las ultimas 3 obras en el rango son: \n')
         if lt.size(result[0])>0:
-            for i in range(lt.size(result[0])-3,lt.size(result[0])): 
-                artwork = lt.getElement(result[0],i) 
-                printArtWork(artwork) 
             print("\n" +"Las primeras 3 obras son: \n")
             for i in range(0,3):
                 artwork = lt.getElement(result[0],i) 
                 printArtWork(artwork)
+            print("\n" +'Las ultimas 3 obras en el rango son: \n')
+            for i in range(lt.size(result[0])-3,lt.size(result[0])): 
+                artwork = lt.getElement(result[0],i) 
+                printArtWork(artwork) 
         else:
             print("No se encontraron obras de " + str(fecha_final) + " a " + str(fecha_final))
 
