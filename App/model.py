@@ -85,7 +85,7 @@ def addArt(catalog, artwork):
             lt.addLast(lista_creada, artwork)
         
             mp.put(catalog['ID'],id , lista_creada)
-            
+
    
 
     
@@ -124,6 +124,7 @@ def newCatalog(estructuraDatos):
     catalog['ID'] = mp.newMap(1000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpMedio)
     catalog['Artist'] = lt.newList(datastructure=estructuraDatos)
     catalog['IDA'] = mp.newMap(1000, maptype='PROBING', loadfactor=0.5, comparefunction=cmpMedio)
+
     
  
     return catalog
@@ -353,10 +354,9 @@ def sortObrasxfecha(lista):
 # Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
-def AddArtFecha(art, fechai, fechaf, Lista):
+def AddArtFecha(art, fechai, fechaf, lista):
     if cmpArtworkByDateAcquiredSolo(art, fechai, fechaf):
-            lt.addLast(Lista, art)
-    return Lista
+            lt.addLast(lista, art)
             
     
     
@@ -408,8 +408,14 @@ def cmpArtworkByDateAcquired(artwork1, artwork2):
 
 def cmpArtworkByDateAcquiredSolo(artwork, fechai, fechaf):
     artworka = (artwork['DateAcquired']).split('-')
+    fechai = fechai.split('-')
+    fechaf = fechaf.split('-')
     if artworka[0] != '':
-        return (int(artworka[0]) >= int(fechai)) and (int(artworka[0]) <= int(fechaf))
+        if (int(artworka[0]) >= int(fechai[0])) and (int(artworka[0]) <= int(fechaf[0])):
+            if (int(artworka[1]) >= int(fechai[1])) and (int(artworka[1]) <= int(fechaf[1])):
+                if (int(artworka[1]) >= int(fechai[1])) and (int(artworka[1]) <= int(fechaf[1])):
+                    return True
+    
     else: return False
 
 
@@ -418,7 +424,7 @@ def cmpArtworkByDateAcquiredSolo(artwork, fechai, fechaf):
 # Funciones de ordenamiento
 
 def OrganizarFecha(lista):
-    return sa.sort(lista, cmpArtworkByDateAcquired)
+    return ms.sort(lista, cmpArtworkByDateAcquired)
 
 def OrganizarNacionalidad(lista):
     return sa.sort(lista, cmpNumNacionalidad)

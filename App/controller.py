@@ -21,6 +21,7 @@
  """
 
 from DISClib.ADT import list as lt
+from DISClib.ADT.indexminpq import size
 import config as cf
 import model
 import csv
@@ -106,6 +107,19 @@ def ObrasPorNacionalidades(catalog):
     
 
 def obrasPorAnio(catalog, fechai, fechaf):
-    pass
+    size = lt.size(catalog['Art'])
+    lista_filtrada = lt.newList()
+    obrasPorCompra = 0
+    for pos in range(size):
+        art = lt.getElement(catalog['Art'], pos)
+        model.AddArtFecha(art, fechai, fechaf, lista_filtrada)
+        if model.escompra(art):
+            obrasPorCompra += 1
+    
+    lista_organizada = model.OrganizarFecha(lista_filtrada)
+    sizefinal = lt.size(lista_organizada)
+    r = [lista_organizada, sizefinal, obrasPorCompra]
+    return r
+    
     
 
