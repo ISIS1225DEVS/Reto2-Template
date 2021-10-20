@@ -87,24 +87,24 @@ def printTransportarObras(transporte, depto):
             print(transporte[2])
             print("----------")
             if lt.size(transporte[2])>0:
-                for i in transporte[2]:
-                 obra = lt.getElement(transporte[2],i) 
-                print("ObjectID: " + str(obra['ObjectID']) + '\t|\t' + 'Title ' + obra['Title'] + '\t|\t' +  
-                "ArtistsNames: " + obra['ArtistsNames'] + '\t|\t' + "Medium: " + obra['Medium'] + "\t|\t" + 
-                "Date: " + str(obra['Date']) + "\t|\t" + "Dimensions: " + obra['Dimensions'] + "\t|\t" + 
-                "Classification: " + obra['Classification'] + "\t|\t" + "TransCost: " + str(obra['TransCost']) + "\t|\t" + 
-                "URL: " + obra['URL'])
+                for i in range(0,5):
+                    obra = lt.getElement(transporte[2],i) 
+                    print("ObjectID: " + str(obra['ObjectID']) + '\t|\t' + 'Title ' + obra['Title'] + '\t|\t' +  
+                     "ArtistsNames: " + obra['ArtistsNames'] + '\t|\t' + "Medium: " + obra['Medium'] + "\t|\t" + 
+                    "Date: " + str(obra['Date']) + "\t|\t" + "Dimensions: " + obra['Dimensions'] + "\t|\t" + 
+                    "Classification: " + obra['Classification'] + "\t|\t" + "TransCost: " + str(obra['TransCost']) + "\t|\t" + 
+                    "URL: " + obra['URL'])
         if transporte[3]:
             print("\n" +"Las 5 obras más antiguas a transportar son: \n")
             print("----------")
             print(transporte[3])
             print("----------")
             if lt.size(transporte[3])>0:
-                for i in transporte[3]:
-                 artwork = lt.getElement(transporte[3],i) 
-                print("ObjectID: " + str(artwork['ObjectID']) + '\t|\t' + 'Title ' + artwork['Title'] + '\t|\t' + "ArtistsNames: " + obra['ArtistsNames'] + '\t|\t' +
-                "Medium: " + artwork['Medium'] + "\t|\t" + "Date: " + str(artwork['Date']) + "\t|\t" + "Dimensions: " + artwork['Dimensions'] + "\t|\t" + 
-                "Classification: " + artwork['Classification'] + "\t|\t" + "TransCost: " + str(artwork['TransCost']) + "\t|\t" + "URL: " + artwork['URL'])
+                for i in range(0,5):
+                    artwork = lt.getElement(transporte[3],i) 
+                    print("ObjectID: " + str(artwork['ObjectID']) + '\t|\t' + 'Title ' + artwork['Title'] + '\t|\t' + "ArtistsNames: " + obra['ArtistsNames'] + '\t|\t' +
+                    "Medium: " + artwork['Medium'] + "\t|\t" + "Date: " + str(artwork['Date']) + "\t|\t" + "Dimensions: " + artwork['Dimensions'] + "\t|\t" + 
+                    "Classification: " + artwork['Classification'] + "\t|\t" + "TransCost: " + str(artwork['TransCost']) + "\t|\t" + "URL: " + artwork['URL'])
     else:
         print("No se encuentran obras a transportar de ese departamento")
 
