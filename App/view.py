@@ -47,7 +47,8 @@ def loadData (catalog) :
     controller.loadData(catalog) 
 def oldestArtworksbyMedium(catalog,medium,n): 
     return controller.oldestbyMedium(catalog,medium,n) 
-
+def transportarObras(depto,catalog) : 
+    return controller.transportarObras(depto,catalog)
 
 """
 Menu principal
@@ -84,6 +85,9 @@ while True:
         while j > lt.size(artistas) - 3 : 
             print(lt.getElement(artistas,j))
             j -= 1 
+    elif int(inputs[0]) == 5 : 
+        Depto = input('Ingrese el departamento a transportar: ')
+        Transporte = transportarObras(Depto,catalog)
         
 
 
