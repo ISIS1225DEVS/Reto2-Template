@@ -425,17 +425,18 @@ def listArtworkbyDate(fechainicial,fechafinal,catalog):
     dates = mp.keySet(catalog["DateAcquired"])
     print(dates)
     datosart = lt.newList("ARRAY_LIST")
-    stop = False
     i = 1
-    while i <= lt.size(dates) and not stop:
-        obra = lt.getElement(dates,i)
-        print(obra)
-        if len(obra['DateAcquired']) > 0:
-            fecha_obra  = date.datetime.strptime(str(obra['DateAcquired']),'%Y-%m-%d') 
-            if fechainicial <= fecha_obra and fechafinal >= fecha_obra : 
-                lt.addLast(datosart,obra) 
-            elif fecha_obra > fechafinal: 
-                stop = True 
+    while i <= lt.size(dates):
+        fecha = int(lt.getElement(dates,i))
+        print(fecha)
+        if fechainicial <= fecha and fechafinal >= fecha:
+            entry = mp.get(date, str(fecha)) 
+            valor = me.getValue(entry)
+            j = 1
+            while j <= lt.size(valor['DateAcquired']):
+                artist = lt.getElement(valor['DateAcquired'],j)
+                lt.addLast(datosart,artist) 
+                j += 1
         i += 1
     return datosart
 
