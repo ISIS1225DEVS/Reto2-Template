@@ -430,10 +430,10 @@ def listArtworkbyDate(fechainicial,fechafinal,catalog):
         print(obra)
         print(obra['DateAcquired'])
         if len(obra['DateAcquired']) > 0:
-            fecha_obra  = date.datetime.strptime(obra['DateAcquired'],'%Y-%m-%d') 
+            fecha_obra  = date.datetime.strptime(str(obra['DateAcquired']),'%Y-%m-%d') 
             if fechainicial <= fecha_obra and fechafinal >= fecha_obra : 
                 lt.addLast(datosart,obra) 
-            elif fecha_obra > fechafinal : 
+            elif fecha_obra > fechafinal: 
                 stop = True 
         i += 1
     return datosart
