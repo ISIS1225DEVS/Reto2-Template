@@ -36,6 +36,7 @@ Presenta el menu de opciones y por cada seleccion
 se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
+#REQ1
 def printArtisbyBeginDate(list):
 
     print('La cantidad de artistas dentro del rango es de ' + str(list[0]))
@@ -49,10 +50,31 @@ def printArtisbyBeginDate(list):
         if i == 3:
             print('\nLos 3 ultimos artistas son: ')
 
+#REQ3
+def printArtworksMediumsbyArtist(list):
+    if list != 0:
+        print(list[4]['DisplayName'] + ' con MOMA ID/ '+list[4]['ConstituentID']+' tiene '+str(list[0])+' obras a su nombre')
+        print('\n Se usa un total de '+ str(len(list[1]))+' tecnicas diferentes')
+        print('\nLas tecnicas que utiliza son: '+ str(list[1]))
+        print('\nLa tecnica mas utilizada es '+ str(list[2]))
+
+        print('\nAlgunas obras de este medio son:')
+        c=0
+        for a in list[3]['elements']:
+
+            print('\nTitulo: '+a['Title']+' | ', 'Fecha de la obra: '+a['Date']+' | ', 'Tecnica o Medio: '+a['Medium']+' | ',
+                'Diemensiones: '+ a['Dimensions'])
+            c+=1
+            if c>6:
+                break
+    else:
+        print('No hay obras para este artista')
+
 
 
 def printMenu():
-    print("Bienvenido")
+    print('___________________________________________________________')
+    print("\nBienvenido")
     print("1- Cargar información en el catálogo")
     #print("0- Numero de obras mas antiguas por medio")
     #print('3- Numero de obras por nacionalidad ')
@@ -72,6 +94,7 @@ Menu principal
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
+
     if int(inputs[0]) == 1:
         print("Cargando información de los archivos ....")
         catalog=controller.initCatalog()
@@ -80,11 +103,10 @@ while True:
         print("\nArtistas cargadas: " + str(lt.size(catalog["Artists"])))
         print("\nObras cargadas: " + str(lt.size(catalog["Artworks"])))
 
-        #mg.sort(mp.get(catalog['BeginDate'],'1920'['value']),controller.)
-        print(mp.get(catalog['BeginDate'],'1984'))
-        #sssssssssprint((lt.getElement(catalog['Artworks'],3)['ConstituentID']).replace('[','').replace(']','').split(','))
-        #print(type(mp.get(catalog['Work_Nationality'],'American')['value']))
+        #x=mp.get(catalog['DisplayName'],'Louise Bourgeois')['value']['ConstituentID']
+        #print(mp.get(catalog['DisplayName'],'Louise Bourgeois'))
         
+          
     elif int(inputs[0]) == 2:
         print("Digite el rango de fechas en el que desea realizar la búsqueda (AAAA)")
         min = int(input("Fecha Inicial: "))
@@ -94,7 +116,10 @@ while True:
         printArtisbyBeginDate(list)
 
     elif int(inputs[0]) == 4:
-        input
+        Name=input("Ingrese el nombre del artista:  ")
+
+        list=controller.ArtworksMediumsbyArtist(catalog,Name)
+        printArtworksMediumsbyArtist(list)
 
 
     elif int(inputs[0]) == 0:

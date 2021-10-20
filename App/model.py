@@ -69,17 +69,30 @@ def newCatalog():
                                    comparefunction=compareArtworksIds)
 
     
-    
+    #REQ1
     catalog['BeginDate'] = mp.newMap(500,
                                    maptype='CHAINING',
                                    loadfactor=5,
                                    comparefunction=compareBeginDate)
     
-    catalog['Medium'] = mp.newMap(34500,
+    
+    #REQ3
+    catalog['DisplayName'] = mp.newMap(14500,
                                 maptype='CHAINING',
                                 loadfactor=2,
                                 comparefunction=compareArtworksbymedium)
-
+    #REQ3
+    catalog['Work_artists'] = mp.newMap(16000,
+                                 maptype='PROBING',
+                                 loadfactor=0.5,)
+    #REQ3
+    catalog['Artists_ConstituentID'] = mp.newMap(16000,
+                                 maptype='PROBING',
+                                 loadfactor=0.5,)
+    '''
+    catalog['Work_ConstituentID'] = mp.newMap(16000,
+                                 maptype='PROBING',
+                                loadfactor=0.5,)
 
     
     catalog['Work_Nationality'] = mp.newMap(34500,
@@ -87,15 +100,15 @@ def newCatalog():
                                   loadfactor=4.0,
                                   comparefunction=compareNationality)
     
-    catalog['Artists_ConstituentID'] = mp.newMap(16000,
-                                 maptype='PROBING',
-                                 loadfactor=0.5,)
+    
+    catalog['Medium'] = mp.newMap(34500,
+                                maptype='CHAINING',
+                                loadfactor=2,
+                                comparefunction=compareArtworksbymedium)
     '''
-    catalog['Work_ConstituentID'] = mp.newMap(16000,
-                                 maptype='PROBING',
-                                 loadfactor=0.5,)
+    
                                  
-    '''
+    
 
     return catalog
   
@@ -128,6 +141,7 @@ def addArtist(catalog, artist):
 
     addtomap(catalog['BeginDate'],artist['BeginDate'],artist)
     mp.put(catalog['Artists_ConstituentID'],artist['ConstituentID'],artist)
+    mp.put(catalog['DisplayName'],artist['DisplayName'],artist)
 
 
 
@@ -135,12 +149,29 @@ def addArtist(catalog, artist):
 def addArtwork(catalog, artwork):
     lt.addLast(catalog["Artworks"], artwork)
 
-    addtomap(catalog['Medium'],artwork['Medium'],artwork)
+    #addtomap(catalog['Medium'],artwork['Medium'],artwork)
     #mp.put(catalog['Work_ConstituentID'],artwork['ConstituentID'],artwork)
-    ArtworksbyNationalityMap(catalog,artwork)
+    #ArtworksbyNationalityMap(catalog,artwork)
+    ArtworksbyArtist(catalog,artwork)
+
+#REQ3
+def ArtworksbyArtist(catalog,artwork):
+
+    list=artwork['ConstituentID'].replace('[','').replace(']','').split(',')
+    Artists=[]
+    for i in list:
+
+        Artist=mp.get(catalog['Artists_ConstituentID'],i)
+        if Artist != None:
+            Name=mp.get(catalog['Artists_ConstituentID'],i)['value']['DisplayName']
+            if Name not in Artists:
+                Artists.append(Name)
+
+                addtomap(catalog['Work_artists'],i,artwork)
 
 
 
+'''
 def ArtworksbyNationalityMap(catalog,artwork):
 
     list=artwork['ConstituentID'].replace('[','').replace(']','').split(',')
@@ -153,7 +184,7 @@ def ArtworksbyNationalityMap(catalog,artwork):
             if Nation not in Nations:
                 Nations.append(Nation)
                 addtomap(catalog['Work_Nationality'],Nation,artwork)
-    
+'''  
 
    
 
@@ -166,7 +197,6 @@ def ArtworksbyNationalityMap(catalog,artwork):
 
 
 # Funciones de consulta
-
 
 ####### REQ 1 #######
 
@@ -248,12 +278,12 @@ def ArtistbyBeginDate(catalog, min, max):
     x=True
     l=lt.newList(datastructure='ARRAY_LIST')
     while pos >=lt.size(b)-2 and x :
-        print('1',type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) == type(lt.getElement(catalog['Artists'],1)))
+        
         if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) == type(lt.getElement(catalog['Artists'],1)):
             listvalues=mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']
             lt.addLast(l,listvalues)
             pos-=1
-        print('2',type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) != type(lt.getElement(catalog['Artists'],1)))
+        
         if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) != type(lt.getElement(catalog['Artists'],1)):
             listvalues=mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']
             mg.sort(listvalues,cmpArtistConstituentID)
@@ -297,6 +327,60 @@ def ArtistbyBeginDate(catalog, min, max):
 
 ####### REQ 3 #######
 
+def ArtworksMediumsbyArtist(catalog,ArtistName):
+    
+    key=mp.get(catalog['DisplayName'],ArtistName)['value']['ConstituentID']
+
+    if mp.get(catalog['Work_artists'],key) != None:
+        artworks=mp.get(catalog['Work_artists'],key)['value']
+        mg.sort(artworks,cmpArtworkMedium)
+
+        size=lt.size(artworks)
+        rta=[size]+ ArtwroksMedium(artworks)
+
+        rta.append(mp.get(catalog['DisplayName'],ArtistName)['value'])
+        #len de lista = 5
+        return rta
+    else: 
+        return 0
+
+def ArtwroksMedium(list):
+    
+
+    Mediums=[lt.getElement(list,1)['Medium']]
+    big_M =lt.getElement(list,1)['Medium']
+    dic={}
+
+    
+
+    for artwork in list['elements']:
+        if artwork['Medium'] not in Mediums:  
+            Mediums.append(artwork['Medium'])
+
+    biggest=0
+    for medium in Mediums:
+        count=0
+        for art in list['elements']:
+            if medium == art['Medium']:
+                count+=1
+        dic[medium]=count
+        if biggest <= count:
+            biggest = count
+            big_M = medium
+
+    
+    return [dic, big_M , Artwork_big_M(list,big_M)]
+
+def Artwork_big_M(list,big_M):
+
+    a=lt.newList("ARRAY_LIST")
+
+    for artwork in list['elements']:
+        if artwork['Medium'] == big_M:
+
+            lt.addLast(a,artwork)
+
+    return a
 
 
 
@@ -441,6 +525,12 @@ def cmpArtistConstituentID(artist1, artist2):
 def cmpArtistBeginDateSublist(artist1, artist2):
 
     if int(artist1['BeginDate']) < int(artist2['BeginDate']):
+        return True
+    else:
+        return False
+
+def cmpArtworkMedium(artwork1, artwork2):
+    if (artwork1["Medium"]) < (artwork2["Medium"]):
         return True
     else:
         return False

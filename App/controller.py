@@ -58,8 +58,13 @@ def loadAdworks(catalog):
 
 #Funciones de Consulta
 
+#REQ1#
 def ArtistbyBeginDate(catalog, min, max):
     return model.ArtistbyBeginDate(catalog, min, max)
+
+#REQU2#
+def ArtworksMediumsbyArtist(catalog,ArtistName):
+    return model.ArtworksMediumsbyArtist(catalog,ArtistName)
 
 def ArtworksbyMedium(catalog,Name,n):
     return model.ArtworksbyMedium(catalog,Name,n)
