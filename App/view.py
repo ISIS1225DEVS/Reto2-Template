@@ -66,8 +66,9 @@ def listArtworkbyDate (fecha_inicial, fecha_final,catalog) :
     return controller.listArtworkbyDate(fecha_inicial, fecha_final,catalog)
 
 def printArtWork(artWork): 
-    print("ObjectID: " + artWork['ObjectID'] + '\t|\t' + 'DateAc ' + artWork['DateAcquired'] + '\t|\t' +  
-    "ArtistID: " + artWork['ConstituentID'] + '\t|\t' + "Date: " + artWork['Date'] + "\t|\t" + artWork['Medium'] + "\t|\t" + artWork['Dimensions'])
+    print("ObjectID: " + artWork['ObjectID'] + '\t|\t' + 'Title ' + artWork['Title'] + '\t|\t' + "ArtistsNames: " + artWork['ArtistsNames'] + '\t|\t' + 
+    "Medium: " + artWork['Medium'] + "\t|\t" + "Dimensions: " + artWork['Dimensions'] + "\t|\t" + "Date: " + artwork['Date'] + "\t|\t" +
+    'DateAcquired: ' + artWork['DateAcquired'] + "\t|\t" + "URL: " + artWork['URL'])
 
 def transportarObras(depto,catalog) : 
     return controller.transportarObras(depto,catalog)
@@ -148,7 +149,7 @@ while True:
                 artwork = lt.getElement(result[0],i) 
                 printArtWork(artwork) 
             print("\n" +"Las primeras 3 obras son: \n")
-            for i in range(1,4):
+            for i in range(0,3):
                 artwork = lt.getElement(result[0],i) 
                 printArtWork(artwork)
         else:
