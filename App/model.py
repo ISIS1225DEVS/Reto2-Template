@@ -399,13 +399,13 @@ def listCronoArtist(anioinicial,aniofinal,catalog) :
 #TODO: Funciones req 2
 
 def listArtworkbyDate(fechainicial,fechafinal,catalog):
-    size= lt.size(catalog['artWork'])
+    size= lt.size(catalog['Artwork'])
     sortArtwork(catalog,3)
     datosart = lt.newList("ARRAY_LIST")
     stop = False
     i = 1
     while i <= size and not stop:
-        obra = lt.getElement(catalog['artWork'],i)
+        obra = lt.getElement(catalog['Artwork'],i)
         if len(obra['DateAcquired']) > 0 :
             fecha_obra  = date.datetime.strptime(obra['DateAcquired'],'%Y-%m-%d') 
             if fechainicial <= fecha_obra and fechafinal >= fecha_obra : 
