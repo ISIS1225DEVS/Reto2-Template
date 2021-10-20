@@ -115,13 +115,18 @@ def addArtWork (catalog,artWork) :
     medium = artWork['Medium'] 
     artistID = artWork['ConstituentID']
     department = artWork['Department']
+    DateAquired = artWork['DateAcquired']
     addArtWorkMedium(catalog,medium,artWork)
     addArtWorkbyArtist(catalog,artistID,artWork)
     addArtWorkDepartment(catalog,department,artWork) 
+    addArtworkDateAdquired(catalog,DateAquired,artWork)
 
 
 
 # Funciones Artistas
+def addArtWorkDateAdquired(catalog,DateAquired,artWork) : 
+    pass
+
 def addArtist(catalog,artist) : 
     lt.addLast(catalog['Artist'],artist)
     year = artist['BeginDate'] 

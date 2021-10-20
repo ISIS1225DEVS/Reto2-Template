@@ -74,6 +74,7 @@ def transportarObras(depto,catalog) :
     return controller.transportarObras(depto,catalog)
 
 def printTransportarObras(transporte, depto):
+    
     if transporte[4] > 0:
         print("El MoMA va a transportar " + str(transporte[4])+" obras del departamento " + str(depto))
         if transporte[1]:
