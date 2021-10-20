@@ -427,8 +427,6 @@ def listArtworkbyDate(fechainicial,fechafinal,catalog):
     i = 1
     while i <= lt.size(date) and not stop:
         obra = lt.getElement(catalog['Artwork'],i)
-        print(obra)
-        print(obra['DateAcquired'])
         if len(obra['DateAcquired']) > 0:
             fecha_obra  = date.datetime.strptime(str(obra['DateAcquired']),'%Y-%m-%d') 
             if fechainicial <= fecha_obra and fechafinal >= fecha_obra : 
