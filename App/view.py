@@ -86,16 +86,16 @@ def printTransportarObras(transporte, depto):
             if lt.size(transporte[2])>0:
                 for i in range(1,6):
                  obra = lt.getElement(transporte[2],i) 
-                print("ObjectID: " + obra['ObjectID'] + '\t|\t' + 'Title ' + obra['Title'] + '\t|\t' +  
+                print("ObjectID: " + str(obra['ObjectID']) + '\t|\t' + 'Title ' + obra['Title'] + '\t|\t' +  
                 "ArtistsNames: " + obra['ArtistsNames'] + '\t|\t' + "Medium: " + obra['Medium'] + "\t|\t" + 
-                "Date: " + obra['Date'] + "\t|\t" + "Dimensions: " + obra['Dimensions'] + "\t|\t" + 
-                "Classification: " + obra['Classification'] + "\t|\t" + "TransCost: " + obra['TransCost'] + "\t|\t" + 
+                "Date: " + str(obra['Date']) + "\t|\t" + "Dimensions: " + obra['Dimensions'] + "\t|\t" + 
+                "Classification: " + obra['Classification'] + "\t|\t" + "TransCost: " + str(obra['TransCost']) + "\t|\t" + 
                 "URL: " + obra['URL'])
         if transporte[3]:
             print("Las 5 obras más antiguas a transportar son: ")
             if lt.size(transporte[3])>0:
                 for i in range(1,6):
-                 obra = lt.getElement(transporte[3],i) 
+                 artwork = lt.getElement(transporte[3],i) 
                 print("ObjectID: " + artwork['ObjectID'] + '\t|\t' + 'Title ' + artwork['Title'] + '\t|\t' + "ArtistsNames: " + obra['ArtistsNames'] + '\t|\t' +
                 "Medium: " + artwork['Medium'] + "\t|\t" + "Date: " + artwork['Date'] + "\t|\t" + "Dimensions: " + artwork['Dimensions'] + "\t|\t" + 
                 "Classification: " + artwork['Classification'] + "\t|\t" + "TransCost: " + artwork['TransCost'] + "\t|\t" + "URL: " + artwork['URL'])
