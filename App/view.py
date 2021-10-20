@@ -126,15 +126,17 @@ while True:
         anioinicial = int(input("Ingrese el año inicial: "))
         aniofinal = int(input("Ingrese el año final: ")) 
         artistas = controller.listCronoArtist(anioinicial,aniofinal,catalog) 
+        print("El tiempo de ejecución del requerimiento 1 es de: " + str(artistas[1]))
         i = 1 
         while i <= 3 :
-            print(lt.getElement(artistas,i))
+            print(lt.getElement(artistas[0],i))
             i += 1 
-        j = lt.size(artistas) 
+        j = lt.size(artistas[0]) 
         print('-'*50)
-        while j > lt.size(artistas) - 3 : 
-            print(lt.getElement(artistas,j))
+        while j > lt.size(artistas[0]) - 3 : 
+            print(lt.getElement(artistas[0],j))
             j -= 1 
+        
 
     elif int(inputs[0]) == 5: 
         fecha_inicial = input("Fecha inicial(AAAA-MM-DD): ")

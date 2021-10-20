@@ -400,6 +400,7 @@ def listCronoArtist(anioinicial,aniofinal,catalog) :
     La funcion retorna los artistas nacidos en un anio.
 
     """
+    start_time = time.process_time()
     beginYears = catalog['ArtistBeginYear']
     anios = mp.keySet(catalog['ArtistBeginYear'])
     artists = lt.newList('ARRAY_LIST')
@@ -415,7 +416,9 @@ def listCronoArtist(anioinicial,aniofinal,catalog) :
                 lt.addLast(artists, artista)
                 j +=1 
         i += 1 
-    return artists
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    return artists, elapsed_time_mseg
 
 #TODO: Funciones req 2
 
