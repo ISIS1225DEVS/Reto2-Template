@@ -505,7 +505,7 @@ def transportarObras(department,catalog) :
             DisplayName += artistInfo['DisplayName'] + ', '
         if len(weight) == 0 : 
             weight = 0 
-        sumaPeso += int(weight)    
+        sumaPeso += float(weight)    
         costo = calcularCosto(artwork) 
         sumaCosto += costo
         artwork['TransCost'] = costo 
