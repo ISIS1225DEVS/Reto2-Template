@@ -83,9 +83,6 @@ def printTransportarObras(transporte, depto):
             print("El costo estimado es de: " + str(transporte[0]) + " USD")
         if transporte[2]:
             print("\n" +"Las 5 obras más costosas a transportar son: \n")
-            print("----------")
-            print(transporte[2])
-            print("----------")
             if lt.size(transporte[2])>0:
                 for i in range(0,5):
                     obra = lt.getElement(transporte[2],i) 
@@ -96,9 +93,6 @@ def printTransportarObras(transporte, depto):
                     "URL: " + obra['URL'])
         if transporte[3]:
             print("\n" +"Las 5 obras más antiguas a transportar son: \n")
-            print("----------")
-            print(transporte[3])
-            print("----------")
             if lt.size(transporte[3])>0:
                 for i in range(0,5):
                     artwork = lt.getElement(transporte[3],i) 
