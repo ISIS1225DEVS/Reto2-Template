@@ -77,6 +77,11 @@ def newCatalog():
                                 loadfactor=0.5,
                                 comparefunction=compareNationality)
 
+    catalog['DateAcquired'] = mp.newMap(69000,
+                                maptype='CHAINING',
+                                loadfactor=0.5,
+                                comparefunction=cmpArtworkByDateAcquired)
+
     catalog['ArtistBeginYear'] = mp.newMap(69000,
                                 maptype='CHAINING',
                                 loadfactor=0.5,
