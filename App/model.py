@@ -65,7 +65,7 @@ def newCatalog():
 
     catalog['Medium'] = mp.newMap(69000,
                                 maptype='CHAINING',
-                                loadfactor=0.5,
+                                loadfactor=4.0,
                                 comparefunction=compareArtistMedium) 
     catalog['ArtworksByArtist'] = mp.newMap(69000,
                                 maptype='PROBING',
@@ -74,17 +74,17 @@ def newCatalog():
     
     catalog["Nationality"] = mp.newMap(20000,
                                 maptype='CHAINING',
-                                loadfactor=0.5,
+                                loadfactor=4.0,
                                 comparefunction=compareNationality)
 
     catalog['DateAcquired'] = mp.newMap(69000,
                                 maptype='CHAINING',
-                                loadfactor=0.5,
+                                loadfactor=4.0,
                                 comparefunction=cmpArtworkByDateAcquired)
 
     catalog['ArtistBeginYear'] = mp.newMap(69000,
                                 maptype='CHAINING',
-                                loadfactor=0.5,
+                                loadfactor=4.0,
                                 comparefunction=compareMapYear)
     
     catalog['ArtworksDepartment'] = mp.newMap(69000,
@@ -401,6 +401,7 @@ def listCronoArtist(anioinicial,aniofinal,catalog) :
 def listArtworkbyDate(fechainicial,fechafinal,catalog):
     sortArtwork(catalog,3)
     anios = mp.keySet(catalog["DateAcquired"])
+    print(anios)
     datosart = lt.newList("ARRAY_LIST")
     stop = False
     i = 1
@@ -413,6 +414,7 @@ def listArtworkbyDate(fechainicial,fechafinal,catalog):
             elif fecha_obra > fechafinal : 
                 stop = True 
         i += 1
+    print(datosart)
     return datosart
 
 def countPurchasedArtwork(artworks) : 
@@ -424,6 +426,7 @@ def countPurchasedArtwork(artworks) :
         if 'Purchase' in artwork['CreditLine'] : 
             count += 1 
         i += 1 
+    print(count)
     return count 
 
 #TODO: Funciones req 3
