@@ -87,7 +87,7 @@ def printTransportarObras(transporte, depto):
             print(transporte[2])
             print("----------")
             if lt.size(transporte[2])>0:
-                for i in range(1,6):
+                for i in transporte[2]:
                  obra = lt.getElement(transporte[2],i) 
                 print("ObjectID: " + str(obra['ObjectID']) + '\t|\t' + 'Title ' + obra['Title'] + '\t|\t' +  
                 "ArtistsNames: " + obra['ArtistsNames'] + '\t|\t' + "Medium: " + obra['Medium'] + "\t|\t" + 
@@ -100,7 +100,7 @@ def printTransportarObras(transporte, depto):
             print(transporte[3])
             print("----------")
             if lt.size(transporte[3])>0:
-                for i in range(1,6):
+                for i in transporte[3]:
                  artwork = lt.getElement(transporte[3],i) 
                 print("ObjectID: " + str(artwork['ObjectID']) + '\t|\t' + 'Title ' + artwork['Title'] + '\t|\t' + "ArtistsNames: " + obra['ArtistsNames'] + '\t|\t' +
                 "Medium: " + artwork['Medium'] + "\t|\t" + "Date: " + str(artwork['Date']) + "\t|\t" + "Dimensions: " + artwork['Dimensions'] + "\t|\t" + 
