@@ -41,12 +41,9 @@ def initCatalog():
     catalog = model.newCatalog()
     return catalog  
 # Funciones para la carga de datos
-def loadData(catalog) :
-    start = timeit.timeit() 
-    loadArtworks(catalog)
+def loadData(catalog) : 
     loadArtists(catalog)
-    end = timeit.timeit()
-    print(end-start)
+    loadArtworks(catalog)
 
 def loadArtists(catalog) : 
     artistsfile = cf.data_dir + 'Artists-utf8-small.csv' 
@@ -57,6 +54,7 @@ def loadArtists(catalog) :
 def loadArtworks(catalog): 
     artworksfile = cf.data_dir + 'Artworks-utf8-small.csv'
     input_file = csv.DictReader(open(artworksfile,encoding='utf-8'))
+    model.sortArtistID(catalog['Artist'],3)
     for artwork in input_file : 
         model.addArtWork(catalog,artwork)
 # Funciones de ordenamiento
@@ -73,6 +71,10 @@ def listCronoArtist(anioinicial,aniofinal,catalog):
     artists = model.listCronoArtist(int(anioinicial),int(aniofinal),catalog) 
     model.sortArtistBegin(artists,3)
     return artists
+
+def transportarObras(depto,catalog) : 
+    transportar = model.transportarObras(depto,catalog)
+    return transportar 
 
 
    
