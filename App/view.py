@@ -93,10 +93,8 @@ def printTransportarObras(transporte, depto):
             print("Las 5 obras más antiguas a transportar son: ")
             artwork = transporte[3]
             print("ObjectID: " + artwork['ObjectID'] + '\t|\t' + 'Title ' + artwork['Title'] + '\t|\t' +  
-            "ArtistsNames: " + artwork['ArtistsNames'] + '\t|\t' + "Medium: " + artwork['Medium'] + "\t|\t" + 
-            "Date: " + artwork['Date'] + "\t|\t" + "Dimensions: " + artwork['Dimensions'] + "\t|\t" + 
-            "Classification: " + artwork['Classification'] + "\t|\t" + "TransCost: " + artwork['TransCost'] + "\t|\t" + 
-            "URL: " + artwork['URL'])
+            "Medium: " + artwork['Medium'] + "\t|\t" + "Date: " + artwork['Date'] + "\t|\t" + "Dimensions: " + artwork['Dimensions'] + "\t|\t" + 
+            "Classification: " + artwork['Classification'] + "\t|\t" + "TransCost: " + artwork['TransCost'] + "\t|\t" + "URL: " + artwork['URL'])
     else:
         print("No se encuentran obras a transportar de ese departamento")
 
