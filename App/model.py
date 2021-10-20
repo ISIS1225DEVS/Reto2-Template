@@ -119,14 +119,11 @@ def addArtWork (catalog,artWork) :
     addArtWorkMedium(catalog,medium,artWork)
     addArtWorkbyArtist(catalog,artistID,artWork)
     addArtWorkDepartment(catalog,department,artWork) 
-    addArtworkDateAdquired(catalog,DateAquired,artWork)
+    addArtWorkDateAdquired(catalog,DateAquired,artWork)
 
 
 
 # Funciones Artistas
-def addArtWorkDateAdquired(catalog,DateAquired,artWork) : 
-    pass
-
 def addArtist(catalog,artist) : 
     lt.addLast(catalog['Artist'],artist)
     year = artist['BeginDate'] 
@@ -187,6 +184,16 @@ def addArtWorkMedium(catalog,medium,artWork) :
         mp.put(mediums,medium,Medium)
     lt.addLast(Medium['artWorks'],artWork)
 
+def addArtWorkDateAdquired(catalog,DateAquired,artWork) : 
+    DatesAquired = catalog['DateAcquired'] 
+    existDate = mp.contains(DatesAquired,DateAquired)
+    if existDate : 
+        entry = mp.get(DatesAquired,DateAquired)
+        Date = me.getValue(entry)
+    else : 
+        Date = newArtworkDepartment(DateAquired)
+        mp.put(DatesAquired,DateAquired,Date)
+    lt.addLast(Date['artWorks'],artWork)
 
 # Funciones para creacion de datos
 
@@ -404,29 +411,32 @@ def listCronoArtist(anioinicial,aniofinal,catalog) :
 #TODO: Funciones req 2
 
 def listArtworkbyDate(fechainicial,fechafinal,catalog):
-    size= lt.size(catalog['Artwork'])
+    date = catalog["DateAcquired"]
+    dates = mp.keySet(catalog["DateAcquired"])
     sortArtwork(catalog,3)
     datosart = lt.newList("ARRAY_LIST")
     stop = False
     i = 1
-    while i <= size and not stop:
-        obra = lt.getElement(catalog['Artwork'],i)
-        if len(obra['DateAcquired']) > 0 :
-            fecha_obra  = date.datetime.strptime(obra['DateAcquired'],'%Y-%m-%d') 
-            if fechainicial <= fecha_obra and fechafinal >= fecha_obra : 
-                lt.addLast(datosart,obra) 
-            elif fecha_obra > fechafinal : 
+    while i <= lt.size(dates) and not stop:
+        fecha = lt.getElement(dates,i)
+        if len(fecha['DateAcquired']) > 0:
+            fecha_obra  = date.datetime.strptime(fecha['DateAcquired'],'%Y-%m-%d') 
+            if fechainicial <= fecha_obra and fechafinal >= fecha_obra: 
+                entry = mp.get(date, str(fecha))
+                valor = me.getValue(entry)
+                lt.addLast(datosart,valor) 
+            elif fecha_obra > fechafinal: 
                 stop = True 
         i += 1
     return datosart
 
-def countPurchasedArtwork(artworks) : 
+def countPurchasedArtwork(artworks): 
     size = lt.size(artworks)
     i = 1 
     count = 0 
     while i < size : 
         artwork = lt.getElement(artworks, i)
-        if 'Purchase' in artwork['CreditLine'] : 
+        if 'Purchase' in artwork['CreditLine']: 
             count += 1 
         i += 1 
     return count 
