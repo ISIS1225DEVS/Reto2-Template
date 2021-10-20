@@ -80,7 +80,7 @@ def newCatalog():
     catalog['DateAcquired'] = mp.newMap(69000,
                                 maptype='CHAINING',
                                 loadfactor=4.0,
-                                comparefunction=cmpArtworkByDateAcquired)
+                                comparefunction=compareDateAcquired)
 
     catalog['ArtistBeginYear'] = mp.newMap(69000,
                                 maptype='CHAINING',
@@ -315,7 +315,7 @@ def compareNationality(keyname, nationality):
     else:
         return -1
 
-def cmpArtworkByDateAcquired(keyname, dateacquired):
+def compareDateAcquired(keyname, dateacquired):
     dateEntry = me.getKey(dateacquired)
     if (keyname == dateEntry):
         return 0
@@ -323,6 +323,18 @@ def cmpArtworkByDateAcquired(keyname, dateacquired):
         return 1
     else:
         return -1
+
+def cmpArtworkByDateAcquired(artwork1,artwork2):
+    cadena_fecha_A = artwork1['DateAcquired']
+    cadena_fecha_B = artwork2['DateAcquired']
+    if len(cadena_fecha_A) > 0 and len(cadena_fecha_B) > 0: 
+        fecha_A = date.datetime.strptime(cadena_fecha_A,'%Y-%m-%d')
+        fecha_B = date.datetime.strptime(cadena_fecha_B,'%Y-%m-%d')
+        return fecha_A < fecha_B
+    elif len(cadena_fecha_A) > 0 and len(cadena_fecha_B) == 0 : 
+        return True
+    elif len(cadena_fecha_A) == 0 and len(cadena_fecha_B) > 0 : 
+        return False 
 
 # Funciones de ordenamiento
 def sortArtistID(artists,orden) : 
