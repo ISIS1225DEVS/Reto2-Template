@@ -67,7 +67,7 @@ def listArtworkbyDate (fecha_inicial, fecha_final,catalog) :
 
 def printArtWork(artWork): 
     print(artWork)
-    print("ObjectID: " + artWork['ObjectID'] + '\t|\t' + 'Title ' + artWork['Title'] + '\t|\t' + "ArtistsNames: " + artWork['ArtistsNames'] + '\t|\t' + 
+    print("ObjectID: " + artWork['ObjectID'] + '\t|\t' + 'Title ' + artWork['Title'] + '\t|\t'  + 
     "Medium: " + artWork['Medium'] + "\t|\t" + "Dimensions: " + artWork['Dimensions'] + "\t|\t" + "Date: " + artwork['Date'] + "\t|\t" +
     'DateAcquired: ' + artWork['DateAcquired'] + "\t|\t" + "URL: " + artWork['URL'])
 
@@ -92,7 +92,7 @@ def printTransportarObras(transporte, depto):
         if transporte[3]:
             print("Las 5 obras más antiguas a transportar son: ")
             artwork = transporte[3]
-            print("ObjectID: " + artwork['ObjectID'] + '\t|\t' + 'Title ' + artwork['Title'] + '\t|\t' +  
+            print("ObjectID: " + artwork['ObjectID'] + '\t|\t' + 'Title ' + artwork['Title'] + '\t|\t' + "ArtistsNames: " + obra['ArtistsNames'] + '\t|\t' +
             "Medium: " + artwork['Medium'] + "\t|\t" + "Date: " + artwork['Date'] + "\t|\t" + "Dimensions: " + artwork['Dimensions'] + "\t|\t" + 
             "Classification: " + artwork['Classification'] + "\t|\t" + "TransCost: " + artwork['TransCost'] + "\t|\t" + "URL: " + artwork['URL'])
     else:
