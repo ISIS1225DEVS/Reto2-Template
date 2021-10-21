@@ -109,7 +109,7 @@ def addArtist(catalog, name, id,bio,nationality,gender,begin,end,wiki,ulan):
     artist['Wiki QID'] = wiki 
     artist['ULAN'] = ulan
 
-    addArtistNationality(catalog,nationality,artist)
+    addArtistNationality(catalog,artist['Nationality'],artist)
 
     return artist
 
@@ -539,6 +539,7 @@ def masUtilizada(mediumArtwork,tamanioArtwork) :
 
 def Artworksbynationality (catalog):
    datos = mp.valueSet(catalog['Nationality'])
+   print(datos)
    for nationality in lt.iterator(datos):
        listaArtistas = nationality['Artist']
        for artista in lt.iterator(listaArtistas):
@@ -547,9 +548,11 @@ def Artworksbynationality (catalog):
                if obra['ConstituentID'] == idArtist:
                    entry = mp.get(catalog['Nationality'],nationality['Nationality'])
                    value = me.getValue(entry)
+                   print(value)
                    if lt.isPresent(value['Artwork'],obra['ObjectID']) == 0:
                        lt.addLast(value['Artwork'],obra)
                        value["Count"] += 1
+print(Artworksbynationality (newCatalog()))
 
 def Artworksbynationality_2 (catalog):
     datos = mp.valueSet(catalog['Nationality'])
