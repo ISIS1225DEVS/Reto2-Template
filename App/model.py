@@ -109,7 +109,8 @@ def addArtist(catalog, name, id,bio,nationality,gender,begin,end,wiki,ulan):
     artist['Wiki QID'] = wiki 
     artist['ULAN'] = ulan
 
-    addArtistNationality(catalog,artist['Nationality'],artist)
+    print(artist)
+    print(addArtistNationality(catalog,artist['Nationality'],artist))
 
     return artist
 
