@@ -504,13 +504,21 @@ def Artworksbynationality (catalog):
     i = 1
     while i < lt.size(artworks['Nationality']):
         artwork = lt.getElement(catalog['Artwork'],i)
+        print('---------------------------------------------------------------------')
+        print(artwork)
         artwork['ArtistsNames'] = ''
         ids = artwork['ConstituentID'].strip('[]').split(',')
         for id in ids:
             artist = searchArtistInfo(catalog,int(id))
+            print('---------------------------------------------------------------------')
+            print(artist)
             datosartist = lt.getElement(catalog['Artist'],artist)
+            print('---------------------------------------------------------------------')
+            print(datosartist)
             lt.addLast(artwork['ArtistNames'], datosartist)
             nacionality = datosartist['Nationality']
+            print('---------------------------------------------------------------------')
+            print(nacionality)
             if mp.contains(catalog['Nationality'],nacionality):
                 lt.addLast(obra, artwork)
             else:
