@@ -616,7 +616,7 @@ def ArtbyDepartment(catalog,depa):
 
 def prolificArtist(catalog, min, max, n):
 
-    start = time.process_time_ns()
+    
 
     Dates=mp.keySet(catalog['BeginDate'])
     b=lt.newList(datastructure='ARRAY_LIST')
@@ -670,10 +670,7 @@ def prolificArtist(catalog, min, max, n):
         artists.append(lt.getElement(listArtist,i))
 
    
-    stop = time.process_time_ns()
-
-    sgs = (stop-start)/1000000000
-    print(sgs) 
+    
    
     return artists
 
