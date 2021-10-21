@@ -523,6 +523,7 @@ def Artworksbynationality (catalog):
             else:
                 lt.addLast(obra,artwork)
         i += 1
+    print(obra)
     return obra
 
 def sortObras (obra):
