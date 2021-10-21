@@ -51,7 +51,7 @@ def printArtisbyBeginDate(list):
             print('\nLos 3 ultimos artistas son: ')
 
 #REQ3
-def printArtworksMediumsbyArtist(list):
+def printArtworksMediumsbyArtist(catalog,list):
     if list != 0:
         print(list[4]['DisplayName'] + ' con MOMA ID/ '+list[4]['ConstituentID']+' tiene '+str(list[0])+' obras a su nombre')
         print('\n Se usa un total de '+ str(len(list[1]))+' tecnicas diferentes')
@@ -59,16 +59,41 @@ def printArtworksMediumsbyArtist(list):
         print('\nLa tecnica mas utilizada es '+ str(list[2]))
 
         print('\nAlgunas obras de este medio son:')
-        c=0
-        for a in list[3]['elements']:
-
+        
+        if type(list[3])==type(lt.getElement(catalog['Artists'],1)):
+            a=list[3]
             print('\nTitulo: '+a['Title']+' | ', 'Fecha de la obra: '+a['Date']+' | ', 'Tecnica o Medio: '+a['Medium']+' | ',
-                'Diemensiones: '+ a['Dimensions'])
-            c+=1
-            if c>6:
-                break
+                    'Diemensiones: '+ a['Dimensions'])
+
+        else:
+            c=0
+            for a in list[3]['elements']:
+
+                print('\nTitulo: '+a['Title']+' | ', 'Fecha de la obra: '+a['Date']+' | ', 'Tecnica o Medio: '+a['Medium']+' | ',
+                    'Diemensiones: '+ a['Dimensions'])
+                c+=1
+                if c>6:
+                    break
     else:
         print('No hay obras para este artista')
+
+    #BONO
+
+def printprolificArtist(list):
+
+    for a in list:
+
+        if a[1] != 0:
+
+            print('Nombre: '+ a[0]['DisplayName']+' | ' ,'Año de Nacimiento: '+ a[0]['BeginDate']+' | ',
+            'Genero: '+ a[0]['Gender']+' | ', 'Total de obras: '+ str(a[1][0])+' | ' , 'Total técnicas utilizadas: '+ str(len(a[1][1]))+' | ', 
+            'La técnica más utilizada: '+ str(a[1][2])+' | ', )
+        else:
+            print('Nombre: '+ a[0]['DisplayName']+' | ' ,'Año de Nacimiento: '+ a[0]['BeginDate']+' | ',
+            'Genero: '+ a[0]['Gender']+' | ')
+
+
+
 
 
 
@@ -83,7 +108,7 @@ def printMenu():
     print("4- Clasificar las obras de un artista por técnica")
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("6- Costos transportar obras de un departamento")
-    print("7- Proponer una nueva exposición en el museo")
+    print("7- Encontrar los artistas más prolíficos del museo")
     print("8- Salir")
    
 catalog = None
@@ -119,7 +144,16 @@ while True:
         Name=input("Ingrese el nombre del artista:  ")
 
         list=controller.ArtworksMediumsbyArtist(catalog,Name)
-        printArtworksMediumsbyArtist(list)
+        printArtworksMediumsbyArtist(catalog,list)
+
+    elif int(inputs[0]) == 7:
+        N=int(input("Ingrese Número de artistas que desea en la clasificación:  "))
+        min = int(input("Fecha Inicial: "))
+        max = int(input("Fecha Final: "))
+
+        list=controller.prolificArtist(catalog,min,max,N)
+        printprolificArtist(list)
+
 
 
     elif int(inputs[0]) == 0:

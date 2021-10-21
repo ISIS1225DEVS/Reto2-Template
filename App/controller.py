@@ -62,9 +62,13 @@ def loadAdworks(catalog):
 def ArtistbyBeginDate(catalog, min, max):
     return model.ArtistbyBeginDate(catalog, min, max)
 
-#REQU2#
+#REQU3#
 def ArtworksMediumsbyArtist(catalog,ArtistName):
     return model.ArtworksMediumsbyArtist(catalog,ArtistName)
+
+#REQBONO
+def prolificArtist(catalog, min, max, n):
+    return model.prolificArtist(catalog, min, max, n)
 
 def ArtworksbyMedium(catalog,Name,n):
     return model.ArtworksbyMedium(catalog,Name,n)

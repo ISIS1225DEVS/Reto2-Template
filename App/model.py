@@ -32,6 +32,7 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as mg
+from DISClib.Algorithms.Sorting import insertionsort as ins
 assert cf
 
 """
@@ -333,14 +334,25 @@ def ArtworksMediumsbyArtist(catalog,ArtistName):
 
     if mp.get(catalog['Work_artists'],key) != None:
         artworks=mp.get(catalog['Work_artists'],key)['value']
-        mg.sort(artworks,cmpArtworkMedium)
 
-        size=lt.size(artworks)
-        rta=[size]+ ArtwroksMedium(artworks)
+        
+        if type(artworks) != type(lt.getElement(catalog['Artists'],1)):
 
-        rta.append(mp.get(catalog['DisplayName'],ArtistName)['value'])
-        #len de lista = 5
-        return rta
+            mg.sort(artworks,cmpArtworkMedium)
+
+            size=lt.size(artworks)
+            rta=[size]+ ArtwroksMedium(artworks)
+
+            rta.append(mp.get(catalog['DisplayName'],ArtistName)['value'])
+            #len de lista = 5
+            return rta
+
+        else:
+            rta=[1,[artworks['Medium']],artworks['Medium'],artworks,mp.get(catalog['DisplayName'],ArtistName)['value']]
+            
+            return rta
+
+            
     else: 
         return 0
 
@@ -382,7 +394,65 @@ def Artwork_big_M(list,big_M):
 
     return a
 
+#### BONO ####
 
+def prolificArtist(catalog, min, max, n):
+
+    Dates=mp.keySet(catalog['BeginDate'])
+    b=lt.newList(datastructure='ARRAY_LIST')
+
+    for i in range(1,lt.size(Dates)+1):
+
+        date=int(lt.getElement(Dates,i))
+
+        if int(min) <= date and date <= int(max):
+            lt.addLast(b,date)
+
+    mg.sort(b,cmpArtistBegindate)
+
+    listArtist=lt.newList(datastructure='ARRAY_LIST')
+
+    x=True
+    pos=1
+
+    while pos <=n and x :
+
+        if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) == type(lt.getElement(catalog['Artists'],1)):
+            artist=mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']
+            
+            result=ArtworksMediumsbyArtist(catalog,artist['DisplayName'])
+            if result != 0:
+                lt.addLast(listArtist,[mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value'],result])
+            else:
+                lt.addLast(listArtist,[mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value'],[0,[],'','',a]])
+            
+            
+
+        if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']) != type(lt.getElement(catalog['Artists'],1)):
+            listvalues=mp.get(catalog['BeginDate'],str(lt.getElement(b,pos)))['value']
+            
+            for a in listvalues['elements']:
+                
+                resul=ArtworksMediumsbyArtist(catalog,a['DisplayName'])
+                if resul != 0:
+                    lt.addLast(listArtist,[a,resul])
+                else:
+                    lt.addLast(listArtist,[a,[0,[],'','',a]])
+
+        pos+=1
+    
+    ins.sort(listArtist,cmpProlificArtists)
+
+    
+
+    artists=[]
+    for i in range(1,n+1):
+        artists.append(lt.getElement(listArtist,i))
+
+   
+    
+   
+    return artists
 
 
 
@@ -532,5 +602,20 @@ def cmpArtistBeginDateSublist(artist1, artist2):
 def cmpArtworkMedium(artwork1, artwork2):
     if (artwork1["Medium"]) < (artwork2["Medium"]):
         return True
+    else:
+        return False
+
+def cmpProlificArtists(artist1,artist2):
+
+    a1=artist1[1]
+    a2=artist2[1]
+    
+
+    if a1[0] > a2[0]:
+        return True
+
+    #elif len(artist1[1]) > len(artist2[1]):
+     #   return True
+
     else:
         return False
