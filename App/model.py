@@ -108,6 +108,9 @@ def addArtist(catalog, name, id,bio,nationality,gender,begin,end,wiki,ulan):
     artist['EndDate'] = end
     artist['Wiki QID'] = wiki 
     artist['ULAN'] = ulan
+
+    addArtistNationality(catalog,nationality,artist)
+
     return artist
 
 def addArtWork (catalog,artWork) : 
@@ -116,6 +119,7 @@ def addArtWork (catalog,artWork) :
     artistID = artWork['ConstituentID']
     department = artWork['Department']
     DateAquired = artWork['DateAcquired']
+
     addArtWorkMedium(catalog,medium,artWork)
     addArtWorkbyArtist(catalog,artistID,artWork)
     addArtWorkDepartment(catalog,department,artWork) 
@@ -139,6 +143,17 @@ def addArtistYear(catalog,year,artist) :
         Year = newArtistBeginYear(year)
         mp.put(years,year,Year)
     lt.addLast(Year['Artists'],artist)
+
+def addArtistNationality(catalog,nationality,artist):
+    nationalitys = catalog['Nationality'] 
+    existnationality = mp.contains(nationalitys,nationality)
+    if existnationality : 
+        entry = mp.get(nationalitys,nationality)
+        artistNationality = me.getValue(entry)
+    else : 
+        artistNationality = newArtistNationality(nationality)
+        mp.put(nationalitys,nationality,artistNationality)
+    lt.addLast(artistNationality['Artworks'],artist)
 
 # Funciones Atworks
 def addArtWorkDepartment(catalog,department,artWork):
@@ -223,6 +238,12 @@ def newArtistBeginYear(Year) :
     year['Begin Year'] = Year 
     year['Artists'] = lt.newList('ARRAY_LIST')
     return year
+
+def newArtistNationality(nationality):
+    nacionalidad = {'Nationality': '', 'Artist': ''}
+    nacionalidad['Nacionality'] = nationality
+    nacionalidad['Artist'] = lt.newList('ARRAY_LIST')
+    return nacionalidad
 
 # Funciones de consulta
 def artWorksbyMedium(catalog,medium) :
@@ -465,6 +486,47 @@ def ArtistArtworksbyMedium (DisplayName,catalog) :
     while i <= tamanio : 
         artwork = lt.getElement(Artworks,i) 
     pass 
+
+# Funciones requerimiento 4
+def getBooksByYear(catalog, year):
+    """
+    Retorna los libros publicados en un año
+    """
+    year = mp.get(catalog['years'], year)
+    if year:
+        return me.getValue(year)['books']
+    return None
+
+def Artworksbynationality (catalog):
+    artworks = catalog['Artwork']
+    obra = lt.newList('ARRAY_LIST')
+    sortArtistID(catalog,2)
+    i = 1
+    while i < lt.size(artworks['Nationality']):
+        artwork = lt.getElement(catalog['Artwork'],i)
+        artwork['ArtistsNames'] = ''
+        ids = artwork['ConstituentID'].strip('[]').split(',')
+        for id in ids:
+            artist = searchArtistInfo(catalog,int(id))
+            datosartist = lt.getElement(catalog['Artist'],artist)
+            lt.addLast(artwork['ArtistNames'], datosartist)
+            nacionality = datosartist['Nationality']
+            if mp.contains(catalog['Nationality'],nacionality):
+                lt.addLast(obra, artwork)
+            else:
+                lt.addLast(obra,artwork)
+        i += 1
+    return obra
+
+def sortObras (obra):
+    lista = lt.newList('ARRAY_LIST')
+    for i in obra:
+        lt.addLast(lista, i)
+    orderList = quic.sort(lista, compareSizeArtworks)
+    return orderList
+
+def compareSizeArtworks (artwork1, artwork2):
+    return lt.size(artwork1) < lt.size(artwork2)
 
 #TODO: Funciones req 5 
 def calcularCosto(artwork) :
