@@ -539,7 +539,7 @@ def masUtilizada(mediumArtwork,tamanioArtwork) :
 
 def Artworksbynationality (catalog):
    datos = mp.valueSet(catalog['Nationality'])
-   print(datos)
+   print(catalog['Nationality'])
    for nationality in lt.iterator(datos):
        listaArtistas = nationality['Artist']
        for artista in lt.iterator(listaArtistas):
