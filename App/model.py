@@ -444,7 +444,6 @@ def listCronoArtist(anioinicial,aniofinal,catalog) :
 #TODO: Funciones req 2
 
 def listArtworkbyDate(fechainicial,fechafinal,catalog):
-    start_time = time.process_time()
     datesAq = catalog["DateAcquired"]
     dates = mp.keySet(catalog["DateAcquired"])
     datosart = lt.newList("ARRAY_LIST")
@@ -465,9 +464,7 @@ def listArtworkbyDate(fechainicial,fechafinal,catalog):
                 j += 1
         i += 1
     mer.sort(datosart,cmpArtworkByDateAcquired)
-    stop_time = time.process_time()
-    elapsed_time_mseg = (stop_time - start_time)*1000
-    return datosart, elapsed_time_mseg
+    return datosart
 
 def countPurchasedArtwork(artworks): 
     size = lt.size(artworks)
