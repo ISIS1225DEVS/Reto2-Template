@@ -175,25 +175,14 @@ def addArtwork(catalog, artwork):
     addtomap(catalog['Medium'],artwork['Medium'],artwork)
     addtomap2(catalog["Department"],artwork["Department"],artwork)
     #mp.put(catalog['Work_ConstituentID'],artwork['ConstituentID'],artwork)
-    ArtworksbyNationalityMap(catalog,artwork)
+    
 
 
 def addDateAcquired(catalog,artwork):
     addtomap(catalog["DateAcquired",artwork["DateAcquired"],artwork])
 
 
-def ArtworksbyNationalityMap(catalog,artwork):
 
-    list=artwork['ConstituentID'].replace('[','').replace(']','').split(',')
-    Nations=[]
-    for i in list:
-
-        Artist=mp.get(catalog['Artists_ConstituentID'],i)
-        if Artist != None:
-            Nation=mp.get(catalog['Artists_ConstituentID'],i)['value']['Nationality']
-            if Nation not in Nations:
-                Nations.append(Nation)
-                addtomap(catalog['Work_Nationality'],Nation,artwork)
 
 
 
@@ -211,58 +200,7 @@ def ArtworksbyNationalityMap(catalog,artwork):
 
 
 # Funciones de consulta
-#REQ 1
 
-def ArtistbyBeginDate(catalog, min, max):
-
-    rta=[]
-
-    Dates=mp.keySet(catalog['BeginDate'])
-    b=lt.newList(datastructure='ARRAY_LIST')
-
-    for i in range(1,lt.size(Dates)+1):
-
-        date=int(lt.getElement(Dates,i))
-
-        if int(min) <= date and date <= int(max):
-            lt.addLast(b,date)
-
-    mg.sort(b,cmpArtistBegindate)
-
-    size=lt.size(b)
-    rta.append(size)
-
-    
-
-    if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']) == type(lt.getElement(catalog['Artists'],1)):
-        a1=mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']
-        rta.append(a1)
-    if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,2)))['value']) == type(lt.getElement(catalog['Artists'],1)):
-        a2=mp.get(catalog['BeginDate'],str(lt.getElement(b,2)))['value']
-        rta.append(a2)
-
-    if type(mp.get(catalog['BeginDate'],str(lt.getElement(b,3)))['value']) == type(lt.getElement(catalog['Artists'],1)):
-        a3=mp.get(catalog['BeginDate'],str(lt.getElement(b,3)))['value']
-        rta.append(a3)
-
-    else: 
-        mg.sort(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value'],cmpArtistNationality)
-        if lt.size(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']) >= 3:
-            for i in range(1,4):
-                a=lt.getElement(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value'],i)
-                rta.append(a)
-        else:
-            for i in range(1,3):
-                a=lt.getElement(mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value'],i)
-                rta.append(a)
-            af=mp.get(catalog['BeginDate'],str(lt.getElement(b,1)))['value']
-            rta.append(af)
-
-    
-
-    print(rta)    
-
-    return rta
 
     #Requerimiento 2
 
@@ -335,94 +273,10 @@ def getbyNationality(catalog):
 
 
 
-#Req 5 
-
-def artworksDepartment(catalog, med):
-    lg=[]
-    dep = lt.newList("ARRAY_LIST")
-
-    a=catalog["Artworks"]["elements"]
-    mg.sort(a,compareDate)
-    
-    for i in a:
-        if i["Department"]==med:
-            lt.addLast(dep,i)
-    peso=0
-    prec=0
-
-    for j in dep["elements"]:
-        c=0
-        c1=0
-        c2=0
-        c3=0
-        c4=0
-        if j['Weight (kg)'] != "":
-            c1=float(j['Weight (kg)']*75)
-            peso+=float(j['Weight (kg)'])
-
-        if j['Height (cm)'] != '' and j['Width (cm)'] !="":
-            c2=((float(j['Height (cm)'])*float(j['Width (cm)']))/100)*75
-        
-        if j['Height (cm)'] != '' and j['Width (cm)'] != '' and j['Depth (cm)'] != '':
-            c3=((float(j['Height (cm)'])*float(j['Width (cm)'])*float(j['Depth (cm)']))/1000000)*75
-        else:
-            c4=48
-        
-        if c1>=c2 and c1>=c3 and c1>=c4:
-            c=c1
-        elif c2>=c1 and c2>=c3 and c2>=c4:
-            c=c2
-        elif c3>=c1 and c3>=c2 and c3>=c4:
-            c=c3
-        else: 
-            c=c4
-
-        prec += c
-        l=[]
-        l.append(j)
-        l.append(c)
-        lg.append(l)
-
-    return lg, peso, prec
 
 
 
-
-
-
-
-#lab5
-
-def ArtworksbyMedium2(catalog,Name,n):
-
-    Artworks = mp.get(catalog['Medium'],Name)
-    
-    list=Artworks['value']
-    
-    mg.sort(list,cmpArtworkDate)
-    
-    rta=lt.newList(datastructure='ARRAY_LIST')
-    for i in range(1,int(n)+1):
-        
-        lt.addLast(rta,lt.getElement(list,i))
-        
-    return rta
-
-def ArtworksbyMedium(catalog,Name,n):
-
-    Artworks = mp.get(catalog['Medium'],Name)
-    
-    
-    list=Artworks['value']
-    
-    mg.sort(list,cmpArtworkDate)
-    
-    rta=lt.newList(datastructure='ARRAY_LIST')
-    for i in range(1,int(n)+1):
-        
-        lt.addLast(rta,lt.getElement(list,i))
-        
-    return rta
+#REQ5
 
 def TransportCos(catalog,depa):
     start = time.process_time_ns()
@@ -489,17 +343,7 @@ def ArtbyDepartment(catalog,depa):
 
     return a
 
-#Lab6
 
-def ArtworksbyNationality(catalog,Nation):
-
-    size=0
-    if type(mp.get(catalog['Work_Nationality'],Nation)['value']) == dict:
-
-        size=lt.size(mp.get(catalog['Work_Nationality'],Nation)['value'])
-    elif type(mp.get(catalog['Work_Nationality'],Nation)['value']) == type(lt.getElement(catalog['Artists'],1)):
-        size=1
-    return size
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
