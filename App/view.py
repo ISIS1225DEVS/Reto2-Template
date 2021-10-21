@@ -207,23 +207,6 @@ while True:
         list=controller.ArtistbyBeginDate(catalog,min,max)
         printArtisbyBeginDate(list)
 
-    elif int(inputs[0]) == 4:
-        Name=input("Ingrese el nombre del artista:  ")
-
-        list=controller.ArtworksMediumsbyArtist(catalog,Name)
-        printArtworksMediumsbyArtist(catalog,list)
-
-    elif int(inputs[0]) == 7:
-        N=int(input("Ingrese Número de artistas que desea en la clasificación:  "))
-        min = int(input("Fecha Inicial: "))
-        max = int(input("Fecha Final: "))
-
-        list=controller.prolificArtist(catalog,min,max,N)
-        printprolificArtist(list)
-
-
-
-    
     elif int(inputs[0]) == 3:
         
 
@@ -237,6 +220,12 @@ while True:
         stop=time.process_time()
 
         print("Tiempo"+ str(stop-start))
+
+    elif int(inputs[0]) == 4:
+        Name=input("Ingrese el nombre del artista:  ")
+
+        list=controller.ArtworksMediumsbyArtist(catalog,Name)
+        printArtworksMediumsbyArtist(catalog,list)
 
     elif int(inputs[0]) == 5:
         start= time.process_time()
@@ -253,6 +242,21 @@ while True:
         printArtDepa(list)
         stop=time.process_time()
         print("Tiempo"+ str(stop-start))
+
+    elif int(inputs[0]) == 7:
+        N=int(input("Ingrese Número de artistas que desea en la clasificación:  "))
+        min = int(input("Fecha Inicial: "))
+        max = int(input("Fecha Final: "))
+
+        list=controller.prolificArtist(catalog,min,max,N)
+        printprolificArtist(list)
+
+
+
+    
+    
+
+    
     else:
         sys.exit(0)
 sys.exit(0)

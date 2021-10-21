@@ -117,6 +117,8 @@ def newCatalog():
     catalog["DateAcquired"] = mp.newMap(16000,
                                 maptype="PROBING",
                                 loadfactor=0.5)
+
+    '''
     catalog['Department'] = mp.newMap(34500,
                                 maptype='CHAINING',
                                 loadfactor=2,
@@ -126,7 +128,7 @@ def newCatalog():
                                 maptype='CHAINING',
                                 loadfactor=2,
                                 comparefunction=compareArtworksbymedium)
-    '''
+    
     
                                  
     
@@ -176,7 +178,7 @@ def addtomap2(map,key,object):
     else: 
         mp.put(map,key,object)
     
- 
+ ######
 
 def addArtist(catalog, artist):
     lt.addLast(catalog["Artists"], artist)
@@ -194,7 +196,7 @@ def addArtwork(catalog, artwork):
     addtomap(catalog['Medium'],artwork['Medium'],artwork)
     addtomap2(catalog["Department"],artwork["Department"],artwork)
     #mp.put(catalog['Work_ConstituentID'],artwork['ConstituentID'],artwork)
-    
+    ArtworksbyArtist(catalog,artwork)
 
 
 def addDateAcquired(catalog,artwork):
@@ -250,8 +252,23 @@ def ArtworksbyNationalityMap(catalog,artwork):
 # Funciones de consulta
 
 ####### REQ 1 #######
+
 def ArtistbyBeginDate(catalog, min, max):
-    
+
+    start = time.process_time_ns()
+
+    rta=[]
+
+    Dates=mp.keySet(catalog['BeginDate'])
+    b=lt.newList(datastructure='ARRAY_LIST')
+
+    for i in range(1,lt.size(Dates)+1):
+
+        date=int(lt.getElement(Dates,i))
+
+        if int(min) <= date and date <= int(max):
+            lt.addLast(b,date)
+
     mg.sort(b,cmpArtistBegindate)
     
   
@@ -363,9 +380,6 @@ def ArtistbyBeginDate(catalog, min, max):
 
     sgs = (stop-start)/1000000000
     print(sgs) 
-
-
-
 
     return rta
 
