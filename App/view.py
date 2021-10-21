@@ -166,9 +166,25 @@ while True:
 
     elif int(inputs[0]) == 7:
         obras = controller.Artworksbynationality(catalog)
+        print("Los 10 paises con el mayor número de obras: ")
         for i in range(lt.size(obras)-9,lt.size(obras)+1):
             artwork = lt.getElement(obras,i)
             printArtworksbyNationality(artwork)
+        topnationality = lt.getElement(obras,lt.size(obras))
+        sizetopnationality = lt.size(topnationality['Artworks'])
+        print("La nacionalidad con mayor número de obras fue: " + topnationality['Nationality'] + " con " + str(sizetopnationality) + " obras")
+        print("Las 3 primeras y últimas obras de " + topnationality['Nationality'] + " fueron: ")
+        if sizetopnationality>0:
+            for i in range(1,4):
+                artwork = lt.getElement(obras,i) 
+                printArtWork(artwork)
+            for j in range(lt.size(obras)-2,lt.size(obras)+1): 
+                artwork = lt.getElement(obras,j) 
+                printArtWork(artwork) 
+        else:
+            print("No se encontraron obras de " + str(fecha_final) + " a " + str(fecha_final))
+        
+        
 
     elif int(inputs[0]) == 8: 
         depto = input('Ingrese el departamento a transportar: ')
