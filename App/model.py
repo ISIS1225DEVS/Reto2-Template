@@ -444,25 +444,26 @@ def listCronoArtist(anioinicial,aniofinal,catalog) :
 #TODO: Funciones req 2
 
 def listArtworkbyDate(fechainicial,fechafinal,catalog):
-    date = catalog["DateAcquired"]
-    sortArtwork(catalog,3)
+    datesAq = catalog["DateAcquired"]
     dates = mp.keySet(catalog["DateAcquired"])
-    print(dates)
     datosart = lt.newList("ARRAY_LIST")
     i = 1
     while i <= lt.size(dates):
         fecha = lt.getElement(dates,i)
-        fecha_obra  = date.datetime.strptime(fecha,'%Y-%m-%d') 
-        print(fecha)
+        if len(fecha) > 0 : 
+            fecha_obra  = date.datetime.strptime(fecha,'%Y-%m-%d') 
+        if len(fecha) == 0 : 
+            fecha_obra = date.datetime.strptime('9999-12-31','%Y-%m-%d')
         if fechainicial <= fecha_obra and fechafinal >= fecha_obra:
-            entry = mp.get(date, str(fecha_obra)) 
+            entry = mp.get(datesAq, fecha) 
             valor = me.getValue(entry)
             j = 1
-            while j <= lt.size(valor['DateAcquired']):
-                artist = lt.getElement(valor['DateAcquired'],j)
-                lt.addLast(datosart,artist) 
+            while j <= lt.size(valor['artWorks']):
+                artWork = lt.getElement(valor['artWorks'],j)
+                lt.addLast(datosart,artWork) 
                 j += 1
         i += 1
+    mer.sort(datosart,cmpArtworkByDateAcquired)
     return datosart
 
 def countPurchasedArtwork(artworks): 
@@ -479,13 +480,49 @@ def countPurchasedArtwork(artworks):
 #TODO: Funciones req 3
 def ArtistArtworksbyMedium (DisplayName,catalog) : 
     entry = mp.get(catalog['ArtworksByArtist'],DisplayName)
-    Artworks = me.getValue(entry) 
+    Value = me.getValue(entry) 
+    Artworks = Value['artWorks']
     tamanio = lt.size(Artworks) 
-    mediumArtwork = {'NA':''}
+    mediumArtwork = {}
+    tamanioArtwork = {}
     i = 1 
     while i <= tamanio : 
         artwork = lt.getElement(Artworks,i) 
-    pass 
+        medio = artwork['Medium'] 
+        if medio in mediumArtwork.keys():
+            mediumArtwork[medio].append(artwork)
+            tamanioArtwork[medio] += 1 
+        else : 
+            if len(medio) == 0 :
+                medio = 'NA' 
+            mediumArtwork[medio] = []
+            mediumArtwork[medio].append(artwork)
+            tamanioArtwork[medio] = 1
+        i += 1
+    return mediumArtwork, tamanioArtwork ,tamanio
+
+def masUtilizada(mediumArtwork,tamanioArtwork) : 
+    llaveMayor = ''
+    mayor = 0 
+    for k,v in tamanioArtwork.items(): 
+        if v > mayor : 
+            mayor = v
+            llaveMayor = k
+    Primeros_3 = []
+    Ultimos_3 = []
+    mediumArtworks = mediumArtwork[llaveMayor]
+    i = 0 
+    while i < 3 : 
+        artwork = mediumArtworks[i]
+        Primeros_3.append(artwork)
+        i += 1
+    j = len(mediumArtworks) - 3
+    while j < len(mediumArtworks) : 
+        artwork = mediumArtworks[j]
+        Ultimos_3.append(artwork)
+        j += 1 
+    return Primeros_3,Ultimos_3 
+      
 
 # Funciones requerimiento 4
 def getBooksByYear(catalog, year):

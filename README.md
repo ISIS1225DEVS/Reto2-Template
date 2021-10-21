@@ -2,8 +2,8 @@
 
 INTEGRANTES:
 
-Requerimiento 4: Mateo Oviedo Reyes, 202028312, m.oviedo@uniandes.edu.co 
-Requerimiento 3: Angie Catalina Campos Perilla, 202115094, ac.campos@uniandes.edu.co
+Requerimiento 3: Mateo Oviedo Reyes, 202028312, m.oviedo@uniandes.edu.co 
+Requerimiento 4: Angie Catalina Campos Perilla, 202115094, ac.campos@uniandes.edu.co
 
 Este proyecto contiene los Tipos abstractos de datos, estructuras de datos y algoritmos requeridos por el curso ISIS1225-Estructuras de Datos y Algoritmos
 
