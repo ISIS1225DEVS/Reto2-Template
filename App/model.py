@@ -154,55 +154,70 @@ def findArtist(artists,artist_IDs):
     return artists_artworks
 
 #Requirement 1
-def ArtistsInRange(Artists,StartYear,EndYear,list_type):
-    artistsInRange = lt.newList(datastructure=list_type)
+def ArtistsInRange(Artists,StartYear,EndYear,list_type,map_type):
+    artistsInRange = map.newMap(maptype=map_type)
     posList = 0
     while posList < lt.size(Artists):
         Artist = lt.getElement(Artists,posList)
         Year = int(Artist['BeginDate'])
         if Year >= StartYear and Year <= EndYear:
-            lt.addLast(artistsInRange,Artist)
+            if map.contains(artistsInRange,Year):
+                year_artists = map.get(artistsInRange,Year)['value']
+                lt.addLast(year_artists,Artist)
+            else:
+                year_artists = lt.newList(datastructure=list_type)
+                lt.addLast(year_artists,Artist)
+                map.put(artistsInRange,Year,year_artists)
         posList += 1
     return artistsInRange
 
 
-def SortChronologically(artistsInRange):
-    for pos1 in range(lt.size(artistsInRange)):
-        minPos = pos1
-        for pos2 in range(pos1+1, lt.size(artistsInRange)):
-            YearMin = lt.getElement(artistsInRange,minPos)['BeginDate'] 
-            Year2 = lt.getElement(artistsInRange,pos2)['BeginDate'] 
-            if Year2 < YearMin:
-                minPos = pos2
-
-        lt.exchange(artistsInRange,minPos,pos1)
-    sortedArtists = artistsInRange
-    return sortedArtists
+def SortChronologically(artistsInRange,StartYear,EndYear,list_type):
+    sorted_artists = lt.newList(datastructure=list_type)
+    for Year in range(StartYear,EndYear+1):
+        if map.contains(artistsInRange,Year):
+            year_artists = map.get(artistsInRange,Year)['value']
+            for artist in lt.iterator(year_artists):
+                lt.addLast(sorted_artists,artist)
+    return sorted_artists
 
 #Requirement 2
-def ArtworksInRange(Artworks,StartYear,EndYear,list_type):
-    artworksInRange = lt.newList(datastructure=list_type)
+def ArtworksInRange(Artworks,StartDate,EndDate,list_type,map_type):
+    artworksInRange = map.newMap(maptype=map_type)
     posList = 0
     while posList < lt.size(Artworks):
         Artwork = lt.getElement(Artworks,posList)
-        Year = Artwork['DateAcquired']
-        if Year >= StartYear and Year <= EndYear:
-            lt.addLast(artworksInRange,Artwork)
+        Date = Artwork['DateAcquired']
+        if Date >= StartDate and Date <= EndDate:
+            if map.contains(artworksInRange,Date):
+                date_artworks = map.get(artworksInRange,Date)['value']
+                lt.addLast(date_artworks,Artwork)
+            else:
+                date_artworks = lt.newList(datastructure=list_type)
+                lt.addLast(date_artworks,Artwork)
+                map.put(artworksInRange,Date,date_artworks)
         posList += 1
     return artworksInRange
 
-def SortArtworks(artworksInRange,sort_type):
+def SortArtworks(artworksInRange,sort_type,list_type):
+    dates = map.keySet(artworksInRange)
     if sort_type == "QUICKSORT":
-        sortedList = qs.sort(artworksInRange,cmpArtworkByDate)
+        sorted_dates = qs.sort(dates,cmpDates)
     elif sort_type == "INSERTION":
-        sortedList = ins.sort(artworksInRange,cmpArtworkByDate)
+        sorted_dates = ins.sort(dates,cmpDates)
     elif sort_type == "SHELL":
-        sortedList = ss.sort(artworksInRange,cmpArtworkByDate)
+        sorted_dates = ss.sort(dates,cmpDates)
     elif sort_type == "SELECTION":
-        sortedList = scs.sort(artworksInRange,cmpArtworkByDate)
+        sorted_dates = scs.sort(dates,cmpDates)
     else:
-        sortedList = ms.sort(artworksInRange,cmpArtworkByDate)
-    return sortedList
+        sorted_dates = ms.sort(dates,cmpDates)
+    
+    sorted_artworks = lt.newList(list_type)
+    for date in lt.iterator(sorted_dates):
+        date_artworks = map.get(artworksInRange,date)['value']
+        for artwork in date_artworks:
+            lt.addLast(sorted_artworks,artwork)
+    return sorted_artworks
 
 #Requirement 3
 def encounterArtist(artists,artist_name):
@@ -394,11 +409,8 @@ def moveDepartment(artworks,department,list_type):
         pos += 1
     return est_price, art2trans, est_weight, artworks_dep
 
-def cmpArtworkByDate(artwork1, artwork2): 
-    return artwork1["DateAcquired"] < artwork2['DateAcquired']
-
-def cmpArtworkByDate(artwork1, artwork2): 
-    return artwork1["Date"] < artwork2['Date']
+def cmpDates(date1, date2): 
+    return date1 < date2
 
 def cmpArtworkByEstPrice(artwork1, artwork2): 
     return artwork1["EstPrice"] > artwork2['EstPrice']

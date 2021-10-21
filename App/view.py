@@ -313,18 +313,48 @@ while True:
         input('Presione "Enter" para continuar.\n')
     
     elif int(inputs[0]) == 2:
+        valid_map = False
+        while not valid_map:
+            print("--Métodos de colisión")
+            print("1) Separate Chaining")
+            print("2) Linear Probing")
+            map_type = input("Seleccione el tipo de método de colisión a usar para el mapa: ")
+
+            valid_types = ["1","2"]
+            if map_type not in valid_types:
+                print("\nDebe seleccionar una opción válida.")
+                input('Presione "Enter" para continuar.\n')
+            else:
+                map_type = int(map_type)
+                valid_map = True
+        
         StartYear = int(input('Brinde el año inicial del rango: '))
         EndYear = int(input('Brinde el año final del rango: '))
-        artistsInRange = controller.ArtistsInRange(Artists,StartYear,EndYear,list_type)
-        SortedArtists = controller.SortChronologically(artistsInRange)
+        artistsInRange = controller.ArtistsInRange(Artists,StartYear,EndYear,list_type,map_type)
+        SortedArtists = controller.SortChronologically(artistsInRange,StartYear,EndYear,list_type)
         printReq1Answer(SortedArtists,StartYear,EndYear)
 
     elif int(inputs[0]) == 3:
+        valid_map = False
+        while not valid_map:
+            print("--Métodos de colisión")
+            print("1) Separate Chaining")
+            print("2) Linear Probing")
+            map_type = input("Seleccione el tipo de método de colisión a usar para el mapa: ")
+
+            valid_types = ["1","2"]
+            if map_type not in valid_types:
+                print("\nDebe seleccionar una opción válida.")
+                input('Presione "Enter" para continuar.\n')
+            else:
+                map_type = int(map_type)
+                valid_map = True
+
         StartYear = input('Brinde la fecha inicial del rango: ')
         EndYear = input('Brinde la fecha final del rango: ')
-        artworksInRange = controller.ArtworksInRange(Artworks,StartYear,EndYear,list_type)
+        artworksInRange = controller.ArtworksInRange(Artworks,StartYear,EndYear,list_type,valid_map)
         sort_type = 5
-        sorted_artworks = controller.SortArtworks(artworksInRange,sort_type)
+        sorted_artworks = controller.SortArtworks(artworksInRange,sort_type,list_type)
 
         printReq2Answer(sorted_artworks,StartYear,EndYear)
 

@@ -58,6 +58,14 @@ def loadArtworks(catalog,list_type):
         model.loadMedium(catalog,artwork,list_type)
         model.loadNationality(catalog,artwork,list_type)
 
+#Funciones generales
+def selectMapType(map_type):
+    if map_type == 1:
+        map_type = "CHAINING"
+    else:
+        map_type = "PROBING"
+    return map_type
+
 #Requirement 0
 def encounterMedium(catalog,medium):
     return model.encounterMedium(catalog,medium)
@@ -79,20 +87,21 @@ def oldestArtworks(catalog,medium,sort_type,list_type):
     return model.oldestArtworks(catalog,medium,sort_type,list_type)  
 
 #Requirement 1
-def ArtistsInRange(Artists,StartYear,EndYear,list_type):
-    return model.ArtistsInRange(Artists,StartYear,EndYear,list_type)
+def ArtistsInRange(Artists,StartYear,EndYear,list_type,map_type):
+    map_type = selectMapType(map_type)
+    return model.ArtistsInRange(Artists,StartYear,EndYear,list_type,map_type)
 
-def SortChronologically(artistsInRange):
-    return model.SortChronologically(artistsInRange)
+def SortChronologically(artistsInRange,StartYear,EndYear,list_type):
+    return model.SortChronologically(artistsInRange,StartYear,EndYear,list_type)
 
 #Requirement 2
 def findArtist(artists,artist_IDs):
     return model.findArtist(artists,artist_IDs)
 
-def ArtworksInRange(Artworks,StartYear,EndYear,list_type):
-    return model.ArtworksInRange(Artworks,StartYear,EndYear,list_type)
+def ArtworksInRange(Artworks,StartYear,EndYear,list_type,map_type):
+    return model.ArtworksInRange(Artworks,StartYear,EndYear,list_type,map_type)
 
-def SortArtworks(artworks,sort_type):
+def SortArtworks(artworks,sort_type,list_type):
     if(sort_type == 1):
         sort_type = "QUICKSORT"
     elif(sort_type == 2):
@@ -103,7 +112,7 @@ def SortArtworks(artworks,sort_type):
         sort_type = "SELECTION"
     else:
         sort_type = "MERGE"
-    return model.SortArtworks(artworks,sort_type)
+    return model.SortArtworks(artworks,sort_type,list_type)
 
 #Requirement 3
 def encounterArtist(artists,artist_name):
@@ -155,7 +164,7 @@ def SortArtworksByPrice(artworks_dep,sort_type):
         sort_type = "MERGE"
     return model.SortArtworksByPrice(artworks_dep,sort_type)
 
-#Requirement 0
+#Requirement 7
 def encounterNationality(catalog,nationality):
     return model.encounterNationality(catalog,nationality)
 
