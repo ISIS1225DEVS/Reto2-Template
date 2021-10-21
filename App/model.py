@@ -26,9 +26,13 @@
 
 
 from math import atan2
+from DISClib.DataStructures.arraylist import newList
+from DISClib.DataStructures.chaininghashtable import newMap
 import config as cf
+import copy
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+import time 
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.Algorithms.Sorting import mergesort as mg
@@ -56,6 +60,7 @@ def newCatalog():
     catalog = {'Artists': None,
                'Artworks': None,
                'Constituen ID': None,
+               "DateAcquired" : None,
                'tags': None,
                'tagIds': None,
                'years': None}
@@ -93,6 +98,14 @@ def newCatalog():
     catalog['Artists_ConstituentID'] = mp.newMap(16000,
                                  maptype='PROBING',
                                  loadfactor=0.5,)
+    
+    catalog["DateAcquired"] = mp.newMap(16000,
+                                maptype="PROBING",
+                                loadfactor=0.5)
+    catalog['Department'] = mp.newMap(34500,
+                                maptype='CHAINING',
+                                loadfactor=2,
+                                comparefunction=compareArtworksbyDepartment)  
     '''
     catalog['Work_ConstituentID'] = mp.newMap(16000,
                                  maptype='PROBING',
@@ -117,13 +130,34 @@ def addtomap(map,key,object):
         else:     
             entry=mp.get(map,key)
             list=entry['value']
-            #print(list)
+            
             lt.addLast(list,object)
             #print(mp.get(catalog['BeginDate'],artist['BeginDate']))
             
     else: 
         mp.put(map,key,object)
+    
+def addtomap2(map,key,object):
 
+    if mp.contains(map,key):
+
+        if type(mp.get(map,key)['value']) == type(object):    
+            l=lt.newList(datastructure='SINGLED_LIST')
+            lt.addLast(l,mp.get(map,key)['value'])
+            lt.addLast(l,object)
+            
+            mp.put(map,key,l)
+            
+        else:     
+            entry=mp.get(map,key)
+            list=entry['value']
+            
+            lt.addLast(list,object)
+            #print(mp.get(catalog['BeginDate'],artist['BeginDate']))
+            
+    else: 
+        mp.put(map,key,object)
+    
  
 
 def addArtist(catalog, artist):
@@ -139,9 +173,13 @@ def addArtwork(catalog, artwork):
     lt.addLast(catalog["Artworks"], artwork)
 
     addtomap(catalog['Medium'],artwork['Medium'],artwork)
+    addtomap2(catalog["Department"],artwork["Department"],artwork)
     #mp.put(catalog['Work_ConstituentID'],artwork['ConstituentID'],artwork)
     ArtworksbyNationalityMap(catalog,artwork)
 
+
+def addDateAcquired(catalog,artwork):
+    addtomap(catalog["DateAcquired",artwork["DateAcquired"],artwork])
 
 
 def ArtworksbyNationalityMap(catalog,artwork):
@@ -156,6 +194,10 @@ def ArtworksbyNationalityMap(catalog,artwork):
             if Nation not in Nations:
                 Nations.append(Nation)
                 addtomap(catalog['Work_Nationality'],Nation,artwork)
+
+
+
+
     
 
    
@@ -222,9 +264,136 @@ def ArtistbyBeginDate(catalog, min, max):
 
     return rta
 
+    #Requerimiento 2
+
+def purchase(gd):
+    
+    count=0
+    a=gd["elements"]
+    
+    
+    for purch in a:
+        
+        i= purch["CreditLine"]
+    
+        if "purchase" in i.lower():
+            count += 1
+
+    return count
+
+def getAdquisiciones(catalog, min, max):
+
+    a=mp.newMap()
+    x=lt.newList("ARRAY_LIST")
+    i=0
+    for byDate in catalog["Artworks"]["elements"]:
+        
+        if byDate["DateAcquired"]!= "":
+            date=byDate["DateAcquired"].replace("-","")
+            
+            if int(date)>=min and int(date)<=max:
+                lt.addLast(x,byDate)
+
+    mg.sort(x,compareDateAcquired)
+
+    return x
+
+#Req 4
+
+def getbyNationality(catalog):
+
+    nac=mp.newMap()
+    x=lt.newList("ARRAY_LIST")
+    dic={}
+    
+
+    for artist in catalog["Artists"]["elements"]:
+        count=0
+        
+        for artwork in catalog["Artworks"]["elements"]:
+            
+            if artist["ConstituentID"] in artwork["ConstituentID"]:
+                count+=1
+                
+            
+        if artist["Nationality"] in dic.keys():
+            z=dic[artist["Nationality"]]
+            z+=count
+            dic[artist["Nationality"]]=z
+        else:  
+            dic[artist["Nationality"]]=count 
+
+    for o in dic:
+        p=[]
+        p=[o,dic[o]]
+        mp.put(nac,o,dic[o])
+        lt.addLast(x,p)
+    
+    mg.sort(x,cmpNationality)
+
+    return nac,x
+
+
+
+#Req 5 
+
+def artworksDepartment(catalog, med):
+    lg=[]
+    dep = lt.newList("ARRAY_LIST")
+
+    a=catalog["Artworks"]["elements"]
+    mg.sort(a,compareDate)
+    
+    for i in a:
+        if i["Department"]==med:
+            lt.addLast(dep,i)
+    peso=0
+    prec=0
+
+    for j in dep["elements"]:
+        c=0
+        c1=0
+        c2=0
+        c3=0
+        c4=0
+        if j['Weight (kg)'] != "":
+            c1=float(j['Weight (kg)']*75)
+            peso+=float(j['Weight (kg)'])
+
+        if j['Height (cm)'] != '' and j['Width (cm)'] !="":
+            c2=((float(j['Height (cm)'])*float(j['Width (cm)']))/100)*75
+        
+        if j['Height (cm)'] != '' and j['Width (cm)'] != '' and j['Depth (cm)'] != '':
+            c3=((float(j['Height (cm)'])*float(j['Width (cm)'])*float(j['Depth (cm)']))/1000000)*75
+        else:
+            c4=48
+        
+        if c1>=c2 and c1>=c3 and c1>=c4:
+            c=c1
+        elif c2>=c1 and c2>=c3 and c2>=c4:
+            c=c2
+        elif c3>=c1 and c3>=c2 and c3>=c4:
+            c=c3
+        else: 
+            c=c4
+
+        prec += c
+        l=[]
+        l.append(j)
+        l.append(c)
+        lg.append(l)
+
+    return lg, peso, prec
+
+
+
+
+
+
+
 #lab5
 
-def ArtworksbyMedium(catalog,Name,n):
+def ArtworksbyMedium2(catalog,Name,n):
 
     Artworks = mp.get(catalog['Medium'],Name)
     
@@ -238,6 +407,87 @@ def ArtworksbyMedium(catalog,Name,n):
         lt.addLast(rta,lt.getElement(list,i))
         
     return rta
+
+def ArtworksbyMedium(catalog,Name,n):
+
+    Artworks = mp.get(catalog['Medium'],Name)
+    
+    
+    list=Artworks['value']
+    
+    mg.sort(list,cmpArtworkDate)
+    
+    rta=lt.newList(datastructure='ARRAY_LIST')
+    for i in range(1,int(n)+1):
+        
+        lt.addLast(rta,lt.getElement(list,i))
+        
+    return rta
+
+def TransportCos(catalog,depa):
+    start = time.process_time_ns()
+
+    listD = ArtbyDepartment(catalog,depa)
+    
+    Cost=0
+    Weight=0
+    
+    for artwork in listD['elements']:
+        costA=48
+        Costs=[]
+        
+        if artwork['Weight (kg)'] != '':
+            costW = float(artwork['Weight (kg)']) * 35
+            Weight += float(artwork['Weight (kg)'])
+        else:
+            costW=0
+        Costs.append(costW)
+
+        if artwork['Height (cm)'] != '' and artwork['Width (cm)'] != '':
+            costm_2 = float(artwork['Height (cm)']) * float(artwork['Width (cm)']) * 35
+        else:
+            costm_2=0
+        Costs.append(costm_2)
+
+        if artwork['Height (cm)'] != '' and artwork['Width (cm)'] != '' and artwork['Depth (cm)'] != '':
+            costm_3 = float(artwork['Height (cm)'])/100 * float(artwork['Width (cm)'])/100 * float(artwork['Depth (cm)'] )/100 *35
+        else:
+            costm_3=0
+        Costs.append(costm_3)
+
+        if max(Costs) != 0:
+         
+            Cost += max(Costs)
+            artwork['Cost']=str(round(max(Costs),2)) +' USD'
+        else:
+            Cost += costA
+            artwork['Cost']=str(round(costA,2)) + ' USD'
+
+    #Artworks_Artist(listD,catalog['Artists'])    
+
+    mg.sort(listD,cmpArtworkDate)
+    expensive = copy.deepcopy(listD)
+    mg.sort(expensive,cmpArtworkCost)
+
+    stop = time.process_time_ns()
+
+    sgs = (stop-start)/1000000000
+    print(sgs) 
+
+    return [listD ,Cost , Weight, expensive]
+
+def ArtbyDepartment(catalog,depa):
+
+
+    listA = catalog['Artworks']
+    a=lt.newList("ARRAY_LIST")
+
+    for artwork in listA['elements']:
+        if artwork['Department'] == depa:
+
+            lt.addLast(a,artwork)
+
+    return a
 
 #Lab6
 
@@ -256,9 +506,9 @@ def ArtworksbyNationality(catalog,Nation):
 # Funciones de ordenamiento
 def compareArtistIds(id1, id2):
    
-    if (id1 == id2):
+    if int(id1 == id2):
         return 0
-    elif id1 > id2:
+    elif int(id1 > id2):
         return 1
     else:
         return -1
@@ -304,6 +554,17 @@ def compareArtworksbymedium(Medium, artwork):
     else:
         return -1
 
+def compareArtworksbyDepartment(d1,d2):
+
+    artentry = me.getKey(d2)
+    if (d1 == artentry):
+        return 0
+    elif (d1 > artentry):
+        return 1
+    else:
+        return -1
+
+
 def compareAuthorsByName(keyname, author):
     """
     Compara dos nombres de autor. El primero es una cadena
@@ -338,6 +599,14 @@ def cmpArtistBegindate(Date1, Date2):
     else:
         return False
 
+def compareDateAcquired(d1,d2):
+    
+
+    if d1["DateAcquired"]<=d2["DateAcquired"]:
+        return True
+    else:
+        return False
+
 def cmpArtworkDate(artwork1, artwork2):
 
     if artwork1["Date"] == '':
@@ -353,6 +622,30 @@ def cmpArtworkDate(artwork1, artwork2):
 def cmpArtistNationality(artist1, artist2):
 
     if artist1['ArtistBio'] < artist2['ArtistBio']:
+        return True
+    else:
+        return False
+
+def compareID(a,b):
+    if a["ConstituentID"]<b["ConstituentID"]:
+        return True
+    else:
+        return False
+
+def cmpNationality(n1,n2):
+    if n1[1]>n2[1]:
+        return True
+    else: 
+        return False
+
+def compareDate(q,w):
+    if q["Date"]>w["Date"]:
+        return True
+    else:
+        return False
+
+def cmpArtworkCost(artwork1, artwork2):
+    if (artwork1["Cost"]) > (artwork2["Cost"]):
         return True
     else:
         return False

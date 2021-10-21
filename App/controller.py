@@ -42,7 +42,7 @@ def loadData(catalog):
     loadAdworks(catalog)
 
 def loadArtist(catalog):
-    artists_file = cf.data_dir + "Artists-utf8-large.csv"
+    artists_file = cf.data_dir + "Artists-utf8-20pct.csv"
     input_file = csv.DictReader(open(artists_file, encoding="utf-8"))
 
     for artist in input_file:
@@ -50,7 +50,7 @@ def loadArtist(catalog):
 
 
 def loadAdworks(catalog):
-    artworks_file = cf.data_dir + "Artworks-utf8-large.csv"
+    artworks_file = cf.data_dir + "Artworks-utf8-20pct.csv"
     input_file2 = csv.DictReader(open(artworks_file, encoding="utf-8"))
 
     for artwork in input_file2:
@@ -67,6 +67,20 @@ def ArtworksbyMedium(catalog,Name,n):
 def ArtworksbyNationality(catalog,Nation):
     return model.ArtworksbyNationality(catalog,Nation)
 
+def getAdquisiciones(catalog,min,max):
+    return model.getAdquisiciones(catalog, min, max)
+
+def purchase(gd):
+    return model.purchase(gd)
+
+def getbyNationality(catalog):
+    return model.getbyNationality(catalog)
+
+def artworksDepartment(catalog,med):
+    return model.artworksDepartment(catalog,med)
+    
+def TransportCos(catalog,depa):
+    return model.TransportCos(catalog,depa)
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo

@@ -22,6 +22,7 @@
 
 import config as cf
 import sys
+import time
 import controller
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -48,23 +49,85 @@ def printArtisbyBeginDate(list):
         if i == 3:
             print('\nLos 3 ultimos artistas son: ')
 
+def print_3(gd):
+    tamaño=lt.size(gd)
+    print("Número total de obras: " + str(tamaño))
+    purchase= controller.purchase(gd)
+    print("Obras compradas: " + str(purchase))
+    print("Primeras 3 obras: ")
+    print("ObjectID: " + str(gd["elements"][0]["ObjectID"]) + ", Título: " + str(gd["elements"][0]['Title'])
+    + ", Fecha: " + str(gd["elements"][0]['DateAcquired'])
+    + ", Medio: " +str(gd["elements"][0]['Medium']) + ", Dimensiones: " + str(gd["elements"][0]['Dimensions']))
 
+    print("\nObjectID: " + str(gd["elements"][1]["ObjectID"]) + ", Título: " + str(gd["elements"][1]['Title'])
+    + ", Fecha: " + str(gd["elements"][1]['DateAcquired'])
+    + ", Medio: " +str(gd["elements"][1]['Medium']) + ", Dimensiones: " + str(gd["elements"][1]['Dimensions']))
+
+    print("\nObjectID: " + str(gd["elements"][2]["ObjectID"]) + ", Título: " + str(gd["elements"][2]['Title'])
+    + ", Fecha: " + str(gd["elements"][2]['DateAcquired'])
+    + ", Medio: " +str(gd["elements"][2]['Medium']) + ", Dimensiones: " + str(gd["elements"][2]['Dimensions']))
+
+    print("\nÚltimas 3 obras: ")
+
+    print("\nObjectID: " + str(gd["elements"][tamaño-3]["ObjectID"]) + ", Título: " + str(gd["elements"][tamaño-3]['Title'])
+    + ", Fecha: " + str(gd["elements"][tamaño-3]['DateAcquired'])
+    + ", Medio: " +str(gd["elements"][tamaño-3]['Medium']) + ", Dimensiones: " + str(gd["elements"][tamaño-3]['Dimensions']))
+
+    print("\nObjectID: " + str(gd["elements"][tamaño-2]["ObjectID"]) + ", Título: " + str(gd["elements"][tamaño-2]['Title'])
+    + ", Fecha: " + str(gd["elements"][tamaño-2]['DateAcquired'])
+    + ", Medio: " +str(gd["elements"][tamaño-2]['Medium']) + ", Dimensiones: " + str(gd["elements"][tamaño-2]['Dimensions']))
+
+    print("\nObjectID: " + str(gd["elements"][tamaño-1]["ObjectID"]) + ", Título: " + str(gd["elements"][tamaño-1]['Title'])
+    + ", Fecha: " + str(gd["elements"][tamaño-1]['DateAcquired'])
+    + ", Medio: " +str(gd["elements"][tamaño-1]['Medium']) + ", Dimensiones: " + str(gd["elements"][tamaño-1]['Dimensions']))
+
+def print_5(result):
+    nationality=result[1]["elements"]
+    i=0
+    while i<10:
+        print(nationality[i])
+        i+=1
+
+def printArtDepa(list):
+
+    print('\nEl departamento tiene un total de ',lt.size(list[0]), 'obras')
+
+    print('El costo por el servicio de transporte es de ',round(list[1]), 'USD')
+
+    print('Todas las obras tienen un peso estimado de' , round(list[2]), 'kg')
+    print('\n5 obras mas antiguas a transportar:')
+    for i in range(1,6):
+#'|Artista: '+a['Artist'],
+        a=lt.getElement(list[0],i)
+        print('\nTitulo: '+ a['Title'],  '|Clasificacion: '+ a['Classification'], '|Fecha: '+ a['Date'],
+         '|Medio: '+ a['Medium'], '|Dimensiones: '+ a['Dimensions'], '|Costo Transporte: '+ a['Cost'])
+    print('\n5 obras mas costosas a transportar:')
+    for i in range(1,6):
+#'|Artista: '+b['Artist'],
+        b=lt.getElement(list[3],i)
+        print('\nTitulo: '+ b['Title'],  '|Clasificacion: '+ b['Classification'], '|Fecha: '+ b['Date'],
+         '|Medio: '+ b['Medium'], '|Dimensiones: '+ b['Dimensions'], '|Costo Transporte: '+ b['Cost'])
+
+"""def print_6(dep):
+    print("Total de obras a trasportar: " + str(dep[0]))
+    print("Precio del Servicio: " + str(dep[1]))
+    print("Peso total de las obras: "+ str(dep[2])+ " kg")
+    i=0
+    while i < 5:
+        print("Titulo: " + str(dep[0][0][i]))"""
 
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
-
-    print("0- Numero de obras mas antiguas por medio")
-    print('3- Numero de obras por nacionalidad ')
     print("2- Listar cronológicamente los artistas")
-    '''
+    
     print("3- Listar cronológicamente las adquisiciones ")
     print("4- Clasificar las obras de un artista por técnica")
     print("5- Clasificar las obras por la nacionalidad de sus creadores")
     print("6- Costos transportar obras de un departamento")
     print("7- Proponer una nueva exposición en el museo")
     print("8- Salir")
-    '''
+
 catalog = None
 
 """
@@ -105,13 +168,36 @@ while True:
             print('Title: '+ i['Title'] +' / ' ,'ConstituentID: '+ i['ConstituentID'] +' / ',
                     'Date: '+ i['Date'] +' / ', 'Medium - tecnica: '+ i['Medium'])
 
+    
     elif int(inputs[0]) == 3:
-
-        Nation=input("Ingrese la nacionalidad:  ")
         
-        rta=controller.ArtworksbyNationality(catalog,Nation)
-        print('De la nacionalidad '+ Nation+ ' hay '+ str(rta) + ' obras')
 
+        min=int(input("Ingrese la Fecha Inicial: ").replace("-",""))
+        max=int(input("Ingrese la Fehca final: ").replace("-",""))
+
+        start= time.process_time()
+        adq=controller.getAdquisiciones(catalog, min, max)
+        print_3(adq)
+
+        stop=time.process_time()
+
+        print("Tiempo"+ str(stop-start))
+
+    elif int(inputs[0]) == 5:
+        start= time.process_time()
+        result=controller.getbyNationality(catalog)
+
+        print_5(result)
+        stop=time.process_time()
+        print("Tiempo"+ str(stop-start))
+
+    elif int(inputs[0]) == 6:
+        start= time.process_time()
+        depa=input('Digite el nombre del departamento que desea costear: ')
+        list=controller.TransportCos(catalog,depa)
+        printArtDepa(list)
+        stop=time.process_time()
+        print("Tiempo"+ str(stop-start))
     else:
         sys.exit(0)
 sys.exit(0)
