@@ -83,7 +83,7 @@ def transportarObras(depto,catalog) :
     return transportar 
 
 def Artworksbynationality (catalog):
-    obra = model.Artworksbynationality (catalog)
+    obra = model.Artworksbynationality_2 (catalog)
     return obra
 
    
