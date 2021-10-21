@@ -515,10 +515,6 @@ def calcularCosto(artwork) :
     costo = max(estimaciones) 
     return costo 
 
-
-
-#Funciones requerimiento 8
-
 def transportarObras(department,catalog) : 
     start_time = time.process_time()
     entry = mp.get(catalog['ArtworksDepartment'],department)
