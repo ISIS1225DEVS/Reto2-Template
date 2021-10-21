@@ -514,7 +514,7 @@ def Artworksbynationality (catalog):
             datosartist = lt.getElement(catalog['Artist'],artist)
             print('---------------------------------------------------------------------')
             print(datosartist)
-            lt.addLast(artwork['ArtistNames'], datosartist)
+            lt.addLast(obra, datosartist)
             nacionality = datosartist['Nationality']
             print('---------------------------------------------------------------------')
             print(nacionality)
