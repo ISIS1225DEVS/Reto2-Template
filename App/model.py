@@ -153,7 +153,7 @@ def addArtistNationality(catalog,nationality,artist):
     else : 
         artistNationality = newArtistNationality(nationality)
         mp.put(nationalitys,nationality,artistNationality)
-    lt.addLast(artistNationality['Artworks'],artist)
+    lt.addLast(artistNationality['Artist'],artist)
 
 # Funciones Atworks
 def addArtWorkDepartment(catalog,department,artWork):
@@ -243,6 +243,8 @@ def newArtistNationality(nationality):
     nacionalidad = {'Nationality': '', 'Artist': ''}
     nacionalidad['Nacionality'] = nationality
     nacionalidad['Artist'] = lt.newList('ARRAY_LIST')
+    nacionalidad['Artwork'] = lt.newList('ARRAY_LIST', cmpfunction = compareArtworks)
+    nacionalidad['Count'] = 0
     return nacionalidad
 
 # Funciones de consulta
@@ -333,6 +335,12 @@ def compareNationality(keyname, nationality):
         return 0
     elif (keyname > nationalityentry):
         return 1
+    else:
+        return -1
+
+def compareArtworks(keyname, artwork):
+    if int(keyname) == int(artwork['ObjectID']):
+        return 0
     else:
         return -1
 
@@ -528,53 +536,29 @@ def masUtilizada(mediumArtwork,tamanioArtwork) :
       
 
 # Funciones requerimiento 4
-def getBooksByYear(catalog, year):
-    """
-    Retorna los libros publicados en un año
-    """
-    year = mp.get(catalog['years'], year)
-    if year:
-        return me.getValue(year)['books']
-    return None
 
 def Artworksbynationality (catalog):
-    artworks = catalog['Artwork']
-    obra = lt.newList('ARRAY_LIST')
-    i = 1
-    while i < lt.size(artworks):
-        artwork = lt.getElement(catalog['Artwork'],i)
-        print('---------------------------------------------------------------------')
-        print(artwork)
-        artwork['ArtistsNames'] = ''
-        ids = artwork['ConstituentID'].strip('[]').split(',')
-        for id in ids:
-            artist = searchArtistInfo(catalog,int(id))
-            print('---------------------------------------------------------------------')
-            print(artist)
-            datosartist = lt.getElement(catalog['Artist'],artist)
-            print('---------------------------------------------------------------------')
-            print(datosartist)
-            lt.addLast(obra, datosartist)
-            nacionality = datosartist['Nationality']
-            print('---------------------------------------------------------------------')
-            print(nacionality)
-            if mp.contains(catalog['Nationality'],nacionality):
-                lt.addLast(obra, artwork)
-            else:
-                lt.addLast(obra,artwork)
-        i += 1
-    print(obra)
-    return obra
+   datos = mp.valueSet(catalog['Nationality'])
+   for nationality in lt.iterator(datos):
+       listaArtistas = nationality['Artist']
+       for artista in lt.iterator(listaArtistas):
+           idArtist = artista['ConstituentID']
+           for obra in lt.iterator(catalog['Artwork']):
+               if obra['ConstituentID'] == idArtist:
+                   entry = mp.get(catalog['Nationality'],nationality['Nationality'])
+                   value = me.getValue(entry)
+                   if lt.isPresent(value['Artwork'],obra['ObjectID']) == 0:
+                       lt.addLast(value['Artwork'],obra)
+                       value["Count"] += 1
 
-def sortObras (obra):
-    lista = lt.newList('ARRAY_LIST')
-    for i in obra:
-        lt.addLast(lista, i)
-    orderList = quic.sort(lista, compareSizeArtworks)
-    return orderList
+def Artworksbynationality_2 (catalog):
+    datos = mp.valueSet(catalog['Nationality'])
+    sortlist = quic.sort(datos, compareSizeArtworks)
+    return sortlist              
 
 def compareSizeArtworks (artwork1, artwork2):
-    return lt.size(artwork1) < lt.size(artwork2)
+    return artwork1['Count'] > artwork2['Count']
+    
 
 #TODO: Funciones req 5 
 def calcularCosto(artwork) :
