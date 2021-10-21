@@ -552,7 +552,6 @@ def Artworksbynationality (catalog):
                    if lt.isPresent(value['Artwork'],obra['ObjectID']) == 0:
                        lt.addLast(value['Artwork'],obra)
                        value["Count"] += 1
-print(Artworksbynationality (newCatalog()))
 
 def Artworksbynationality_2 (catalog):
     datos = mp.valueSet(catalog['Nationality'])
