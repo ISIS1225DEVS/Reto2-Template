@@ -105,6 +105,15 @@ def ObrasPorNacionalidades(catalog):
     lista = model.listaNacionalidad(catalog)
     return lista
     
+def transportarobras(catalog, dept):
+    size = model.sizelistaDepart(catalog, dept)
+    precios = model.get_estimado_precio(catalog, dept)[0]
+    listaobras = model.get_estimado_precio(catalog, dept)[1]
+    listaorganizada = model.organizarPrecio(listaobras)
+    pesoTotal = model.get_estimado_peso(catalog, dept)
+    listaObrasAntiguas = model.obras_antiguas(catalog, dept)
+    listaAntiguasOrganizada = model.organizarPrecio(listaObrasAntiguas)
+    return size, precios, listaorganizada, pesoTotal, listaAntiguasOrganizada
 
 def obrasPorAnio(catalog, fechai, fechaf):
     size = lt.size(catalog['Art'])

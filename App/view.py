@@ -20,6 +20,7 @@
  * along withthis program.  If not, see <http://www.gnu.org/licenses/>.
  """
 
+
 import config as cf
 import sys
 import controller
@@ -167,7 +168,39 @@ while True:
         print('')
         print(lt.getElement(lt.getElement(valor, sizevalor-2), 1))
 
+    elif int(inputs[0]) == 6:
+        print("Ingrese el departamento")
+        dept = input()
+        r = controller.transportarobras(catalog, dept)
+        size = r[0]
+        precio = r[1]
+        peso = r[3]
+
+        listaprecio = r[2]
+        sizeprecio = lt.size(listaprecio)
+
+        listadate = r[4]
+        sizedate = lt.size(listadate)
+
+        print('El total de obras a transportar es de: '+ str(size))
+        print('El precio estimado es de:' + str(precio))
+        print('El peso estimado es de: ' + str(peso))
+        print('Las 5 obras más costosas son:')
+        print((lt.getElement(listaprecio, sizeprecio))[0])
+        print((lt.getElement(listaprecio, sizeprecio - 1))[0])
+        print((lt.getElement(listaprecio, sizeprecio - 2))[0])
+        print((lt.getElement(listaprecio, sizeprecio - 3))[0])
+        print((lt.getElement(listaprecio, sizeprecio - 4))[0])
+        print('')
+        print('')
+        print('Las 5 obras más antiguas son:')
+        print((lt.getElement(listadate, sizedate))[0])
+        print((lt.getElement(listadate, sizedate - 1))[0])
+        print((lt.getElement(listadate, sizedate - 2))[0])
+        print((lt.getElement(listadate, sizedate - 3))[0])
+        print((lt.getElement(listadate, sizedate - 4))[0])
         
+           
     elif int(inputs[0]) == 8:
         print("Ingrese el numero de obras que quiere conocer: ")
         num = int(input())

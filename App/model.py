@@ -46,6 +46,11 @@ De lo contrario generaría una nueva lista del medio no encontrado y añadiria e
 def addArt(catalog, artwork):
 
     lt.addLast(catalog['Art'], artwork)
+    if artwork['Weight (kg)'] != '':
+        pass
+
+    
+    #print('Altura' + artwork['Height (cm)'])
 
     if mp.contains(catalog['Medium'], artwork['Medium']):
         llave_valor=mp.get(catalog['Medium'],artwork['Medium'])
@@ -86,16 +91,20 @@ def addArt(catalog, artwork):
         
             mp.put(catalog['ID'],id , lista_creada)
 
-   
+    if mp.contains(catalog['Department'], artwork['Department']):
+        llave_valor=mp.get(catalog['Department'],artwork['Department'])
+        valor=me.getValue(llave_valor)
+        lt.addLast(valor, artwork)
 
-    
-  
+    else:
+        lista_creada= lt.newList()
+        lt.addLast(lista_creada, artwork)
+        mp.put(catalog['Department'],artwork['Department'], lista_creada)
+
 
 def addArtist(catalog, artistname):
 
     lt.addLast(catalog['Artist'], artistname)
-
-
     mp.put(catalog['IDA'],artistname['ConstituentID'],artistname['Nationality'])
 
     #if mp.contains(catalog['IDA'], artistname['ConstituentID']):
@@ -124,6 +133,7 @@ def newCatalog(estructuraDatos):
     catalog['ID'] = mp.newMap(1000, maptype='CHAINING', loadfactor=4.0, comparefunction=cmpMedio)
     catalog['Artist'] = lt.newList(datastructure=estructuraDatos)
     catalog['IDA'] = mp.newMap(1000, maptype='PROBING', loadfactor=0.5, comparefunction=cmpMedio)
+    catalog['Department'] = mp.newMap(1000, maptype='PROBING', loadfactor=0.5, comparefunction=cmpMedio)
 
     
  
@@ -301,42 +311,44 @@ def buscar_obrasxartista(artworks, id):
                 break
     return obras
 
-def get_transporte(arte, nombre_departamento):
-    lista_respuestas= lt.newList()
-    obras_departamento= buscar_obrasxdepartamento(arte, nombre_departamento)
-    totalobras= lt.size(obras_departamento)
-    estimado_precio= get_estimado_precio(obras_departamento)
-    estimado_peso= get_estimado_peso(obras_departamento)
-    mas_antiguas= get_primerosobras(obras_departamento)
-    lt.addLast(lista_respuestas, totalobras)
-    lt.addLast(lista_respuestas, estimado_precio)
-    lt.addLast(lista_respuestas, estimado_peso)
-    lt.addLast(lista_respuestas, mas_antiguas)
-    
-def buscar_obrasxdepartamento(arte, departamento):
-    obras_dep= lt.newList()
-    for obras_recorridas in lt.iterator(arte):
-        if departamento == obras_recorridas["Department"]:
-            lt.addLast(obras_dep, obras_recorridas)
-            break
-    return obras_dep
 
-def get_estimado_precio(obras_dep):
+def get_estimado_precio(catalog, dept):
+    listaobras = lt.newList()
+    valor_list = mp.get(catalog['Department'], dept)
+    list = me.getValue(valor_list)
     precio_total=0
     precio_x_kg= 35
     precio_x_defecto= 48
-    for obras_x_dep in lt.iterator(obras_dep):
-        if obras_x_dep["Weight (kg)"] == "":
-            precio_total+=precio_x_defecto
-        else:
-            precio_total+=precio_x_kg*(float(obras_x_dep["Weight (kg)"]))
-    return precio_total
 
-def get_estimado_peso(obras_dep):
+    for obras_x_dep in lt.iterator(list):
+        if obras_x_dep["Weight (kg)"] == "":
+            precio_obra = precio_x_defecto
+        else:
+            precio_obra = precio_x_kg*(float(obras_x_dep["Weight (kg)"]))
+        listaprecio = [obras_x_dep, precio_obra]
+        lt.addLast(listaobras, listaprecio)
+        precio_total += precio_obra
+    return precio_total, listaobras
+
+def get_estimado_peso(catalog, dept):
+    valor_list = mp.get(catalog['Department'], dept)
+    list = me.getValue(valor_list)
     peso_total= 0
-    for obras_x_dep in lt.iterator(obras_dep):
-        peso_total+=(float(obras_x_dep["Weight (kg)"]))
+    for obras_x_dep in lt.iterator(list):
+        if type(obras_x_dep["Weight (kg)"]) != str:
+            peso_total+=(float(obras_x_dep["Weight (kg)"]))
     return peso_total
+    
+def obras_antiguas(catalog, dept):
+    listaobras = lt.newList()
+    valor_list = mp.get(catalog['Department'], dept)
+    list = me.getValue(valor_list)
+
+    for obras_x_dep in lt.iterator(list):
+        if obras_x_dep["Date"] != '':
+            listaDate = [obras_x_dep, obras_x_dep["Date"]]
+            lt.addLast(listaobras, listaDate )
+    return listaobras
     
 def get_primerosobras(lista):
     lista_ordenada= sortObrasxfecha(lista)
@@ -362,6 +374,13 @@ def AddArtFecha(art, fechai, fechaf, lista):
     
 
 # Funciones de consulta
+
+def sizelistaDepart(catalog, dept):
+    valor_list = mp.get(catalog['Department'], dept)
+    list = me.getValue(valor_list)
+
+    return lt.size(list)
+    
 
 
 def escompra(artwork):
@@ -418,6 +437,9 @@ def cmpArtworkByDateAcquiredSolo(artwork, fechai, fechaf):
     
     else: return False
 
+def cmpPrecio(art1, art2):
+    return art1[1] < art2[1]
+
 
    
 
@@ -425,6 +447,9 @@ def cmpArtworkByDateAcquiredSolo(artwork, fechai, fechaf):
 
 def OrganizarFecha(lista):
     return ms.sort(lista, cmpArtworkByDateAcquired)
+
+def organizarPrecio(lista):
+    return ms.sort(lista, cmpPrecio)
 
 def OrganizarNacionalidad(lista):
     return sa.sort(lista, cmpNumNacionalidad)
