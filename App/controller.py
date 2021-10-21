@@ -74,18 +74,6 @@ def loadArtist(catalog):
         model.addArtist(catalog, artist)
         contador+=1
 
-def conteo_artistas(artistas, inicial, final):
-    return model.get_conteo(artistas, inicial, final)
-
-def primeros_tres(artistas, inicial, final):
-    return model.get_primeros(artistas, inicial, final)
-
-def ultimos_tres(artistas, inicial, final):
-    return model.get_ultimos(artistas, inicial, final)
-
-def get_obras(catalog, nombre_artista):
-    return model.get_obrasxtecnica(catalog, nombre_artista)
-
 def get_info_transporte(arte, nombre_departamento):
     return model.get_transporte(arte, nombre_departamento)
 
@@ -95,8 +83,14 @@ def obras_porMedio(catalog, num ,medio):
     listaorganizada = model.organizar_medio(list, num)
     return listaorganizada
 
-   
 def obrasPorNacionalidad(catalog, nac):
     return model.tamañoMapaNacionalidad(catalog, nac)
     
+
+
+def get_req1(artistas, inicio, final):
+    return model.nacimiento_artistas(artistas, inicio, final)
+
+def get_req3(catalog, nombre_artista):
+    return model.get_obrasxtecnica(catalog, nombre_artista)
 

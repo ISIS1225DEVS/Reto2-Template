@@ -25,7 +25,8 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
-
+import time
+from DISClib.ADT import map as mp
 
 """
 La vista se encarga de la interacción con el usuario
@@ -85,8 +86,50 @@ while True:
         loadData(catalog)
         print('Artistas cargados: ' + str(lt.size(catalog['Artist'])))
         print('Obras cargados: ' + str(lt.size(catalog['Art'])))
-        print('Ultimos 3 artistas: ') #+ str(lt.size(catalog[''])))
-        print('Ultimas 3 obras ' ) #str(lt.size(catalog[''])))
+        #print('Ultimos 3 artistas: ') #+ str(lt.size(catalog[''])))
+        #print('Ultimas 3 obras ' ) #str(lt.size(catalog[''])))
+    
+    elif int(inputs[0]) == 2:
+        print("Ingrese año inicial: ")
+        inicial= int(input())
+        print("Ingrese año final: ")
+        final= int(input())
+        
+        start_time= time.process_time()
+        
+        lista_respuesta1= controller.get_req1(catalog['Artist-hash'], inicial, final)
+        conteo= lt.getElement(lista_respuesta1, 1)
+        print ("La cantidad de artistas en dicho rango son: " + str(conteo))
+        lista_artistas= lt.getElement(lista_respuesta1, 2)
+        contador= 1
+        print ("\nLos tres primeros artistas son: \n")
+        for artista in range(1, lt.size(lista_artistas)):
+            if contador<4:
+                llave=lt.getElement(lista_artistas, artista)
+                i=(mp.get(catalog['Artist-hash'], llave))
+                print(i['value']['DisplayName'] + ", ",i['value']['BeginDate'] + "-",i['value']['EndDate'] + ", ", i['value']['Nationality'] + ", ", i['value']['Gender'])
+            contador=contador+1
+        contador_2= 1
+        print ("\nLos tres últimos artistas son: \n")
+        for artista in range(1, lt.size(lista_artistas)):       
+            if contador_2>lt.size(lista_artistas)-4:
+                llave=lt.getElement(lista_artistas, artista)
+                i=(mp.get(catalog['Artist-hash'], llave))
+                print(i['value']['DisplayName'] + ", ",i['value']['BeginDate'] + "-",i['value']['EndDate'] + ", ", i['value']['Nationality'] + ", ", i['value']['Gender'])
+            contador_2=contador_2+1
+        
+        stop_time= time.process_time()
+        elapsed_time_mseg= (stop_time-start_time)*1000
+        print("\nEl programa se demoro " + str(elapsed_time_mseg) + " mseg en ordenar los datos.\n")
+
+    elif int(inputs[0]) == 4:
+        print("Ingrese nombre del artista: ")
+        nombre_artista= str(input())
+
+        start_time= time.process_time()
+
+        lista_respuesta= controller.get_req3(catalog, nombre_artista)
+        
     
     elif int(inputs[0]) == 8:
         print("Ingrese el numero de obras que quiere conocer: ")
