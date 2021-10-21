@@ -500,7 +500,6 @@ def getBooksByYear(catalog, year):
 def Artworksbynationality (catalog):
     artworks = catalog['Artwork']
     obra = lt.newList('ARRAY_LIST')
-    sortArtistID(catalog,2)
     i = 1
     while i < lt.size(artworks['Nationality']):
         artwork = lt.getElement(catalog['Artwork'],i)
