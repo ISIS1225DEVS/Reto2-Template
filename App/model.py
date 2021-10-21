@@ -420,8 +420,6 @@ def getAdquisiciones(catalog, min, max):
 
     return x
 
-####### REQ 3 #######
-
 def ArtworksMediumsbyArtist(catalog,ArtistName):
     
     start = time.process_time_ns()
@@ -462,6 +460,12 @@ def ArtworksMediumsbyArtist(catalog,ArtistName):
             
             
     else: 
+
+        stop = time.process_time_ns()
+
+        sgs = (stop-start)/1000000000
+        print(sgs)
+
         return 0
 
 def ArtwroksMedium(list):
