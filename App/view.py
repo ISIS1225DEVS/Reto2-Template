@@ -167,6 +167,7 @@ while True:
 
     elif int(inputs[0]) == 7:
         obras = controller.Artworksbynationality(catalog)
+        print(obras)
         print("Los 10 paises con el mayor número de obras: ")
         for i in range(lt.size(obras)-9,lt.size(obras)+1):
             artwork = lt.getElement(obras,i)
