@@ -42,7 +42,11 @@ def loadData(catalog):
     loadAdworks(catalog)
 
 def loadArtist(catalog):
+<<<<<<< HEAD
     artists_file = cf.data_dir + "Artists-utf8-20pct.csv"
+=======
+    artists_file = cf.data_dir + "Artists-utf8-small.csv"
+>>>>>>> JV
     input_file = csv.DictReader(open(artists_file, encoding="utf-8"))
 
     for artist in input_file:
@@ -50,7 +54,11 @@ def loadArtist(catalog):
 
 
 def loadAdworks(catalog):
+<<<<<<< HEAD
     artworks_file = cf.data_dir + "Artworks-utf8-20pct.csv"
+=======
+    artworks_file = cf.data_dir + "Artworks-utf8-small.csv"
+>>>>>>> JV
     input_file2 = csv.DictReader(open(artworks_file, encoding="utf-8"))
 
     for artwork in input_file2:
@@ -58,8 +66,17 @@ def loadAdworks(catalog):
 
 #Funciones de Consulta
 
+#REQ1#
 def ArtistbyBeginDate(catalog, min, max):
     return model.ArtistbyBeginDate(catalog, min, max)
+
+#REQU3#
+def ArtworksMediumsbyArtist(catalog,ArtistName):
+    return model.ArtworksMediumsbyArtist(catalog,ArtistName)
+
+#REQBONO
+def prolificArtist(catalog, min, max, n):
+    return model.prolificArtist(catalog, min, max, n)
 
 def ArtworksbyMedium(catalog,Name,n):
     return model.ArtworksbyMedium(catalog,Name,n)
