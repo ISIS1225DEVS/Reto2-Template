@@ -466,6 +466,38 @@ def ArtistArtworksbyMedium (DisplayName,catalog) :
         artwork = lt.getElement(Artworks,i) 
     pass 
 
+# Funciones requerimiento 4
+def Artworksbynationality (catalog):
+    artworks = catalog['Artwork']
+    obra = lt.newList('ARRAY_LIST')
+    sortArtistID(catalog,2)
+    i = 1
+    while i < lt.size(artworks):
+        artwork = lt.getElement(catalog['Artwork'],i)
+        artwork['ArtistsNames'] = ''
+        ids = artwork['ConstituentID'].strip('[]').split(',')
+        for id in ids:
+            artist = searchArtistInfo(catalog,int(id))
+            datosartist = lt.getElement(catalog['Artist'],artist)
+            lt.addLast(artwork['ArtistNames'], datosartist)
+            nacionality = datosartist['Nationality']
+            if mp.contains(catalog['Nationality'],nacionality):
+                lt.addLast(obra, artwork)
+            else:
+                lt.addLast(obra,artwork)
+        i += 1
+    return obra
+
+def sortObras (obra):
+    lista = lt.newList('ARRAY_LIST')
+    for i in obra:
+        lt.addLast(lista, i)
+    orderList = quic.sort(lista, compareSizeArtworks)
+    return orderList
+
+def compareSizeArtworks (artwork1, artwork2):
+    return lt.size(artwork1) < lt.size(artwork2)
+
 #TODO: Funciones req 5 
 def calcularCosto(artwork) :
 
@@ -514,10 +546,6 @@ def calcularCosto(artwork) :
         estimaciones.append(48)
     costo = max(estimaciones) 
     return costo 
-
-
-
-#Funciones requerimiento 8
 
 def transportarObras(department,catalog) : 
     start_time = time.process_time()

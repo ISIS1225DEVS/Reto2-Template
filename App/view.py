@@ -70,6 +70,9 @@ def printArtWork(artWork):
     "Medium: " + artWork['Medium'] + "\t|\t" + "Dimensions: " + artWork['Dimensions'] + "\t|\t" + "Date: " + artwork['Date'] + "\t|\t" +
     'DateAcquired: ' + artWork['DateAcquired'] + "\t|\t" + "URL: " + artWork['URL'])
 
+def printArtworksbyNationality(artwork):
+    print('Nationality: ' + artwork['Nationality'] + '\t|\t' + 'Artworks: ' + str(lt.size(artwork['Artworks'])) + '\t|\t')
+
 def transportarObras(depto,catalog) : 
     return controller.transportarObras(depto,catalog)
 
@@ -160,6 +163,12 @@ while True:
                 printArtWork(artwork) 
         else:
             print("No se encontraron obras de " + str(fecha_final) + " a " + str(fecha_final))
+
+    elif int(inputs[0]) == 7:
+        obras = controller.Artworksbynationality(catalog)
+        for i in range(lt.size(obras)-9,lt.size(obras)+1):
+            artwork = lt.getElement(obras,i)
+            printArtworksbyNationality(artwork)
 
     elif int(inputs[0]) == 8: 
         depto = input('Ingrese el departamento a transportar: ')

@@ -82,6 +82,10 @@ def transportarObras(depto,catalog) :
     transportar = model.transportarObras(depto,catalog)
     return transportar 
 
+def Artworksbynationality (catalog):
+    obra = model.Artworksbynationality (catalog)
+    orderList = model.sortObras (obra)
+    return orderList
 
    
 # Funciones de conteo
