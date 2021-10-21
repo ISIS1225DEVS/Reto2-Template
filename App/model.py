@@ -26,6 +26,7 @@
 
 
 from math import atan2
+import time
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -203,6 +204,8 @@ def ArtworksbyNationalityMap(catalog,artwork):
 
 def ArtistbyBeginDate(catalog, min, max):
 
+    start = time.process_time_ns()
+
     rta=[]
 
     Dates=mp.keySet(catalog['BeginDate'])
@@ -322,6 +325,10 @@ def ArtistbyBeginDate(catalog, min, max):
         rta.append(i)
 
       
+    stop = time.process_time_ns()
+
+    sgs = (stop-start)/1000000000
+    print(sgs) 
 
     return rta
 
@@ -330,6 +337,8 @@ def ArtistbyBeginDate(catalog, min, max):
 
 def ArtworksMediumsbyArtist(catalog,ArtistName):
     
+    start = time.process_time_ns()
+
     key=mp.get(catalog['DisplayName'],ArtistName)['value']['ConstituentID']
 
     if mp.get(catalog['Work_artists'],key) != None:
@@ -345,13 +354,25 @@ def ArtworksMediumsbyArtist(catalog,ArtistName):
 
             rta.append(mp.get(catalog['DisplayName'],ArtistName)['value'])
             #len de lista = 5
+
+            stop = time.process_time_ns()
+
+            sgs = (stop-start)/1000000000
+            print(sgs)
+
             return rta
 
         else:
             rta=[1,[artworks['Medium']],artworks['Medium'],artworks,mp.get(catalog['DisplayName'],ArtistName)['value']]
             
+            stop = time.process_time_ns()
+
+            sgs = (stop-start)/1000000000
+            print(sgs)
+
             return rta
 
+            
             
     else: 
         return 0
@@ -397,6 +418,8 @@ def Artwork_big_M(list,big_M):
 #### BONO ####
 
 def prolificArtist(catalog, min, max, n):
+
+    start = time.process_time_ns()
 
     Dates=mp.keySet(catalog['BeginDate'])
     b=lt.newList(datastructure='ARRAY_LIST')
@@ -450,7 +473,10 @@ def prolificArtist(catalog, min, max, n):
         artists.append(lt.getElement(listArtist,i))
 
    
-    
+    stop = time.process_time_ns()
+
+    sgs = (stop-start)/1000000000
+    print(sgs) 
    
     return artists
 
