@@ -250,8 +250,9 @@ def ArtworksbyNationalityMap(catalog,artwork):
 # Funciones de consulta
 
 ####### REQ 1 #######
-
-mg.sort(b,cmpArtistBegindate)
+def ArtistbyBeginDate(catalog, min, max):
+    
+    mg.sort(b,cmpArtistBegindate)
     
   
     size=0
