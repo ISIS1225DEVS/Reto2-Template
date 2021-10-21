@@ -108,23 +108,22 @@ def addArtist(catalog, name, id,bio,nationality,gender,begin,end,wiki,ulan):
     artist['EndDate'] = end
     artist['Wiki QID'] = wiki 
     artist['ULAN'] = ulan
+
+    addArtistNationality(catalog,nationality,artist)
+
     return artist
 
-def addArtWork (catalog,artWork,artist) : 
+def addArtWork (catalog,artWork) : 
     lt.addLast(catalog['Artwork'],artWork)
-    lt.addLast(catalog['Artist'],artist)
     medium = artWork['Medium'] 
     artistID = artWork['ConstituentID']
     department = artWork['Department']
     DateAquired = artWork['DateAcquired']
-    nationality = artist['Nationality']
-    artist = artist['DisplayName']
 
     addArtWorkMedium(catalog,medium,artWork)
     addArtWorkbyArtist(catalog,artistID,artWork)
     addArtWorkDepartment(catalog,department,artWork) 
     addArtWorkDateAdquired(catalog,DateAquired,artWork)
-    addArtistNationality(catalog,nationality,artist)
 
 
 
