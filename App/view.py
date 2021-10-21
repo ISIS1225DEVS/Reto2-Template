@@ -77,6 +77,7 @@ def printTransportarObras(transporte, depto):
     
     if transporte[4] > 0:
         print("El MoMA va a transportar " + str(transporte[4])+" obras del departamento " + str(depto))
+        print("El tiempo de ejecución del requerimiento 5 es de: " + str(transporte[5]))
         if transporte[1]:
             print("El peso estimado es de: " + str(transporte[1]) +" Kg")
         if transporte[0]:

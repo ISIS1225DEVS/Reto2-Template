@@ -517,9 +517,10 @@ def calcularCosto(artwork) :
 
 
 
-
+#Funciones requerimiento 8
 
 def transportarObras(department,catalog) : 
+    start_time = time.process_time()
     entry = mp.get(catalog['ArtworksDepartment'],department)
     Value = me.getValue(entry) 
     artworks = Value['artWorks']
@@ -547,7 +548,9 @@ def transportarObras(department,catalog) :
         i +=1 
     masCostosas = obrasMasCaras(artworks) 
     masAntiguas = obrasMasAntiguas(artworks)
-    return sumaCosto,sumaPeso,masCostosas,masAntiguas,tamanio 
+    stop_time = time.process_time()
+    elapsed_time_mseg = (stop_time - start_time)*1000
+    return sumaCosto,sumaPeso,masCostosas,masAntiguas,tamanio, elapsed_time_mseg
 
 
 
