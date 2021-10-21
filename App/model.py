@@ -109,9 +109,6 @@ def addArtist(catalog, name, id,bio,nationality,gender,begin,end,wiki,ulan):
     artist['Wiki QID'] = wiki 
     artist['ULAN'] = ulan
 
-    print(artist)
-    print(addArtistNationality(catalog,artist['Nationality'],artist))
-
     return artist
 
 def addArtWork (catalog,artWork) : 
@@ -132,7 +129,9 @@ def addArtWork (catalog,artWork) :
 def addArtist(catalog,artist) : 
     lt.addLast(catalog['Artist'],artist)
     year = artist['BeginDate'] 
+    nationality = artist['Nationality']
     addArtistYear(catalog,year,artist) 
+    addArtistNationality(catalog,nationality,artist)
 
 def addArtistYear(catalog,year,artist) : 
     years = catalog['ArtistBeginYear'] 
@@ -540,7 +539,6 @@ def masUtilizada(mediumArtwork,tamanioArtwork) :
 
 def Artworksbynationality (catalog):
    datos = mp.valueSet(catalog['Nationality'])
-   print(catalog['Nationality'])
    print(datos)
    for nationality in lt.iterator(datos):
        listaArtistas = nationality['Artist']
