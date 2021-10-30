@@ -52,7 +52,7 @@ def loadData(catalog):
 
 def loadArt(catalog):
    
-    artworksfile = cf.data_dir +  'Artworks-utf8-small.csv'
+    artworksfile = cf.data_dir +  'Artworks-utf8-large.csv'
     input_file = csv.DictReader(open(artworksfile , encoding='utf-8'))
     for artwork in input_file:
         model.addArt(catalog, artwork)
@@ -60,7 +60,7 @@ def loadArt(catalog):
 
 def loadArtist(catalog):
  
-    artistsfile = cf.data_dir + 'Artists-utf8-small.csv'
+    artistsfile = cf.data_dir + 'Artists-utf8-large.csv'
     input_file = csv.DictReader(open(artistsfile, encoding='utf-8'))
     contador= 0
     for artist in input_file:
@@ -85,8 +85,6 @@ def obras_porMedio(catalog, num ,medio):
 
 def obrasPorNacionalidad(catalog, nac):
     return model.tamañoMapaNacionalidad(catalog, nac)
-    
-
 
 def get_req1(artistas, inicio, final):
     return model.nacimiento_artistas(artistas, inicio, final)

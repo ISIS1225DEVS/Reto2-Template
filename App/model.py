@@ -433,8 +433,49 @@ def get_obrasxtecnica(catalog, nombre_artista):
         return -1
     else: 
         mapa_obras= buscar_obras(catalog['Art-hash'], id)
-        
-        print(mapa_obras)
+        conteo= mp.size(mapa_obras)
+        lista_tecnicas= getTecnicas(mapa_obras)
+        conteo_tecnicas= getConteoTecnicas(lista_tecnicas)
+        masRepetida= getMasRepetida(lista_tecnicas)
+        mapa_filtrado= filtrarxTecnica(mapa_obras, masRepetida)
+        lt.addLast(respuesta, conteo)
+        lt.addLast(respuesta, conteo_tecnicas)
+        lt.addLast(respuesta, masRepetida)
+        lt.addLast(respuesta, mapa_filtrado)
+    return respuesta
+
+def filtrarxTecnica(mapa_obras, masRepetida):
+    mapa= mapa_obras.copy()
+    llaves= mp.keySet(mapa)
+    for llave_obras in lt.iterator(llaves):
+        valores= mp.get(mapa_obras, llave_obras)
+        if not valores['value']['value']['Medium'] == masRepetida:
+            mapa= mp.remove(mapa, llave_obras)
+    return mapa
+
+def getMasRepetida(lista_tecnicas):
+    contador= 0
+    repetida= lista_tecnicas[0]
+    for i in lista_tecnicas:
+        conteo_tecnicas= lista_tecnicas.count(i)
+        if conteo_tecnicas>contador:
+            contador= conteo_tecnicas
+            repetida= i
+    return repetida
+
+
+def getConteoTecnicas(lista_tecnicas):
+    unicos= set(lista_tecnicas)
+    conteo= len(unicos)
+    return conteo
+
+def getTecnicas(mapa):
+    llaves= mp.keySet(mapa)
+    lista_tecnicas=[]
+    for llave in lt.iterator(llaves):
+        valores= mp.get(mapa, llave)
+        lista_tecnicas.append(valores["value"]["value"]["Medium"])
+    return lista_tecnicas
 
 def buscar_obras(obras, id):
     mapa= mp.newMap()

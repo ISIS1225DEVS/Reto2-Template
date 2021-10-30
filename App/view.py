@@ -129,7 +129,24 @@ while True:
         start_time= time.process_time()
 
         lista_respuesta= controller.get_req3(catalog, nombre_artista)
-        
+        print("El total de obras de " + nombre_artista + " es: " + str(lt.getElement(lista_respuesta, 1)))
+        print("El total de técnicas utilizadas por " + nombre_artista + " fue: " + str(lt.getElement(lista_respuesta, 2)))
+        print("La técnica más utilizada por " + nombre_artista + " fue: " + str(lt.getElement(lista_respuesta, 3)))
+        mapa_obras= lt.getElement(lista_respuesta, 4)
+        lista_obras2= mp.keySet(mapa_obras)
+        for obra in lt.iterator(lista_obras2):
+            valores= mp.get(mapa_obras, obra)
+            print("------------------------------------------------")
+            print("\nTítulo de la obra: " + valores['value']['value']['Title'])
+            print("\nAño de la obra: " + valores['value']['value']['Date'])
+            print("\nTécnica: " + valores['value']['value']['Medium'])
+            print("\nDimensiones: " + valores['value']['value']['Dimensions'])
+            print("\n")
+            
+        stop_time= time.process_time()
+        elapsed_time_mseg= (stop_time-start_time)*1000
+        print("El programa se demoro " + str(elapsed_time_mseg) + "ms en ordenar los datos.")
+
     
     elif int(inputs[0]) == 8:
         print("Ingrese el numero de obras que quiere conocer: ")
@@ -145,7 +162,6 @@ while True:
         num = controller.obrasPorNacionalidad(catalog, nac)
         print('Hay ' + num + ' obras de la nacionalidad ' + nac)
        
-
     else:
         sys.exit(0)
 sys.exit(0)
