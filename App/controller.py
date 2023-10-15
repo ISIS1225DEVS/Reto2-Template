@@ -35,104 +35,73 @@ def new_controller():
     """
     Crea una instancia del modelo
     """
-    #TODO: Llamar la función del modelo que crea las estructuras de datos
-    pass
+    return model.new_data_structs()
 
 
 # Funciones para la carga de datos
 
-def load_data(control, filename):
+def load_and_sort_data(control, tamaño, algoritmo):
     """
     Carga los datos del reto
     """
-    # TODO: Realizar la carga de datos
-    pass
+    tamaños = {"1": "small",
+               "2": "5pct",
+               "3": "10pct",
+               "4": "20pct",
+               "5": "30pct",
+               "6": "50pct",
+               "7": "80pct",
+               "8": "large"}
+    
+    if tamaño in list(tamaños.keys()):
+        tamaño = tamaños[tamaño]
+        
+        control["results"] = model.lt.newList("ARRAY_LIST")
+        control["shootouts"] = model.lt.newList("ARRAY_LIST")
+        control["goalscorers"] = model.lt.newList("ARRAY_LIST")
+        
+        load_data(control, tamaño, "results")
+        load_data(control, tamaño, "shootouts")
+        load_data(control, tamaño, "goalscorers")
+        
+    sort(control, algoritmo)
+    model.creating_hash(control)
+    
+def load_data(control, tamaño, archivo):
+    
+    file = cf.data_dir + f'/football/{archivo}-utf8-{tamaño}.csv'
+    input_file = csv.DictReader(open(file, encoding="utf-8"))
+    for fila in input_file:
+        model.add_data(control, fila, archivo)
+
+def get_datasize(control):
+    """
+    Retorna el tamaño de los datos cargados
+    """
+    return model.get_datasize(control)
 
 
 # Funciones de ordenamiento
 
-def sort(control):
+def sort(control, algoritmo):
     """
     Ordena los datos del modelo
     """
-    #TODO: Llamar la función del modelo para ordenar los datos
-    pass
+    start_time = get_time()
+    model.sort(control, algoritmo)
+    end_time = get_time()
+    delta_time = end_time - start_time
+    print(f"Tiempo de ejecución: {delta_time} ms")
 
+# Funciones de requerimientos
 
-# Funciones de consulta sobre el catálogo
+def req_6(control, n_equipos, torneo, año):
+    
+    return model.req_6(control, n_equipos, torneo, año)
 
-def get_data(control, id):
-    """
-    Retorna un dato por su ID.
-    """
-    #TODO: Llamar la función del modelo para obtener un dato
-    pass
-
-
-def req_1(control):
-    """
-    Retorna el resultado del requerimiento 1
-    """
-    # TODO: Modificar el requerimiento 1
-    pass
-
-
-def req_2(control):
-    """
-    Retorna el resultado del requerimiento 2
-    """
-    # TODO: Modificar el requerimiento 2
-    pass
-
-
-def req_3(control):
-    """
-    Retorna el resultado del requerimiento 3
-    """
-    # TODO: Modificar el requerimiento 3
-    pass
-
-
-def req_4(control):
-    """
-    Retorna el resultado del requerimiento 4
-    """
-    # TODO: Modificar el requerimiento 4
-    pass
-
-
-def req_5(control):
-    """
-    Retorna el resultado del requerimiento 5
-    """
-    # TODO: Modificar el requerimiento 5
-    pass
-
-def req_6(control):
-    """
-    Retorna el resultado del requerimiento 6
-    """
-    # TODO: Modificar el requerimiento 6
-    pass
-
-
-def req_7(control):
-    """
-    Retorna el resultado del requerimiento 7
-    """
-    # TODO: Modificar el requerimiento 7
-    pass
-
-
-def req_8(control):
-    """
-    Retorna el resultado del requerimiento 8
-    """
-    # TODO: Modificar el requerimiento 8
-    pass
-
-
-# Funciones para medir tiempos de ejecucion
+def req_7(control, torneo, puntaje, fecha_inicio, fecha_fin):
+    
+    return model.req_7(control, torneo, puntaje, fecha_inicio, fecha_fin)
 
 def get_time():
     """
