@@ -85,6 +85,8 @@ def load_and_sort_data(control):
     
     controller.load_and_sort_data(control, tamaño, algoritmo)
     
+#Funciones para mostrar los datos    
+    
 def print_table(data, headers):
     """
     Imprime los resultados
@@ -144,6 +146,50 @@ def print_data(control):
     
     if lt.isEmpty(control["shootouts"]) == False:
         print_table(control["shootouts"], headers_shootouts)
+    
+#Funciones para mostrar los requerimientos
+
+def print_req_5(control):
+    
+    anotador = input("Ingrese el nombre del anotador que desea consultar\n")
+    año_inicial = input("Ingrese el año inicial que desea consultar\n")
+    mes_inicial = input("Ingrese el mes inicial que desea consultar\n")
+    dia_inicial = input("Ingrese el dia inicial que desea consultar\n")
+    año_final = input("Ingrese el año final que desea consultar\n")
+    mes_final = input("Ingrese el mes final que desea consultar\n")
+    dia_final = input("Ingrese el dia final que desea consultar\n")
+    
+    fecha_inicial = f"{año_inicial}-{mes_inicial}-{dia_inicial}"
+    fecha_final = f"{año_final}-{mes_final}-{dia_final}"
+    
+    headers = {"scorer": "antoador",
+               "date": "Fecha",
+               "minute": "Minuto",
+               "home_team": "Equipo local",
+               "away_team": "Equipo visitante",
+               "team": "Equipo del jugador",
+               "home_score": "Marcador local",
+                "away_score": "Marcador visitante",
+                "tournament": "Torneo",
+                "penalty": "Penal",
+                "own_goal": "Autogol"}
+    
+    n_jugadores, n_anotaciones, n_torneos, n_penales, n_autogoles, anotaciones = controller.req_5(control, anotador, fecha_inicial, fecha_final)
+    
+    print("\n=============== Datos del usuario ==================")
+    print(f"\nAnotador: {anotador}")
+    print(f"\nFecha inicial: {año_inicial}-{mes_inicial}-{dia_inicial}")
+    print(f"\nFecha final: {año_final}-{mes_final}-{dia_final}")
+    
+    print("\n=============== Resultados ==================")
+    print(f"\nSe encontraron {n_jugadores} jugadores")
+    print(f"\nSe encontraron {n_anotaciones} anotaciones por parte de {anotador}")
+    print(f"\nSe encontraron {n_torneos} torneos donde anoto {anotador}")
+    print(f"\nSe encontraron {n_penales} penales")
+    print(f"\nSe encontraron {n_autogoles} autogoles")
+    
+    print_table(anotaciones, headers)
+                
         
 def print_req_6(control):
     

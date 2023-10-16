@@ -38,7 +38,7 @@ def new_controller():
     return model.new_data_structs()
 
 
-# Funciones para la carga de datos
+#Funciones para la carga de datos
 
 def load_and_sort_data(control, tamaño, algoritmo):
     """
@@ -80,8 +80,7 @@ def get_datasize(control):
     """
     return model.get_datasize(control)
 
-
-# Funciones de ordenamiento
+#Funciones de ordenamiento
 
 def sort(control, algoritmo):
     """
@@ -95,6 +94,10 @@ def sort(control, algoritmo):
 
 # Funciones de requerimientos
 
+def req_5(control, anotador, fecha_inicial, fecha_final):
+    
+    return model.req_5(control, anotador, fecha_inicial, fecha_final)
+
 def req_6(control, n_equipos, torneo, año):
     
     return model.req_6(control, n_equipos, torneo, año)
@@ -103,12 +106,13 @@ def req_7(control, torneo, puntaje, fecha_inicio, fecha_fin):
     
     return model.req_7(control, torneo, puntaje, fecha_inicio, fecha_fin)
 
+#Funciones para manejar el tiempo y la memoria
+
 def get_time():
     """
     devuelve el instante tiempo de procesamiento en milisegundos
     """
     return float(time.perf_counter()*1000)
-
 
 def delta_time(start, end):
     """
@@ -122,7 +126,6 @@ def get_memory():
     toma una muestra de la memoria alocada en instante de tiempo
     """
     return tracemalloc.take_snapshot()
-
 
 def delta_memory(stop_memory, start_memory):
     """

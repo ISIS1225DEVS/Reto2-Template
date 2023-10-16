@@ -46,7 +46,6 @@ dos listas, una para los videos, otra para las categorias de los mismos.
 
 # Construccion de modelos
 
-
 def new_data_structs():
     """
     Inicializa las estructuras de datos del modelo. Las crea de
@@ -67,7 +66,6 @@ def new_data_structs():
     football_data["hash_goalscorers"] = mp.newMap()
         
     return football_data
-
 
 # Funciones para agregar informacion al modelo
 
@@ -124,6 +122,46 @@ def creating_hash(control):
     control["hash_goalscorers"] = hash_goalscorers
     
 #Requerimientos
+
+def req_5(control, anotador, fecha_inicial, fecha_final):
+    
+    goles = lt.newList("ARRAY_LIST")
+    jugadores = mp.newMap()
+    torneos = mp.newMap()
+    penales = 0
+    autogoles = 0
+    
+    for gol in lt.iterator(control["goalscorers"]):
+        
+        if not mp.contains(jugadores, gol["scorer"]):
+            mp.put(jugadores, gol["scorer"], 1)
+        
+        if gol["scorer"] == anotador and intervalo(fecha_inicial, fecha_final, gol["date"]):
+            if not mp.contains(control["hash_results"], f'{gol["date"]}-{gol["home_team"]}-{gol["away_team"]}'):
+                gol["home_score"] = "Desconocido"
+                gol["away_score"] = "Desconocido"
+                gol["tournament"] = "Desconocido"
+                lt.addLast(goles, gol)
+                
+            else:
+                partido = mp.get(control["hash_results"], f'{gol["date"]}-{gol["home_team"]}-{gol["away_team"]}')['value']
+                gol["home_score"] = partido["home_score"]
+                gol["away_score"] = partido["away_score"]
+                gol["tournament"] = partido["tournament"]
+                lt.addLast(goles, gol)
+                
+            if gol["penalty"] == "True":
+                penales += 1
+            
+            if gol["own_goal"] == "True":
+                autogoles += 1
+                
+            if not mp.contains(torneos, gol["tournament"]):
+                mp.put(torneos, gol["tournament"], 1)
+            
+               
+            
+    return lt.size(jugadores), lt.size(goles), lt.size(torneos), penales, autogoles, goles
 
 def req_6(control, n_equipos, torneo, año):
     
@@ -453,11 +491,8 @@ def req_7(control, torneo, puntaje, fecha_inicio, fecha_fin):
             
             
                 
-    return mp.size(torneos), lt.size(lista_jugadores), n_anotadores_puntaje, n_goles, lt.size(partidos), n_autogoles, n_penalties, jugadores_puntos
-         
+    return mp.size(torneos), lt.size(lista_jugadores), n_anotadores_puntaje, n_goles, lt.size(partidos), n_autogoles, n_penalties, jugadores_puntos       
     
-       
-
 #Funcion de ordenamiento y sus auxiliares
     
 def sort(control, algoritmo):
