@@ -64,6 +64,7 @@ def new_data_structs():
     football_data["hash_results"] = mp.newMap()
     football_data["hash_shootouts"] = mp.newMap()
     football_data["hash_goalscorers"] = mp.newMap()
+    football_data["hash_scorers"] = mp.newMap()
         
     return football_data
 
@@ -115,26 +116,43 @@ def creating_hash(control):
             temporal_list = mp.get(hash_goalscorers, key)["value"]
             lt.addLast(temporal_list, i)
             mp.put(hash_goalscorers, key, temporal_list)
+            
+            
+    hash_scorers = mp.newMap()
+    
+    for i in lt.iterator(control["goalscorers"]):
+        key = i["scorer"]
+        
+        if not mp.contains(hash_scorers, key):
+            temporal_list = lt.newList("ARRAY_LIST")
+            lt.addLast(temporal_list, i)
+            mp.put(hash_scorers, key, temporal_list)
+        
+        else:
+            temporal_list = mp.get(hash_scorers, key)["value"]
+            lt.addLast(temporal_list, i)
+            mp.put(hash_scorers, key, temporal_list)
         
 
     control["hash_results"] = hash_results
     control["hash_shootouts"] = hash_shootouts
     control["hash_goalscorers"] = hash_goalscorers
+    control["hash_scorers"] = hash_scorers
     
 #Requerimientos
 
 def req_5(control, anotador, fecha_inicial, fecha_final):
     
     goles = lt.newList("ARRAY_LIST")
-    jugadores = mp.newMap()
-    torneos = mp.newMap()
+    jugadores = set()
+    torneos = set()
     penales = 0
     autogoles = 0
     
     for gol in lt.iterator(control["goalscorers"]):
         
-        if not mp.contains(jugadores, gol["scorer"]):
-            mp.put(jugadores, gol["scorer"], 1)
+        if not gol["scorer"] in jugadores:
+            jugadores.add(gol["scorer"])
         
         if gol["scorer"] == anotador and intervalo(fecha_inicial, fecha_final, gol["date"]):
             if not mp.contains(control["hash_results"], f'{gol["date"]}-{gol["home_team"]}-{gol["away_team"]}'):
@@ -156,8 +174,8 @@ def req_5(control, anotador, fecha_inicial, fecha_final):
             if gol["own_goal"] == "True":
                 autogoles += 1
                 
-            if not mp.contains(torneos, gol["tournament"]):
-                mp.put(torneos, gol["tournament"], 1)
+            if not gol["tournament"] in torneos:
+                torneos.add(gol["tournament"])
             
                
             
@@ -283,25 +301,14 @@ def req_6(control, n_equipos, torneo, año):
 
     #Implementacion algoritmo principal
     
-    torneos = mp.newMap()
+    torneos = set()
+    ciudades = set()
+    paises = set()
     partidos = 0
-    ciudades = mp.newMap()
-    paises = mp.newMap()
     
     for resultado in lt.iterator(control["results"]):
         
         if resultado["tournament"] == torneo and resultado["date"].split("-")[0] == año:
-            
-            if not mp.contains(torneos, resultado["tournament"]):
-                mp.put(torneos, resultado["tournament"], 1)
-                
-            if not mp.contains(ciudades, resultado["city"]):
-                mp.put(ciudades, resultado["city"], 1)
-            
-            if not mp.contains(paises, resultado["country"]):
-                mp.put(paises, resultado["country"], 1)
-            
-            partidos += 1
             
             equipo_uno, equipo_dos = crear_informacion(control, resultado)
             
@@ -325,6 +332,15 @@ def req_6(control, n_equipos, torneo, año):
                 nueva_info = modificar_informacion(equipo_dos, info)
                 lt.changeInfo(equipos, indice, nueva_info)
                 
+            if not resultado["tournament"] in torneos:
+                torneos.add(resultado["tournament"])
+            
+            if not resultado["city"] in ciudades:
+                ciudades.add(resultado["city"])
+            
+            if not resultado["country"] in paises:
+                paises.add(resultado["country"])
+                
                 
     merg.sort(equipos, sort_criteria_equipos)
     equipos_encontrados = lt.size(equipos)
@@ -335,7 +351,7 @@ def req_6(control, n_equipos, torneo, año):
     else:
         equipos_a_mostrar = equipos
         
-    return equipos_a_mostrar, equipos_encontrados, mp.size(torneos), partidos, mp.size(ciudades), mp.size(paises)
+    return equipos_a_mostrar, equipos_encontrados, len(torneos), partidos, len(ciudades), len(paises)
         
 def req_7(control, torneo, puntaje, fecha_inicio, fecha_fin):
     
@@ -443,11 +459,11 @@ def req_7(control, torneo, puntaje, fecha_inicio, fecha_fin):
     lista_jugadores = lt.newList("ARRAY_LIST")
     mapa_indices = mp.newMap()
     
-    torneos = mp.newMap()
+    torneos = set()
+    partidos = set()
     n_goles = 0
     n_autogoles = 0
     n_penalties = 0
-    partidos = mp.newMap()  
     
     for gol in lt.iterator(control["goalscorers"]):
         
@@ -470,11 +486,11 @@ def req_7(control, torneo, puntaje, fecha_inicio, fecha_fin):
                     nueva_info = modificar_informacion(crear_informacion(control, gol), info)
                     lt.changeInfo(lista_jugadores, indice, nueva_info)
                     
-                if not mp.contains(torneos, gol_torneo):
-                    mp.put(torneos, gol_torneo, 1)
-                
-                if not mp.contains(partidos, llave):
-                    mp.put(partidos, llave, 1)
+                if not gol_torneo in torneos:
+                    torneos.add(gol_torneo)
+                    
+                if not llave in partidos:
+                    partidos.add(llave)
                     
                 n_goles += 1
                 n_autogoles += check_autogol(gol)
@@ -491,7 +507,7 @@ def req_7(control, torneo, puntaje, fecha_inicio, fecha_fin):
             
             
                 
-    return mp.size(torneos), lt.size(lista_jugadores), n_anotadores_puntaje, n_goles, lt.size(partidos), n_autogoles, n_penalties, jugadores_puntos       
+    return len(torneos), lt.size(lista_jugadores), n_anotadores_puntaje, n_goles, len(partidos), n_autogoles, n_penalties, jugadores_puntos       
     
 #Funcion de ordenamiento y sus auxiliares
     
