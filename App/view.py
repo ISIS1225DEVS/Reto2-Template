@@ -44,8 +44,8 @@ def new_controller():
     """
         Se crea una instancia del controlador
     """
-    #TODO: Llamar la función del controlador donde se crean las estructuras de datos
-    pass
+    control = controller.newController()
+    return control
 
 
 def print_menu():
@@ -62,20 +62,37 @@ def print_menu():
     print("0- Salir")
 
 
-def load_data(control):
+def load_goalscorers(control,filename, memory, maptype, lf):
     """
     Carga los datos
     """
-    #TODO: Realizar la carga de datos
-    pass
+    goalscorers = controller.load_goalscorers(control,
+                                 filename, memory, maptype, lf)
+    
+    return goalscorers
 
+def load_results(control,filename, memory, maptype, lf):
+    results = controller.load_results(control,
+                                      filename, memory, maptype, lf)
+    
+    return results
 
-def print_data(control, id):
-    """
-        Función que imprime un dato dado su ID
-    """
-    #TODO: Realizar la función para imprimir un elemento
-    pass
+def load_shootouts(control,filename, memory, maptype, lf):
+    shootouts = controller.load_shootouts(control,
+                                        filename,memory, maptype, lf)
+    
+    
+    return shootouts
+
+def printLoadDataAnswer(tiempo, memoria, bool): 
+    """ 
+    Imprime los datos de tiempo y memoria de la carga de datos 
+    """ 
+    if bool == True and memoria != 0.0: 
+        print("Tiempo [ms]: ", round(tiempo,2), "||", 
+        "Memoria [kB]: ", round(memoria,2)) 
+    else: 
+        print("Tiempo [ms]: ",round(tiempo,2))
 
 def print_req_1(control):
     """
@@ -154,9 +171,40 @@ if __name__ == "__main__":
     while working:
         print_menu()
         inputs = input('Seleccione una opción para continuar\n')
+        inputs = input('Seleccione una opción para continuar\n')
+        inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
+            print("¿Desea observar el uso de memoria en la carga de datos?, (True, False)")
+            mem = input("Respuesta: \n")
+            if mem == "True":
+                memory = True
+            else:
+                memory = False
+            print("Seleccione el tipo de mapa que desea usar: \n")
+            print("1. Separate Chaining")
+            print("2. Linear Probing")
+            temp = input("Respuesta: \n")
+            if int(temp) == 1:
+                maptype = "CHAINING"
+            else:
+                maptype = "PROBING"
+            lf = float(input("Ingrese el factor de carga deseado: \n"))
+            results_file=input("Diga a cual csv de results quiere acceder: \n")
+            results, time_r, memory_r=load_results(control,results_file, memory, maptype, lf)
+            goal_file=input("Diga a cual csv de goalscorers quiere acceder: \n")
+            goals, time_g, mem_g=load_goalscorers(control,goal_file, memory, maptype, lf)
+            shootouts_file=input("Diga a cual csv de shootouts quiere acceder: \n")
+            shootouts, time_s, memory_s=load_shootouts(control,shootouts_file, memory, maptype, lf)
             print("Cargando información de los archivos ....\n")
-            data = load_data(control)
+            print('Results: '+str(results))
+            printLoadDataAnswer(time_r, memory_r, memory)
+            print('Goalscorers: '+str(goals))
+            printLoadDataAnswer(time_g, mem_g, memory)
+            print('Shootouts: '+str(shootouts))
+            printLoadDataAnswer(time_s, memory_s, memory)
+            print("Tiempo total de carga: "+str(time_r+time_g+time_s))
+            print("Memoria total de carga: "+str(memory_r+mem_g+memory_s))
+            print("La información ha sido cargada correctamente\n")
         elif int(inputs) == 2:
             print_req_1(control)
 

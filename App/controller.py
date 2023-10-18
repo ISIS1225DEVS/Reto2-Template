@@ -25,28 +25,92 @@ import model
 import time
 import csv
 import tracemalloc
-
+import os
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
 
 
-def new_controller():
+def newController():
     """
     Crea una instancia del modelo
     """
-    #TODO: Llamar la función del modelo que crea las estructuras de datos
-    pass
+    control = {
+        'model': None
+    }
+    control['model'] = model.new_data_structs()
+    return control
 
 
 # Funciones para la carga de datos
 
-def load_data(control, filename):
+def load_goalscorers(control, filename, memory, mapa, lf):
     """
     Carga los datos del reto
     """
-    # TODO: Realizar la carga de datos
-    pass
+    inicio_time = get_time()
+    if memory==True:
+        tracemalloc.start()
+        inicio_memory = get_memory()
+         
+    data_structs = control["model"]
+    
+    goalscorersfile = os.path.join(cf.data_dir, filename)
+    
+    data_structs = model.add_goalscorers(data_structs, goalscorersfile, mapa, lf)
+    stop_time = get_time()
+    diff_time = delta_time(inicio_time, stop_time)
+    if memory == True:
+        stop_memory = get_memory()
+        tracemalloc.stop()
+        diff_memory = delta_memory(stop_memory, inicio_memory)
+        return model.goalscorers_size(data_structs), diff_time, diff_memory
+    else:
+        return model.goalscorers_size(data_structs), diff_time, 0.0
+    
+
+def load_results(control, filename, memory, mapa, lf):
+    inicio_time = get_time()
+    if memory==True:
+        tracemalloc.start()
+        inicio_memory = get_memory()
+        
+    data_structs = control["model"]
+    
+    resultsfile = os.path.join(cf.data_dir, filename)
+    
+    data_structs = model.add_results(data_structs, resultsfile, mapa, lf)
+    stop_time = get_time()
+    diff_time = delta_time(inicio_time, stop_time)
+    if memory == True:
+        stop_memory = get_memory()
+        tracemalloc.stop()
+        diff_memory = delta_memory(stop_memory, inicio_memory) 
+        return model.results_size(data_structs), diff_time, diff_memory
+    else:
+        return model.results_size(data_structs), diff_time, 0.0
+    
+
+def load_shootouts(control, filename, memory, mapa, lf):
+    inicio_time = get_time()
+    if memory==True:
+        tracemalloc.start()
+        inicio_memory = get_memory()
+    data_structs = control["model"]
+    
+    shootoutsfile = os.path.join(cf.data_dir, filename)
+    
+    data_structs = model.add_shootouts(data_structs, shootoutsfile, mapa, lf)
+
+    stop_time = get_time()
+    diff_time = delta_time(inicio_time, stop_time)
+    if memory == True:
+        stop_memory = get_memory()
+        tracemalloc.stop()
+        diff_memory = delta_memory(stop_memory, inicio_memory)
+        return model.shootouts_size(data_structs), diff_time, diff_memory
+    else:
+        return model.shootouts_size(data_structs), diff_time, 0.0
 
 
 # Funciones de ordenamiento
@@ -133,7 +197,15 @@ def req_8(control):
 
 
 # Funciones para medir tiempos de ejecucion
-
+def printLoadDataAnswer(tiempo, memoria, bool): 
+    """ 
+    Imprime los datos de tiempo y memoria de la carga de datos 
+    """ 
+    if bool == True and memoria != 0.0: 
+        print("Tiempo [ms]: ", round(tiempo,2), "||", 
+        "Memoria [kB]: ", round(memoria,2)) 
+    else: 
+        print("Tiempo [ms]: ",round(tiempo,2))
 def get_time():
     """
     devuelve el instante tiempo de procesamiento en milisegundos
