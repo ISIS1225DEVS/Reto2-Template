@@ -137,7 +137,10 @@ def req_1(control):
     """
     Retorna el resultado del requerimiento 1
     """
-    # TODO: Modificar el requerimiento 1
+    numero = input("Ingrese el número de partidos: ")
+    nombre = input("Ingrese el nombre del equipo: ")
+    condicion= input("Ingrese la condición del equipo: ")
+    return model.req_1(control,numero,nombre,condicion)
     pass
 
 
@@ -153,7 +156,11 @@ def req_3(control):
     """
     Retorna el resultado del requerimiento 3
     """
-    # TODO: Modificar el requerimiento 3
+    equipo= input("Ingrese el nombre del equipo: ")
+    fecha_i = input("Ingrese la fecha inicial (YYYY-MM-DD): ")
+    fecha_f = input("Ingrese la fecha final (YYYY-MM-DD): ")
+    return model.req_3(control,equipo,fecha_i,fecha_f)
+
     pass
 
 

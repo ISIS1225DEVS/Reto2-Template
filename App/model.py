@@ -38,6 +38,7 @@ from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
 assert cf
 import time as tm
+from datetime import datetime
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá
 dos listas, una para los videos, otra para las categorias de los mismos.
@@ -64,53 +65,29 @@ def new_data_structs():
 
 # Funciones para agregar informacion al modelo
 
-def add_goalscorers(data_structs, filename):
+def add_goalscorers(data_structs, filename,colision,lf):
     '''
     Función para agregar nuevos elementos a la lista
     '''
-    data_structs['goalscorers']=mp.newMap(maptype='PROBING')
+    data_structs['goalscorers']=mp.newMap(maptype=colision,loadfactor=lf)
     goles = lt.newList('ARRAY_LIST', filename=filename)
     for element in lt.iterator(goles):
-        dic = {}
-        dic['date'] = element['date']
-        dic['home_team'] = element['home_team']
-        dic['away_team'] = element['away_team']
-        dic['scorer'] = element['scorer']
-        dic['team'] = element['team']
-        dic['minute'] = element['minute']
-        dic['penalty'] = element['penalty']
-        dic['own_goal'] = element['own_goal']
-        mp.put(data_structs['goalscorers'], element['scorer'] + "-" + element["date"],dic)
+        mp.put(data_structs['goalscorers'], element['scorer'] + "-" + element["date"], element)
     return data_structs
 
 
-def add_results(data_structs, filename):
+def add_results(data_structs, filename,colision,lf):
     results= lt.newList('ARRAY_LIST', filename=filename)
-    data_structs['results'] = mp.newMap()
+    data_structs['results'] = mp.newMap(maptype=colision,loadfactor=lf)
     for element in lt.iterator(results):
-        dic = {}
-        dic['date'] = element['date']
-        dic['home_team'] = element['home_team']
-        dic['away_team'] = element['away_team']
-        dic['home_score'] = element['home_score']
-        dic['away_score'] = element['away_score']
-        dic['country'] = element['country']
-        dic['city'] = element['city']
-        dic['tournament'] = element['tournament'] 
-        mp.put(data_structs['results'],element['date']+"-"+element['home_team'],dic)
-
+        mp.put(data_structs['results'],element['date']+"-"+element['home_team'],element)
     return data_structs
 
-def add_shootouts(data_structs, filename):
+def add_shootouts(data_structs, filename,colision,lf):
     shootouts = lt.newList('ARRAY_LIST', filename=filename)
-    data_structs['shootouts']=mp.newMap()
+    data_structs['shootouts']=mp.newMap(maptype=colision,loadfactor=lf)
     for element in lt.iterator(shootouts):
-        dic={}
-        dic['date']= element['date']
-        dic['home_team']=element['home_team']
-        dic['away_team']=element['away_team']
-        dic['winner']=element['winner']
-        mp.put(data_structs['shootouts'],element['date']+element['home_team'],dic)
+        mp.put(data_structs['shootouts'],element['date']+element['home_team'],element)
     return data_structs
 
 def sort_criteria1(data_1, data_2):
@@ -227,13 +204,26 @@ def shootouts_size(data_structs):
     return mp.size(data_structs['shootouts'])
 
 
-def req_1(data_structs):
-    """
+def req_1(data_structs,numero,nombre,condicion):
+    '''
     Función que soluciona el requerimiento 1
-    """
-    # TODO: Realizar el requerimiento 1
-    pass
-
+    '''
+    list1 = lt.newList("ARRAY_LIST")
+    for element in lt.iterator(mp.keySet(data_structs['model']['results'])):
+        lista=me.getValue(mp.get(data_structs['model']['results'],element))
+        
+        if condicion.lower() == "home":
+            if lista["home_team"].lower() == nombre.lower():
+                lt.addLast(list1, lista)
+        elif condicion.lower() == "away":
+            if lista["away_team"].lower() == nombre.lower():
+                lt.addLast(list1, lista)
+        else:
+            if lista["home_team"].lower() == nombre.lower():
+                lt.addLast(list1, lista)
+            if lista["away_team"].lower() == nombre.lower():
+                lt.addLast(list1, lista)
+    return list1
 
 def req_2(data_structs):
     """
@@ -243,12 +233,25 @@ def req_2(data_structs):
     pass
 
 
-def req_3(data_structs):
+def req_3(data_structs,equipo,fecha_i,fecha_f):
     """
     Función que soluciona el requerimiento 3
     """
     # TODO: Realizar el requerimiento 3
-    pass
+    fecha_i = datetime.strptime(fecha_i, "%Y-%m-%d")
+    fecha_f = datetime.strptime(fecha_f, "%Y-%m-%d")
+    
+    lista1 = lt.newList("ARRAY_LIST")
+    for element in lt.iterator(mp.keySet(data_structs['model']['results'])):
+        lista=me.getValue(mp.get(data_structs['model']['results'],element))
+    
+        if equipo in (lista["home_team"], lista["away_team"]):
+            fecha_partido = datetime.strptime(lista["date"], "%Y-%m-%d")
+            if fecha_i <= fecha_partido <= fecha_f:
+                lt.addLast(lista1, lista)
+    
+    return lista1
+    
 
 
 def req_4(data_structs):
@@ -323,3 +326,4 @@ def sort(data_structs):
     """
     #TODO: Crear función de ordenamiento
     pass
+

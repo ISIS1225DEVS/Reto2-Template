@@ -99,6 +99,7 @@ def print_req_1(control):
         Función que imprime la solución del Requerimiento 1 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 1
+    print(controller.req_1(control))
     pass
 
 
@@ -115,7 +116,8 @@ def print_req_3(control):
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
-    pass
+    
+    print(controller.req_3(control))
 
 
 def print_req_4(control):
@@ -170,8 +172,6 @@ if __name__ == "__main__":
     #ciclo del menu
     while working:
         print_menu()
-        inputs = input('Seleccione una opción para continuar\n')
-        inputs = input('Seleccione una opción para continuar\n')
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
             print("¿Desea observar el uso de memoria en la carga de datos?, (True, False)")
