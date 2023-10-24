@@ -38,7 +38,7 @@ from DISClib.Algorithms.Sorting import mergesort as merg
 from DISClib.Algorithms.Sorting import quicksort as quk
 assert cf
 import time as tm
-from datetime import datetime
+
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá
 dos listas, una para los videos, otra para las categorias de los mismos.
@@ -89,6 +89,183 @@ def add_shootouts(data_structs, filename,colision,lf):
     for element in lt.iterator(shootouts):
         mp.put(data_structs['shootouts'],element['date']+element['home_team'],element)
     return data_structs
+
+# Funciones para creacion de datos
+
+def new_data(id, info):
+    """
+    Crea una nueva estructura para modelar los datos
+    """
+    #TODO: Crear la función para estructurar los datos
+    pass
+
+
+# Funciones de consulta
+
+def get_data(data_structs, id):
+    """
+    Retorna un dato a partir de su ID
+    """
+    #TODO: Crear la función para obtener un dato de una lista
+    pass
+
+
+def goalscorers_size(data_structs):
+    return mp.size(data_structs['goalscorers'])
+
+def results_size(data_structs):
+    return mp.size(data_structs['results'])
+
+def shootouts_size(data_structs):
+    return mp.size(data_structs['shootouts'])
+
+
+def req_1(data_structs,numero,nombre,condicion):
+    '''
+    Función que soluciona el requerimiento 1
+    '''
+    lista1 = lt.newList("ARRAY_LIST")
+    for element in lt.iterator(mp.keySet(data_structs['model']['results'])):
+        lista=me.getValue(mp.get(data_structs['model']['results'],element))
+        
+        if condicion == "home":
+            if lista["home_team"] == nombre:
+                lt.addLast(lista1, lista)
+        elif condicion == "away":
+            if lista["away_team"] == nombre:
+                lt.addLast(lista1, lista)
+        else:
+            if lista["home_team"] == nombre:
+                lt.addLast(lista1, lista)
+            if lista["away_team"] == nombre:
+                lt.addLast(lista1, lista)
+    lista1= merg.sort(lista1, sort_criteria2)
+    lista_p3 = lt.newList("ARRAY_LIST")
+    pos1 = 2
+    while pos1 >= 0:
+        lt.addFirst(lista_p3, lista1["elements"][pos1])
+        pos1 -= 1
+    tamaño = lt.size(lista1) - 2
+    lista_u3 = lt.subList(lista1, tamaño, 3)
+    lista_p3_u3 = lt.newList("ARRAY_LIST")
+    for element in lista_p3["elements"]:
+        lt.addLast(lista_p3_u3, element)
+    for element in lista_u3["elements"]:
+        lt.addLast(lista_p3_u3, element)
+    return lista_p3_u3  
+
+def req_2(data_structs, numero_de_goles, nombre):
+    """
+    Función que soluciona el requerimiento 2 
+    """
+    lista1 = lt.newList("ARRAY_LIST")
+    
+
+    for element in lt.iterator(mp.keySet(data_structs['model']['goalscorers'])):
+        lista = me.getValue(mp.get(data_structs['model']['goalscorers'], element))
+        if lista["scorer"] == nombre:
+            lt.addLast(lista1,lista)
+    lista1= merg.sort(lista1, sort_criteria1)
+    lista_p3 = lt.newList("ARRAY_LIST")
+    pos1 = 2
+    while pos1 >= 0:
+        lt.addFirst(lista_p3, lista1["elements"][pos1])
+        pos1 -= 1
+    tamaño = lt.size(lista1) - 2
+    lista_u3 = lt.subList(lista1, tamaño, 3)
+    lista_p3_u3 = lt.newList("ARRAY_LIST")
+    for element in lista_p3["elements"]:
+        lt.addLast(lista_p3_u3, element)
+    for element in lista_u3["elements"]:
+        lt.addLast(lista_p3_u3, element)
+    return lista_p3_u3 
+    
+
+
+def req_3(data_structs,equipo,fecha_i,fecha_f):
+    """
+    Función que soluciona el requerimiento 3
+    """
+    # TODO: Realizar el requerimiento 3
+    fecha_i = tm.strptime(fecha_i, "%Y-%m-%d")
+    fecha_f = tm.strptime(fecha_f, "%Y-%m-%d")
+    
+    lista1 = lt.newList("ARRAY_LIST")
+    for element in lt.iterator(mp.keySet(data_structs['model']['results'])):
+        lista=me.getValue(mp.get(data_structs['model']['results'],element))
+    
+        if equipo in (lista["home_team"], lista["away_team"]):
+            fecha_partido = tm.strptime(lista["date"], "%Y-%m-%d")
+            if fecha_i <= fecha_partido <= fecha_f:
+                lt.addLast(lista1, lista)
+    lista1= merg.sort(lista1, sort_criteria3)            
+    lista_p3 = lt.newList("ARRAY_LIST")
+    pos1 = 2
+    while pos1 >= 0:
+        lt.addFirst(lista_p3, lista1["elements"][pos1])
+        pos1 -= 1
+    tamaño = lt.size(lista1) - 2
+    lista_u3 = lt.subList(lista1, tamaño, 3)
+    lista_p3_u3 = lt.newList("ARRAY_LIST")
+    for element in lista_p3["elements"]:
+        lt.addLast(lista_p3_u3, element)
+    for element in lista_u3["elements"]:
+        lt.addLast(lista_p3_u3, element)
+    return lista_p3_u3  
+    
+
+
+def req_4(data_structs):
+    """
+    Función que soluciona el requerimiento 4
+    """
+    # TODO: Realizar el requerimiento 4
+    pass
+
+
+def req_5(data_structs):
+    """
+    Función que soluciona el requerimiento 5
+    """
+    # TODO: Realizar el requerimiento 5
+    pass
+
+
+def req_6(data_structs):
+    """
+    Función que soluciona el requerimiento 6
+    """
+    # TODO: Realizar el requerimiento 6
+    pass
+
+
+def req_7(data_structs):
+    """
+    Función que soluciona el requerimiento 7
+    """
+    # TODO: Realizar el requerimiento 7
+    pass
+
+
+def req_8(data_structs):
+    """
+    Función que soluciona el requerimiento 8
+    """
+    # TODO: Realizar el requerimiento 8
+    pass
+
+
+# Funciones utilizadas para comparar elementos dentro de una lista
+
+def compare(data_1, data_2):
+    """
+    Función encargada de comparar dos datos
+    """
+    #TODO: Crear función comparadora de la lista
+    pass
+
+# Funciones de ordenamiento
+
 
 def sort_criteria1(data_1, data_2):
     """sortCriteria criterio de ordenamiento para las funciones de ordenamiento
@@ -174,150 +351,6 @@ def sort_criteria3(data_1, data_2):
             return False
     else: 
         return False
-# Funciones para creacion de datos
-
-def new_data(id, info):
-    """
-    Crea una nueva estructura para modelar los datos
-    """
-    #TODO: Crear la función para estructurar los datos
-    pass
-
-
-# Funciones de consulta
-
-def get_data(data_structs, id):
-    """
-    Retorna un dato a partir de su ID
-    """
-    #TODO: Crear la función para obtener un dato de una lista
-    pass
-
-
-def goalscorers_size(data_structs):
-    return mp.size(data_structs['goalscorers'])
-
-def results_size(data_structs):
-    return mp.size(data_structs['results'])
-
-def shootouts_size(data_structs):
-    return mp.size(data_structs['shootouts'])
-
-
-def req_1(data_structs,numero,nombre,condicion):
-    '''
-    Función que soluciona el requerimiento 1
-    '''
-    list1 = lt.newList("ARRAY_LIST")
-    for element in lt.iterator(mp.keySet(data_structs['model']['results'])):
-        lista=me.getValue(mp.get(data_structs['model']['results'],element))
-        
-        if condicion.lower() == "home":
-            if lista["home_team"].lower() == nombre.lower():
-                lt.addLast(list1, lista)
-        elif condicion.lower() == "away":
-            if lista["away_team"].lower() == nombre.lower():
-                lt.addLast(list1, lista)
-        else:
-            if lista["home_team"].lower() == nombre.lower():
-                lt.addLast(list1, lista)
-            if lista["away_team"].lower() == nombre.lower():
-                lt.addLast(list1, lista)
-    return list1
-
-def req_2(data_structs):
-    """
-    Función que soluciona el requerimiento 2
-    """
-    # TODO: Realizar el requerimiento 2
-    pass
-
-
-def req_3(data_structs,equipo,fecha_i,fecha_f):
-    """
-    Función que soluciona el requerimiento 3
-    """
-    # TODO: Realizar el requerimiento 3
-    fecha_i = datetime.strptime(fecha_i, "%Y-%m-%d")
-    fecha_f = datetime.strptime(fecha_f, "%Y-%m-%d")
-    
-    lista1 = lt.newList("ARRAY_LIST")
-    for element in lt.iterator(mp.keySet(data_structs['model']['results'])):
-        lista=me.getValue(mp.get(data_structs['model']['results'],element))
-    
-        if equipo in (lista["home_team"], lista["away_team"]):
-            fecha_partido = datetime.strptime(lista["date"], "%Y-%m-%d")
-            if fecha_i <= fecha_partido <= fecha_f:
-                lt.addLast(lista1, lista)
-    
-    return lista1
-    
-
-
-def req_4(data_structs):
-    """
-    Función que soluciona el requerimiento 4
-    """
-    # TODO: Realizar el requerimiento 4
-    pass
-
-
-def req_5(data_structs):
-    """
-    Función que soluciona el requerimiento 5
-    """
-    # TODO: Realizar el requerimiento 5
-    pass
-
-
-def req_6(data_structs):
-    """
-    Función que soluciona el requerimiento 6
-    """
-    # TODO: Realizar el requerimiento 6
-    pass
-
-
-def req_7(data_structs):
-    """
-    Función que soluciona el requerimiento 7
-    """
-    # TODO: Realizar el requerimiento 7
-    pass
-
-
-def req_8(data_structs):
-    """
-    Función que soluciona el requerimiento 8
-    """
-    # TODO: Realizar el requerimiento 8
-    pass
-
-
-# Funciones utilizadas para comparar elementos dentro de una lista
-
-def compare(data_1, data_2):
-    """
-    Función encargada de comparar dos datos
-    """
-    #TODO: Crear función comparadora de la lista
-    pass
-
-# Funciones de ordenamiento
-
-
-def sort_criteria(data_1, data_2):
-    """sortCriteria criterio de ordenamiento para las funciones de ordenamiento
-
-    Args:
-        data1 (_type_): _description_
-        data2 (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
-    #TODO: Crear función comparadora para ordenar
-    pass
 
 
 def sort(data_structs):
@@ -326,4 +359,3 @@ def sort(data_structs):
     """
     #TODO: Crear función de ordenamiento
     pass
-

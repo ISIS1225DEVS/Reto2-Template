@@ -133,35 +133,41 @@ def get_data(control, id):
     pass
 
 
-def req_1(control):
+def req_1(control,numero,nombre,condicion):
     """
     Retorna el resultado del requerimiento 1
     """
-    numero = input("Ingrese el número de partidos: ")
-    nombre = input("Ingrese el nombre del equipo: ")
-    condicion= input("Ingrese la condición del equipo: ")
-    return model.req_1(control,numero,nombre,condicion)
-    pass
+    
+    start_time= get_time()
+    x=model.req_1(control,numero,nombre,condicion)
+    end_time= get_time() 
+    delta_time1=delta_time(start_time,end_time)
+    return x,delta_time1
 
 
-def req_2(control):
+def req_2(control,numero_de_goles,nombre):
     """
     Retorna el resultado del requerimiento 2
     """
     # TODO: Modificar el requerimiento 2
-    pass
+    
+    start_time= get_time()
+    x=model.req_2(control,numero_de_goles,nombre)
+    end_time= get_time() 
+    delta_time1=delta_time(start_time,end_time) 
+    return x,delta_time1
 
 
-def req_3(control):
+def req_3(control,equipo,fecha_i,fecha_f):
     """
     Retorna el resultado del requerimiento 3
     """
-    equipo= input("Ingrese el nombre del equipo: ")
-    fecha_i = input("Ingrese la fecha inicial (YYYY-MM-DD): ")
-    fecha_f = input("Ingrese la fecha final (YYYY-MM-DD): ")
-    return model.req_3(control,equipo,fecha_i,fecha_f)
-
-    pass
+    
+    start_time= get_time()
+    x=model.req_3(control,equipo,fecha_i,fecha_f)
+    end_time= get_time() 
+    delta_time1=delta_time(start_time,end_time)
+    return x,delta_time1
 
 
 def req_4(control):

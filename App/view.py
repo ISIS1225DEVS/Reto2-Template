@@ -29,6 +29,7 @@ from DISClib.ADT import queue as qu
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 assert cf
+import tabulate as tb
 from tabulate import tabulate
 import traceback
 
@@ -99,8 +100,13 @@ def print_req_1(control):
         Función que imprime la solución del Requerimiento 1 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 1
-    print(controller.req_1(control))
-    pass
+    numero = input("Ingrese el número de partidos: ")
+    nombre = input("Ingrese el nombre del equipo: ")
+    condicion= input("Ingrese la condición del equipo: ")
+    lista,tiempo=controller.req_1(control,numero,nombre,condicion)
+    print("Tiempo de ejecución: "+str(tiempo))
+    print(tb.tabulate(lista['elements'], headers='keys', tablefmt='fancy_grid'))
+    
 
 
 def print_req_2(control):
@@ -108,7 +114,11 @@ def print_req_2(control):
         Función que imprime la solución del Requerimiento 2 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 2
-    pass
+    numero_de_goles = input("Ingrese el número de goles: ")
+    nombre = input("Ingrese el nombre del jugador: ")
+    lista,tiempo=controller.req_2(control,numero_de_goles,nombre)
+    print("Tiempo de ejecución: "+str(tiempo))
+    print(tb.tabulate(lista['elements'], headers="keys", tablefmt='fancy_grid'))
 
 
 def print_req_3(control):
@@ -116,8 +126,13 @@ def print_req_3(control):
         Función que imprime la solución del Requerimiento 3 en consola
     """
     # TODO: Imprimir el resultado del requerimiento 3
+    equipo= input("Ingrese el nombre del equipo: ")
+    fecha_i = input("Ingrese la fecha inicial (YYYY-MM-DD): ")
+    fecha_f = input("Ingrese la fecha final (YYYY-MM-DD): ")
     
-    print(controller.req_3(control))
+    lista,tiempo=controller.req_3(control,equipo,fecha_i,fecha_f)
+    print("Tiempo de ejecución: "+str(tiempo))
+    print(tb.tabulate(lista['elements'], headers='keys', tablefmt='fancy_grid'))
 
 
 def print_req_4(control):
