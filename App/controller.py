@@ -138,6 +138,7 @@ def get_data(control, id):
 
 
 def req_1(control,numero,nombre,condicion):
+def req_1(control,numero,nombre,condicion):
     """
     Retorna el resultado del requerimiento 1
     """
@@ -150,6 +151,7 @@ def req_1(control,numero,nombre,condicion):
 
 
 def req_2(control,numero_de_goles,nombre):
+def req_2(control,numero_de_goles,nombre):
     """
     Retorna el resultado del requerimiento 2
     """
@@ -160,12 +162,25 @@ def req_2(control,numero_de_goles,nombre):
     end_time= get_time() 
     delta_time1=delta_time(start_time,end_time) 
     return x,delta_time1
+    
+    start_time= get_time()
+    x=model.req_2(control,numero_de_goles,nombre)
+    end_time= get_time() 
+    delta_time1=delta_time(start_time,end_time) 
+    return x,delta_time1
 
 
+def req_3(control,equipo,fecha_i,fecha_f):
 def req_3(control,equipo,fecha_i,fecha_f):
     """
     Retorna el resultado del requerimiento 3
     """
+    
+    start_time= get_time()
+    x=model.req_3(control,equipo,fecha_i,fecha_f)
+    end_time= get_time() 
+    delta_time1=delta_time(start_time,end_time)
+    return x,delta_time1
     
     start_time= get_time()
     x=model.req_3(control,equipo,fecha_i,fecha_f)

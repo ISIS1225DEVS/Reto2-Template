@@ -104,9 +104,22 @@ def print_req_1(control):
     numero = input("Ingrese el número de partidos: ")
     nombre = input("Ingrese el nombre del equipo: ")
     condicion= input("Ingrese la condición del equipo: ")
-    lista,tiempo=controller.req_1(control,numero,nombre,condicion)
+    lista_p3_u3,lista,tiempo=controller.req_1(control,numero,nombre,condicion)
+    x= len(lista)
+    print("------REQ 1 INPUTS------")
+    print("Número de partidos: "+numero)
+    print("Nombre del equipo: "+nombre)
+    print("Condición del equipo: "+condicion)
+    print(f"    Only {x} matches found, selecting all... ")
+    print("------REQ 1 RESULTS------")
+    print("Total matches found: " + str(len(lista)))
+    print(f"Selecting {numero} matches...")
+    if len(lista) > 6:
+        print("Results struct has more than 6 records...\n")
+    else:
+        print("Results struct has less than 6 records...\n")
     print("Tiempo de ejecución: "+str(tiempo))
-    print(tb.tabulate(lista['elements'], headers='keys', tablefmt='fancy_grid'))
+    print(tb.tabulate(lista_p3_u3['elements'], headers='keys', tablefmt='fancy_grid'))
     
 
 
@@ -118,6 +131,18 @@ def print_req_2(control):
     numero_de_goles = input("Ingrese el número de goles: ")
     nombre = input("Ingrese el nombre del jugador: ")
     lista,tiempo=controller.req_2(control,numero_de_goles,nombre)
+    xd= len(lista)
+    print("------REQ 2 INPUTS------")
+    print("TOP N Goals: "+numero_de_goles)
+    print("Player Name: "+nombre)
+    print(f"    Only {xd} goals found, selecting all... ")
+    print("------REQ 2 RESULTS------")
+    print("Total matches found: " + str(len(lista)))
+    print(f"Selecting {xd} matches...")
+    if len(lista) > 6:
+        print("Results struct has more than 6 records...\n")
+    else:
+        print("Results struct has less than 6 records...\n")
     print("Tiempo de ejecución: "+str(tiempo))
     print(tb.tabulate(lista['elements'], headers="keys", tablefmt='fancy_grid'))
 
@@ -132,6 +157,17 @@ def print_req_3(control):
     fecha_f = input("Ingrese la fecha final (YYYY-MM-DD): ")
     
     lista,tiempo=controller.req_3(control,equipo,fecha_i,fecha_f)
+    xd= len(lista)
+    print("------REQ 2 INPUTS------")
+    print("Team name: "+equipo)
+    print("Start date: "+fecha_i)
+    print("End date: "+fecha_f)
+    print(f"    Only {xd} goals found, selecting all... ")
+    print("------REQ 2 RESULTS------")
+    if len(lista) > 6:
+        print("Results struct has more than 6 records...\n")
+    else:
+        print("Results struct has less than 6 records...\n")
     print("Tiempo de ejecución: "+str(tiempo))
     print(tb.tabulate(lista['elements'], headers='keys', tablefmt='fancy_grid'))
 
