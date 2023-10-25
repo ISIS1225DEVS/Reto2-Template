@@ -273,28 +273,26 @@ if __name__ == "__main__":
         print_menu()
         inputs = input('Seleccione una opción para continuar\n')
         if int(inputs) == 1:
-            #print("¿Desea observar el uso de memoria en la carga de datos?, (True, False)")
-            #mem = input("Respuesta: \n")
-            #if mem == "True":
-              #  memory = True
-            #else:
-             #   memory = False
-            memory = True
-            #print("Seleccione el tipo de mapa que desea usar: \n")
-            #print("1. Separate Chaining")
-            #print("2. Linear Probing")
-            #temp = input("Respuesta: \n")
-            #if int(temp) == 1:
-             #   maptype = "CHAINING"
-            #else:
-             #   maptype = "PROBING"
-            maptype = "PROBING" #TODO
-            lf = 8 #TODO float(input("Ingrese el factor de carga deseado: \n"))
-            results_file = "results-utf8-small.csv" #TODO
+            print("¿Desea observar el uso de memoria en la carga de datos?, (True, False)")
+            mem = input("Respuesta: \n")
+            if mem == "True":
+                memory = True
+            else:
+                memory = False
+            print("Seleccione el tipo de mapa que desea usar: \n")
+            print("1. Separate Chaining")
+            print("2. Linear Probing")
+            temp = input("Respuesta: \n")
+            if int(temp) == 1:
+                maptype = "CHAINING"
+            else:
+                maptype = "PROBING"
+            lf = float(input("Ingrese el factor de carga deseado: \n"))
+            results_file = input("ponga el nombre del archivo results EJ: results-utf8-small.csv")
             results, time_r, memory_r=load_results(control,results_file, memory, maptype, lf)
-            goal_file= "goalscorers-utf8-small.csv" #TODO
+            goal_file= input("ponga el nombre del archivo goalscorers EJ:goalscorers-utf8-small.csv")
             goals, time_g, mem_g=load_goalscorers(control,goal_file, memory, maptype, lf)
-            shootouts_file= "shootouts-utf8-small.csv" #TODO
+            shootouts_file= input("ponga el nombre del archivo shootouts EJ: shootouts-utf8-small.csv")
             shootouts, time_s, memory_s=load_shootouts(control,shootouts_file, memory, maptype, lf)
             print("Cargando información de los archivos ....\n")
             print('Results: '+str(results))
