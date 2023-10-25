@@ -26,6 +26,10 @@ import time
 import csv
 import tracemalloc
 import os
+import pandas as pd
+from model import AnotacionesModel
+from view import AnotacionesView
+
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
@@ -133,28 +137,41 @@ def get_data(control, id):
     pass
 
 
-def req_1(control):
+def req_1(control,numero,nombre,condicion):
     """
     Retorna el resultado del requerimiento 1
     """
-    # TODO: Modificar el requerimiento 1
-    pass
+    
+    start_time= get_time()
+    x=model.req_1(control,numero,nombre,condicion)
+    end_time= get_time() 
+    delta_time1=delta_time(start_time,end_time)
+    return x,delta_time1
 
 
-def req_2(control):
+def req_2(control,numero_de_goles,nombre):
     """
     Retorna el resultado del requerimiento 2
     """
     # TODO: Modificar el requerimiento 2
-    pass
+    
+    start_time= get_time()
+    x=model.req_2(control,numero_de_goles,nombre)
+    end_time= get_time() 
+    delta_time1=delta_time(start_time,end_time) 
+    return x,delta_time1
 
 
-def req_3(control):
+def req_3(control,equipo,fecha_i,fecha_f):
     """
     Retorna el resultado del requerimiento 3
     """
-    # TODO: Modificar el requerimiento 3
-    pass
+    
+    start_time= get_time()
+    x=model.req_3(control,equipo,fecha_i,fecha_f)
+    end_time= get_time() 
+    delta_time1=delta_time(start_time,end_time)
+    return x,delta_time1
 
 
 def req_4(control):
@@ -166,11 +183,24 @@ def req_4(control):
 
 
 def req_5(control):
-    """
-    Retorna el resultado del requerimiento 5
-    """
-    # TODO: Modificar el requerimiento 5
-    pass
+    class AnotacionesController:
+        def __init__(self, model, view):
+            self.model = model
+            self.view = view
+
+        def consultar_anotaciones(self, nombre_jugador, fecha_inicio, fecha_fin):
+            anotaciones_del_jugador = self.model.filtrar_anotaciones(nombre_jugador, fecha_inicio, fecha_fin)
+            total_jugadores, total_anotaciones, total_torneos, total_penal, total_autogoles = self.model.obtener_estadisticas(anotaciones_del_jugador)
+            self.view.mostrar_estadisticas(total_jugadores, total_anotaciones, total_torneos, total_penal, total_autogoles)
+            self.view.mostrar_anotaciones(anotaciones_del_jugador)
+
+    controller = AnotacionesController(AnotacionesModel(), AnotacionesView())
+    nombre_jugador = input("Ingrese el nombre del jugador: ")
+    fecha_inicio = input("Ingrese la fecha inicial (Ejemplo: 2023-01-01): ")
+    fecha_fin = input("Ingrese la fecha final (Ejemplo: 2023-01-01): ")
+    controller.consultar_anotaciones(nombre_jugador, fecha_inicio, fecha_fin)
+
+
 
 def req_6(control):
     """
@@ -179,14 +209,13 @@ def req_6(control):
     # TODO: Modificar el requerimiento 6
     pass
 
-
-def req_7(control):
+def req_7(control, nombre_torneo, puntaje):
     """
-    Retorna el resultado del requerimiento 7
+    Controlador del Requerimiento 7: Encontrar los jugadores de fútbol con N puntos dentro de un torneo específico.
     """
-    # TODO: Modificar el requerimiento 7
-    pass
-
+    # Llama a la función del modelo para obtener los resultados
+    resultado = model.req_7(control['model'], nombre_torneo, puntaje)
+    return resultado
 
 def req_8(control):
     """
