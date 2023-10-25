@@ -139,10 +139,10 @@ def req_1(control,numero,nombre,condicion):
     """
     
     start_time= get_time()
-    x=model.req_1(control,numero,nombre,condicion)
+    lista_p3_u3, lista=model.req_1(control,numero,nombre,condicion)
     end_time= get_time() 
     delta_time1=delta_time(start_time,end_time)
-    return x,delta_time1
+    return lista_p3_u3,lista,delta_time1
 
 
 def req_2(control,numero_de_goles,nombre):

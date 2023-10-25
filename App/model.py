@@ -152,35 +152,29 @@ def req_1(data_structs,numero,nombre,condicion):
         lt.addLast(lista_p3_u3, element)
     for element in lista_u3["elements"]:
         lt.addLast(lista_p3_u3, element)
-    return lista_p3_u3  
+    return lista_p3_u3, lista
 
 def req_2(data_structs, numero_de_goles, nombre):
     """
     Función que soluciona el requerimiento 2 
     """
     lista1 = lt.newList("ARRAY_LIST")
-    
 
     for element in lt.iterator(mp.keySet(data_structs['model']['goalscorers'])):
         lista = me.getValue(mp.get(data_structs['model']['goalscorers'], element))
         if lista["scorer"] == nombre:
-            lt.addLast(lista1,lista)
-    lista1= merg.sort(lista1, sort_criteria1)
-    lista_p3 = lt.newList("ARRAY_LIST")
-    pos1 = 2
-    while pos1 >= 0:
-        lt.addFirst(lista_p3, lista1["elements"][pos1])
-        pos1 -= 1
-    tamaño = lt.size(lista1) - 2
-    lista_u3 = lt.subList(lista1, tamaño, 3)
+            lt.addFirst(lista1, lista)
+    lista1 = merg.sort(lista1, sort_criteria1)
     lista_p3_u3 = lt.newList("ARRAY_LIST")
-    for element in lista_p3["elements"]:
-        lt.addLast(lista_p3_u3, element)
-    for element in lista_u3["elements"]:
-        lt.addLast(lista_p3_u3, element)
-    return lista_p3_u3 
-    
-
+    if lt.size(lista1) < 6:
+        return lista1
+    else:
+        for i in range(3):
+            lt.addFirst(lista_p3_u3, lista1["elements"][i])
+        tamaño = lt.size(lista1)
+        for i in range(tamaño - 3, tamaño):
+            lt.addFirst(lista_p3_u3, lista1["elements"][i])
+    return lista_p3_u3
 
 def req_3(data_structs,equipo,fecha_i,fecha_f):
     """
@@ -197,7 +191,7 @@ def req_3(data_structs,equipo,fecha_i,fecha_f):
         if equipo in (lista["home_team"], lista["away_team"]):
             fecha_partido = tm.strptime(lista["date"], "%Y-%m-%d")
             if fecha_i <= fecha_partido <= fecha_f:
-                lt.addLast(lista1, lista)
+                lt.addFirst(lista1, lista)
     lista1= merg.sort(lista1, sort_criteria3)            
     lista_p3 = lt.newList("ARRAY_LIST")
     pos1 = 2
@@ -208,10 +202,10 @@ def req_3(data_structs,equipo,fecha_i,fecha_f):
     lista_u3 = lt.subList(lista1, tamaño, 3)
     lista_p3_u3 = lt.newList("ARRAY_LIST")
     for element in lista_p3["elements"]:
-        lt.addLast(lista_p3_u3, element)
+        lt.addFirst(lista_p3_u3, element)
     for element in lista_u3["elements"]:
-        lt.addLast(lista_p3_u3, element)
-    return lista_p3_u3  
+        lt.addFirst(lista_p3_u3, element)
+    return lista_p3_u3
     
 
 
