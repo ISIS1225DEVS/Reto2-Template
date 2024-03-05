@@ -23,30 +23,96 @@
 import config as cf
 import model
 import time
-import csv
 import tracemalloc
+import os
+import pandas as pd
+from model import AnotacionesModel
+from view import AnotacionesView
 
 """
 El controlador se encarga de mediar entre la vista y el modelo.
 """
 
-
-def new_controller():
+def newController():
     """
     Crea una instancia del modelo
     """
-    #TODO: Llamar la función del modelo que crea las estructuras de datos
-    pass
+    control = {
+        'model': None
+    }
+    control['model'] = model.new_data_structs()
+    return control
 
 
 # Funciones para la carga de datos
 
-def load_data(control, filename):
+def load_goalscorers(control, filename, memory, mapa, lf):
     """
     Carga los datos del reto
     """
-    # TODO: Realizar la carga de datos
-    pass
+    inicio_time = get_time()
+    if memory==True:
+        tracemalloc.start()
+        inicio_memory = get_memory()
+         
+    data_structs = control["model"]
+    
+    goalscorersfile = os.path.join(cf.data_dir, filename)
+    
+    data_structs = model.add_goalscorers(data_structs, goalscorersfile, mapa, lf)
+    stop_time = get_time()
+    diff_time = delta_time(inicio_time, stop_time)
+    if memory == True:
+        stop_memory = get_memory()
+        tracemalloc.stop()
+        diff_memory = delta_memory(stop_memory, inicio_memory)
+        return model.goalscorers_size(data_structs), diff_time, diff_memory
+    else:
+        return model.goalscorers_size(data_structs), diff_time, 0.0
+    
+
+def load_results(control, filename, memory, mapa, lf):
+    inicio_time = get_time()
+    if memory==True:
+        tracemalloc.start()
+        inicio_memory = get_memory()
+        
+    data_structs = control["model"]
+    
+    resultsfile = os.path.join(cf.data_dir, filename)
+    
+    data_structs = model.add_results(data_structs, resultsfile, mapa, lf)
+    stop_time = get_time()
+    diff_time = delta_time(inicio_time, stop_time)
+    if memory == True:
+        stop_memory = get_memory()
+        tracemalloc.stop()
+        diff_memory = delta_memory(stop_memory, inicio_memory) 
+        return model.results_size(data_structs), diff_time, diff_memory
+    else:
+        return model.results_size(data_structs), diff_time, 0.0
+    
+
+def load_shootouts(control, filename, memory, mapa, lf):
+    inicio_time = get_time()
+    if memory==True:
+        tracemalloc.start()
+        inicio_memory = get_memory()
+    data_structs = control["model"]
+    
+    shootoutsfile = os.path.join(cf.data_dir, filename)
+    
+    data_structs = model.add_shootouts(data_structs, shootoutsfile, mapa, lf)
+
+    stop_time = get_time()
+    diff_time = delta_time(inicio_time, stop_time)
+    if memory == True:
+        stop_memory = get_memory()
+        tracemalloc.stop()
+        diff_memory = delta_memory(stop_memory, inicio_memory)
+        return model.shootouts_size(data_structs), diff_time, diff_memory
+    else:
+        return model.shootouts_size(data_structs), diff_time, 0.0
 
 
 # Funciones de ordenamiento
@@ -69,28 +135,38 @@ def get_data(control, id):
     pass
 
 
-def req_1(control):
+def req_1(control, numero, nombre, condicion):
     """
     Retorna el resultado del requerimiento 1
     """
-    # TODO: Modificar el requerimiento 1
-    pass
+    
+    start_time = get_time()
+    x = model.req_1(control, numero, nombre, condicion)
+    end_time = get_time() 
+    delta_time1 = delta_time(start_time, end_time)
+    return x, delta_time1
 
-
-def req_2(control):
+def req_2(control, numero_de_goles, nombre):
     """
     Retorna el resultado del requerimiento 2
     """
-    # TODO: Modificar el requerimiento 2
-    pass
+    
+    start_time = get_time()
+    x = model.req_2(control, numero_de_goles, nombre)
+    end_time = get_time() 
+    delta_time1 = delta_time(start_time, end_time) 
+    return x, delta_time1
 
-
-def req_3(control):
+def req_3(control, equipo, fecha_i, fecha_f):
     """
     Retorna el resultado del requerimiento 3
     """
-    # TODO: Modificar el requerimiento 3
-    pass
+    
+    start_time = get_time()
+    x = model.req_3(control, equipo, fecha_i, fecha_f)
+    end_time = get_time() 
+    delta_time1 = delta_time(start_time, end_time)
+    return x, delta_time1
 
 
 def req_4(control):
@@ -102,11 +178,24 @@ def req_4(control):
 
 
 def req_5(control):
-    """
-    Retorna el resultado del requerimiento 5
-    """
-    # TODO: Modificar el requerimiento 5
-    pass
+    class AnotacionesController:
+        def __init__(self, model, view):
+            self.model = model
+            self.view = view
+
+        def consultar_anotaciones(self, nombre_jugador, fecha_inicio, fecha_fin):
+            anotaciones_del_jugador = self.model.filtrar_anotaciones(nombre_jugador, fecha_inicio, fecha_fin)
+            total_jugadores, total_anotaciones, total_torneos, total_penal, total_autogoles = self.model.obtener_estadisticas(anotaciones_del_jugador)
+            self.view.mostrar_estadisticas(total_jugadores, total_anotaciones, total_torneos, total_penal, total_autogoles)
+            self.view.mostrar_anotaciones(anotaciones_del_jugador)
+
+    controller = AnotacionesController(AnotacionesModel(), AnotacionesView())
+    nombre_jugador = input("Ingrese el nombre del jugador: ")
+    fecha_inicio = input("Ingrese la fecha inicial (Ejemplo: 2023-01-01): ")
+    fecha_fin = input("Ingrese la fecha final (Ejemplo: 2023-01-01): ")
+    controller.consultar_anotaciones(nombre_jugador, fecha_inicio, fecha_fin)
+
+
 
 def req_6(control):
     """
@@ -115,14 +204,13 @@ def req_6(control):
     # TODO: Modificar el requerimiento 6
     pass
 
-
-def req_7(control):
+def req_7(control, nombre_torneo, puntaje):
     """
-    Retorna el resultado del requerimiento 7
+    Controlador del Requerimiento 7: Encontrar los jugadores de fútbol con N puntos dentro de un torneo específico.
     """
-    # TODO: Modificar el requerimiento 7
-    pass
-
+    # Llama a la función del modelo para obtener los resultados
+    resultado = model.req_7(control['model'], nombre_torneo, puntaje)
+    return resultado
 
 def req_8(control):
     """
@@ -133,7 +221,15 @@ def req_8(control):
 
 
 # Funciones para medir tiempos de ejecucion
-
+def printLoadDataAnswer(tiempo, memoria, bool): 
+    """ 
+    Imprime los datos de tiempo y memoria de la carga de datos 
+    """ 
+    if bool == True and memoria != 0.0: 
+        print("Tiempo [ms]: ", round(tiempo,2), "||", 
+        "Memoria [kB]: ", round(memoria,2)) 
+    else: 
+        print("Tiempo [ms]: ",round(tiempo,2))
 def get_time():
     """
     devuelve el instante tiempo de procesamiento en milisegundos
