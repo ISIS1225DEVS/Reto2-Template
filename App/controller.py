@@ -35,111 +35,209 @@ def new_controller():
     """
     Crea una instancia del modelo
     """
-    #TODO: Llamar la función del modelo que crea las estructuras de datos
-    pass
+    return model.new_data_structs()
 
 
-# Funciones para la carga de datos
+#Funciones para la carga de datos
 
-def load_data(control, filename):
+def load_and_sort_data(control, tamaño, algoritmo):
     """
     Carga los datos del reto
     """
-    # TODO: Realizar la carga de datos
-    pass
+    
+    
+    tamaños = {"1": "small",
+               "2": "5pct",
+               "3": "10pct",
+               "4": "20pct",
+               "5": "30pct",
+               "6": "50pct",
+               "7": "80pct",
+               "8": "large"}
+    
+    tracemalloc.start()
+    tiempo_carga = get_time()
+    memoria_inicial = get_memory()
+    
+    if tamaño in list(tamaños.keys()):
+        tamaño = tamaños[tamaño]
+        
+        control["results"] = model.lt.newList("ARRAY_LIST")
+        control["shootouts"] = model.lt.newList("ARRAY_LIST")
+        control["goalscorers"] = model.lt.newList("ARRAY_LIST")
+        
+        load_data(control, tamaño, "results")
+        load_data(control, tamaño, "shootouts")
+        load_data(control, tamaño, "goalscorers")
+        model.creating_hash(control) 
+     
+        
+    tiempo_carga = delta_time(tiempo_carga, get_time())
+    memoria = delta_memory(get_memory(), memoria_inicial)
+    tracemalloc.stop()
+    
+    tiempo_ordenamiento = get_time()  
+    sort(control, algoritmo)
+    tiempo_ordenamiento = delta_time(tiempo_ordenamiento, get_time())
+    
+    return tiempo_carga, tiempo_ordenamiento,  memoria
+    
+def load_data(control, tamaño, archivo):
+    
+    file = cf.data_dir + f'/football/{archivo}-utf8-{tamaño}.csv'
+    input_file = csv.DictReader(open(file, encoding="utf-8"))
+    for fila in input_file:
+        model.add_data(control, fila, archivo)
 
+def get_datasize(control):
+    """
+    Retorna el tamaño de los datos cargados
+    """
+    return model.get_datasize(control)
 
-# Funciones de ordenamiento
+#Funciones de ordenamiento
 
-def sort(control):
+def sort(control, algoritmo):
     """
     Ordena los datos del modelo
     """
-    #TODO: Llamar la función del modelo para ordenar los datos
-    pass
+    
+    model.sort(control, algoritmo)
+    
 
+# Funciones de requerimientos
 
-# Funciones de consulta sobre el catálogo
+def req_1(control, n_partidos, equipo, condicion):
+    
+    tracemalloc.start()
+    first_time = get_time()
+    first_memory = get_memory()
+    model_response = model.req_1(control, n_partidos, equipo, condicion)
+    last_time = get_time()
+    last_memory = get_memory()
+    tracemalloc.stop()
+    
+    time = delta_time(first_time, last_time)
+    memory = delta_memory(last_memory, first_memory)
+    
+    print(f"Tiempo de ejecución: {time} ms")
+    print(f"Uso de memoria: {memory} KB")
+    
+    return model_response
 
-def get_data(control, id):
-    """
-    Retorna un dato por su ID.
-    """
-    #TODO: Llamar la función del modelo para obtener un dato
-    pass
+def req_2(control, n_goles, jugador):
+    
+    tracemalloc.start()
+    first_time = get_time()
+    first_memory = get_memory()
+    model_response = model.req_2(control, n_goles, jugador)
+    last_time = get_time()
+    last_memory = get_memory()
+    tracemalloc.stop()
+    
+    time = delta_time(first_time, last_time)
+    memory = delta_memory(last_memory, first_memory)
+    
+    print(f"Tiempo de ejecución: {time} ms")
+    print(f"Uso de memoria: {memory} KB")
+    
+    return model_response
 
+def req_3(control, equipo, fecha_inicial, fecha_final):
+    
+    tracemalloc.start()
+    first_time = get_time()
+    first_memory = get_memory()
+    model_response = model.req_3(control, equipo, fecha_inicial, fecha_final)
+    last_time = get_time()
+    last_memory = get_memory()
+    tracemalloc.stop()
+    
+    time = delta_time(first_time, last_time)
+    memory = delta_memory(last_memory, first_memory)
+    
+    print(f"Tiempo de ejecución: {time} ms")
+    print(f"Uso de memoria: {memory} KB")
+    
+    return model_response
 
-def req_1(control):
-    """
-    Retorna el resultado del requerimiento 1
-    """
-    # TODO: Modificar el requerimiento 1
-    pass
+def req_4(control, torneo, fecha_inicial, fecha_final):
+    
+    tracemalloc.start()
+    first_time = get_time()
+    first_memory = get_memory()
+    model_response = model.req_4(control, torneo, fecha_inicial, fecha_final)
+    last_time = get_time()
+    last_memory = get_memory()
+    tracemalloc.stop()
+    
+    time = delta_time(first_time, last_time)
+    memory = delta_memory(last_memory, first_memory)
+    
+    print(f"Tiempo de ejecución: {time} ms")
+    print(f"Uso de memoria: {memory} KB")
+    
+    return model_response
 
+def req_5(control, anotador, fecha_inicial, fecha_final):
+    
+    tracemalloc.start()
+    first_time = get_time()
+    first_memory = get_memory()
+    model_response = model.req_5(control, anotador, fecha_inicial, fecha_final)
+    last_time = get_time()
+    last_memory = get_memory()
+    tracemalloc.stop()
+    
+    time = delta_time(first_time, last_time)
+    memory = delta_memory(last_memory, first_memory)
+    
+    print(f"Tiempo de ejecución: {time} ms")
+    print(f"Uso de memoria: {memory} KB")
+    
+    return model_response
 
-def req_2(control):
-    """
-    Retorna el resultado del requerimiento 2
-    """
-    # TODO: Modificar el requerimiento 2
-    pass
+def req_6(control, n_equipos, torneo, año):
+    
+    tracemalloc.start()
+    first_time = get_time()
+    first_memory = get_memory()
+    model_response = model.req_6(control, n_equipos, torneo, año)
+    last_time = get_time()
+    last_memory = get_memory()
+    tracemalloc.stop()
+    
+    time = delta_time(first_time, last_time)
+    memory = delta_memory(last_memory, first_memory)
+    
+    print(f"Tiempo de ejecución: {time} ms")
+    print(f"Uso de memoria: {memory} KB")
+    
+    return model_response
 
+def req_7(control, torneo, puntaje, fecha_inicio, fecha_fin):
+    
+    first_time = get_time()
+    first_memory = get_memory()
+    model_response = model.req_7(control, torneo, puntaje, fecha_inicio, fecha_fin)
+    last_time = get_time()
+    last_memory = get_memory()
+    
+    time = delta_time(first_time, last_time)
+    memory = delta_memory(last_memory, first_memory)
+    
+    print(f"Tiempo de ejecución: {time} ms")
+    print(f"Uso de memoria: {memory} KB")
+    
+    return model_response
 
-def req_3(control):
-    """
-    Retorna el resultado del requerimiento 3
-    """
-    # TODO: Modificar el requerimiento 3
-    pass
-
-
-def req_4(control):
-    """
-    Retorna el resultado del requerimiento 4
-    """
-    # TODO: Modificar el requerimiento 4
-    pass
-
-
-def req_5(control):
-    """
-    Retorna el resultado del requerimiento 5
-    """
-    # TODO: Modificar el requerimiento 5
-    pass
-
-def req_6(control):
-    """
-    Retorna el resultado del requerimiento 6
-    """
-    # TODO: Modificar el requerimiento 6
-    pass
-
-
-def req_7(control):
-    """
-    Retorna el resultado del requerimiento 7
-    """
-    # TODO: Modificar el requerimiento 7
-    pass
-
-
-def req_8(control):
-    """
-    Retorna el resultado del requerimiento 8
-    """
-    # TODO: Modificar el requerimiento 8
-    pass
-
-
-# Funciones para medir tiempos de ejecucion
+#Funciones para manejar el tiempo y la memoria
 
 def get_time():
     """
     devuelve el instante tiempo de procesamiento en milisegundos
     """
     return float(time.perf_counter()*1000)
-
 
 def delta_time(start, end):
     """
@@ -153,7 +251,6 @@ def get_memory():
     toma una muestra de la memoria alocada en instante de tiempo
     """
     return tracemalloc.take_snapshot()
-
 
 def delta_memory(stop_memory, start_memory):
     """
